@@ -7,8 +7,8 @@ import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 class HissHomeController extends HissRootController{
 
   clickPlay(){
-    // Navigator.push(buildContext, MaterialPageRoute(builder: (_)=>SolitairePage()));
-    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissAAARouters.play);
+    Navigator.push(buildContext, MaterialPageRoute(builder: (_)=>SolitairePage()));
+    // HissRoutersUtils.instance.toNextPageByNamed(routerName: HissAAARouters.play);
   }
 
   clickRank(){

@@ -324,62 +324,6 @@ class _SolitairePageState extends State<SolitairePage> {
             height: 120,
             child: Row(
               children: [
-                GestureDetector(
-                  onTap: flipCardFromStock,
-                  child: Container(
-                    width: 60,
-                    height: 90,
-                    margin: EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.blue,
-                      border: Border.all(width: 1, color: Colors.white),
-                    ),
-                    alignment: Alignment.center,
-                    child: stockPile.isNotEmpty
-                        ? Text("抽牌", style: TextStyle(color: Colors.white))
-                        : SizedBox.shrink(),
-                  ),
-                ),
-                Stack(
-                  children: List.generate(wastePile.length, (index) {
-                    return Container(
-                      margin: EdgeInsets.only(left: index * 20),
-                      child: GestureDetector(
-                        onTap: tryMoveWasteToFoundation,
-                        child: Draggable<Map<String, dynamic>>(
-                          data: {"fromWaste": true, "cards": [wastePile[index]]},
-                          onDragStarted: () {
-                            setState(() {
-                              _isDragging = true;
-                              _draggingCards = [wastePile[index]];
-                            });
-                          },
-                          onDragCompleted: () {
-                            setState(() {
-                              _isDragging = false;
-                              _draggingFromCol = null;
-                              _draggingStartIndex = null;
-                              _draggingCards = null;
-                            });
-                          },
-                          onDraggableCanceled: (velocity, offset) {
-                            setState(() {
-                              _isDragging = false;
-                              _draggingFromCol = null;
-                              _draggingStartIndex = null;
-                              _draggingCards = null;
-                            });
-                          },
-                          feedback: _buildDragFeedback([wastePile[index]]),
-                          childWhenDragging:
-                          Opacity(opacity: 0.5, child: buildCard(wastePile[index])),
-                          child: buildCard(wastePile[index]),
-                        ),
-                      ),
-                    );
-                  }),
-                ),
                 Expanded(
                   child: Row(
                     children: List.generate(4, (fIndex) {
@@ -427,6 +371,62 @@ class _SolitairePageState extends State<SolitairePage> {
                         ),
                       );
                     }),
+                  ),
+                ),
+                Stack(
+                  children: List.generate(wastePile.length, (index) {
+                    return Container(
+                      margin: EdgeInsets.only(left: index * 20),
+                      child: GestureDetector(
+                        onTap: tryMoveWasteToFoundation,
+                        child: Draggable<Map<String, dynamic>>(
+                          data: {"fromWaste": true, "cards": [wastePile[index]]},
+                          onDragStarted: () {
+                            setState(() {
+                              _isDragging = true;
+                              _draggingCards = [wastePile[index]];
+                            });
+                          },
+                          onDragCompleted: () {
+                            setState(() {
+                              _isDragging = false;
+                              _draggingFromCol = null;
+                              _draggingStartIndex = null;
+                              _draggingCards = null;
+                            });
+                          },
+                          onDraggableCanceled: (velocity, offset) {
+                            setState(() {
+                              _isDragging = false;
+                              _draggingFromCol = null;
+                              _draggingStartIndex = null;
+                              _draggingCards = null;
+                            });
+                          },
+                          feedback: _buildDragFeedback([wastePile[index]]),
+                          childWhenDragging:
+                          Opacity(opacity: 0.5, child: buildCard(wastePile[index])),
+                          child: buildCard(wastePile[index]),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+                GestureDetector(
+                  onTap: flipCardFromStock,
+                  child: Container(
+                    width: 60,
+                    height: 90,
+                    margin: EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.blue,
+                      border: Border.all(width: 1, color: Colors.white),
+                    ),
+                    alignment: Alignment.center,
+                    child: stockPile.isNotEmpty
+                        ? Text("抽牌", style: TextStyle(color: Colors.white))
+                        : SizedBox.shrink(),
                   ),
                 ),
               ],

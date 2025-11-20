@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 // ---------------- 花色 ----------------
 enum Suit { hearts, spades, clubs, diamonds }
@@ -106,11 +105,6 @@ class _SolitairePageState extends State<SolitairePage> {
   // 撤销栈
   List<_GameStateSnapshot> _history = [];
 
-  // 发牌动画相关
-  bool _isDealing = false;
-  int _currentDealStep = 0;
-  List<CardModel> _remainingDealCards = [];
-
   @override
   void initState() {
     super.initState();
@@ -127,69 +121,21 @@ class _SolitairePageState extends State<SolitairePage> {
 
     fullDeck.shuffle();
 
-    // 初始化7列空列表
+    int index = 0;
     for (var i = 0; i < 7; i++) {
-      cardList.add([]);
+      List<CardModel> col = [];
+      for (var j = 0; j <= i; j++) {
+        col.add(fullDeck[index++]);
+      }
+      col.last.isFaceUp = true;
+      cardList.add(col);
     }
 
-    // 设置发牌堆
-    stockPile = fullDeck;
-
-    // 开始发牌动画
-    _startDealAnimation();
-  }
-
-  void _startDealAnimation() {
-    setState(() {
-      _isDealing = true;
-      _currentDealStep = 0;
-      _remainingDealCards = List.from(stockPile);
-      stockPile.clear();
-    });
-
-    // 开始逐张发牌
-    _dealNextCard();
-  }
-
-  void _dealNextCard() {
-    if (_currentDealStep >= 28) { // 总共28张牌
-      _finishDeal();
-      return;
-    }
-
-    // 计算当前应该发到哪一列
-    int targetColumn = _currentDealStep % 7;
-    int cardsInColumn = (_currentDealStep ~/ 7) + 1;
-
-    // 检查这一列是否还需要发牌
-    if (cardList[targetColumn].length < cardsInColumn && _remainingDealCards.isNotEmpty) {
-      final card = _remainingDealCards.removeLast();
-      // 只有每列的最后一张牌是正面朝上的
-      card.isFaceUp = (cardList[targetColumn].length == cardsInColumn - 1);
-
-      setState(() {
-        cardList[targetColumn].add(card);
-        _currentDealStep++;
-      });
-
-      // 延迟发下一张牌
-      Timer(Duration(milliseconds: 150), _dealNextCard);
-    } else {
-      _currentDealStep++;
-      _dealNextCard();
-    }
-  }
-
-  void _finishDeal() {
-    setState(() {
-      _isDealing = false;
-      _remainingDealCards.clear();
-    });
+    stockPile = fullDeck.sublist(index);
   }
 
   /// ---------------- Undo ----------------
   void _saveSnapshot() {
-    if (_isDealing) return;
     _history.add(_GameStateSnapshot.from(
         cardList, foundations, stockPile, wastePile));
   }
@@ -367,10 +313,9 @@ class _SolitairePageState extends State<SolitairePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isDealing ? "发牌中... ($_currentDealStep/28)" : "接龙示例（带撤销）"),
+        title: Text("接龙示例（带撤销）"),
         actions: [
-          if (!_isDealing)
-            IconButton(icon: Icon(Icons.undo), onPressed: _undoStep),
+          IconButton(icon: Icon(Icons.undo), onPressed: _undoStep),
         ],
       ),
       body: Column(
@@ -385,7 +330,6 @@ class _SolitairePageState extends State<SolitairePage> {
                       return Expanded(
                         child: DragTarget<Map<String, dynamic>>(
                           onWillAccept: (data) {
-                            if (_isDealing) return false;
                             List<CardModel> moving = data!['cards'];
                             if (moving.length != 1) return false;
                             return canMoveToFoundation(moving.first, foundations[fIndex]);
@@ -434,10 +378,8 @@ class _SolitairePageState extends State<SolitairePage> {
                     return Container(
                       margin: EdgeInsets.only(left: index * 20),
                       child: GestureDetector(
-                        onTap: _isDealing ? null : tryMoveWasteToFoundation,
-                        child: _isDealing
-                            ? buildCard(wastePile[index])
-                            : Draggable<Map<String, dynamic>>(
+                        onTap: tryMoveWasteToFoundation,
+                        child: Draggable<Map<String, dynamic>>(
                           data: {"fromWaste": true, "cards": [wastePile[index]]},
                           onDragStarted: () {
                             setState(() {
@@ -471,22 +413,18 @@ class _SolitairePageState extends State<SolitairePage> {
                   }),
                 ),
                 GestureDetector(
-                  onTap: _isDealing ? null : flipCardFromStock,
+                  onTap: flipCardFromStock,
                   child: Container(
                     width: 60,
                     height: 90,
                     margin: EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      color: _isDealing ? Colors.grey : Colors.blue,
+                      color: Colors.blue,
                       border: Border.all(width: 1, color: Colors.white),
                     ),
                     alignment: Alignment.center,
-                    child: _isDealing
-                        ? CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
-                        : stockPile.isNotEmpty
+                    child: stockPile.isNotEmpty
                         ? Text("抽牌", style: TextStyle(color: Colors.white))
                         : SizedBox.shrink(),
                   ),
@@ -501,7 +439,6 @@ class _SolitairePageState extends State<SolitairePage> {
                 return Expanded(
                   child: DragTarget<Map<String, dynamic>>(
                     onWillAccept: (data) {
-                      if (_isDealing) return false;
                       List<CardModel> movingCards = data!['cards'];
                       if (movingCards.isEmpty) return false;
                       return canMoveToColumn(movingCards.first, cardList[colIndex]);
@@ -550,15 +487,15 @@ class _SolitairePageState extends State<SolitairePage> {
 
                             Widget cardWidget;
                             if (card.isFaceUp) {
+                              // ---------------- 点击 + 拖拽 ----------------
                               cardWidget = GestureDetector(
                                 behavior: HitTestBehavior.translucent,
-                                onTap: _isDealing ? null : () {
+                                onTap: () {
+                                  // 仅列顶部牌可自动上 Foundation
                                   if (rowIndex == list.length - 1)
                                     tryAutoMoveToFoundation(colIndex, rowIndex);
                                 },
-                                child: _isDealing
-                                    ? buildCard(card)
-                                    : LongPressDraggable<Map<String, dynamic>>(
+                                child: LongPressDraggable<Map<String, dynamic>>(
                                   delay: Duration(milliseconds: 50),
                                   hitTestBehavior: HitTestBehavior.translucent,
                                   data: {
@@ -597,9 +534,8 @@ class _SolitairePageState extends State<SolitairePage> {
                                   child: buildCard(card),
                                 ),
                               );
-                            } else {
+                            } else
                               cardWidget = buildCard(card);
-                            }
 
                             return Positioned(
                                 top: rowIndex * 20, left: 0, right: 0, child: cardWidget);
