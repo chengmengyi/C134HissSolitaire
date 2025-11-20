@@ -1,0 +1,3 @@
+enum HissPropType{
+  back,tips,
+}

@@ -3,6 +3,8 @@ import 'package:hiss_aaa/utils/hiss_storage.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_stateful.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_text_widget.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -37,4 +39,16 @@ class _HissMoneyWidgetState extends HissRootStatefulState<HissMoneyWidget>{
       HissImagesWidget(name: "icon_money", width: 28.w, height: 28.w),
     ],
   );
+
+  @override
+  bool canReceivedEventData() => true;
+
+  @override
+  handleEventBusData(HissEventData data) {
+    switch(data.eventCode){
+      case HissEventCode.aUpdateMoneyNum:
+        setState(() { });
+        break;
+    }
+  }
 }

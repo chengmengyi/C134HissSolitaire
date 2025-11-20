@@ -21,7 +21,12 @@ class HissHomePage extends HissRootPage<HissHomeController>{
         alignment: Alignment.topCenter,
         child: Container(
           margin: EdgeInsets.only(top: 156.h),
-          child: HissLevelWidget(),
+          child: HissClickWidget(
+            onTap: (){
+              controller.test();
+            },
+            child: HissLevelWidget(),
+          ),
         ),
       ),
       Align(

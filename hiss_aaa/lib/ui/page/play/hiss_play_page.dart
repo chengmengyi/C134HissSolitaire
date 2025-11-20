@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_aaa/ui/page/play/hiss_play_controller.dart';
+import 'package:hiss_aaa/ui/widget/hiss_super_prop_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_top_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_page.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
@@ -24,7 +25,8 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
           Spacer(),
           _bottomWidget(),
         ],
-      )
+      ),
+      HissSuperPropAnimatorWidget(),
     ],
   );
 
@@ -135,10 +137,6 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HissClickWidget(
-          child: HissImagesWidget(name: "play2", width: 100.w, height: 80.w),
-        ),
-        SizedBox(height: 24.h,),
         Row(
           children: [
             HissClickWidget(
