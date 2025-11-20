@@ -1,483 +1,5 @@
-// import 'dart:math';
-// import 'package:flutter/material.dart';
-//
-// // ---------------- 花色 ----------------
-// enum Suit { hearts, spades, clubs, diamonds }
-//
-// String suitName(Suit s) {
-//   switch (s) {
-//     case Suit.hearts:
-//       return "红桃";
-//     case Suit.spades:
-//       return "黑桃";
-//     case Suit.clubs:
-//       return "梅花";
-//     case Suit.diamonds:
-//       return "方块";
-//   }
-// }
-//
-// // 判断花色是否为红色
-// bool isRedSuit(Suit suit) {
-//   return suit == Suit.hearts || suit == Suit.diamonds;
-// }
-//
-// // ---------------- 牌模型 ----------------
-// class CardModel {
-//   final int value; // 1~13 代表 A ~ K
-//   final Suit suit;
-//   bool isFaceUp;
-//
-//   CardModel(this.value, this.suit, {this.isFaceUp = true});
-//
-//   @override
-//   String toString() {
-//     return 'CardModel {$suit $value faceUp=$isFaceUp}';
-//   }
-// }
-//
-// // ---------------- 游戏快照 ----------------
-// class _GameStateSnapshot {
-//   final List<List<CardModel>> cardList;
-//   final List<List<CardModel>> foundations;
-//   final List<CardModel> stockPile;
-//   final List<CardModel> wastePile;
-//
-//   _GameStateSnapshot({
-//     required this.cardList,
-//     required this.foundations,
-//     required this.stockPile,
-//     required this.wastePile,
-//   });
-//
-//   static List<List<CardModel>> cloneColumns(List<List<CardModel>> src) {
-//     return src
-//         .map((col) => col
-//         .map((c) => CardModel(c.value, c.suit, isFaceUp: c.isFaceUp))
-//         .toList())
-//         .toList();
-//   }
-//
-//   static List<CardModel> cloneList(List<CardModel> src) {
-//     return src
-//         .map((c) => CardModel(c.value, c.suit, isFaceUp: c.isFaceUp))
-//         .toList();
-//   }
-//
-//   factory _GameStateSnapshot.from(
-//       List<List<CardModel>> cardList,
-//       List<List<CardModel>> foundations,
-//       List<CardModel> stockPile,
-//       List<CardModel> wastePile,
-//       ) {
-//     return _GameStateSnapshot(
-//       cardList: cloneColumns(cardList),
-//       foundations: cloneColumns(foundations),
-//       stockPile: cloneList(stockPile),
-//       wastePile: cloneList(wastePile),
-//     );
-//   }
-// }
-//
-// // ---------------- 页面 ----------------
-// class SolitairePage extends StatefulWidget {
-//   const SolitairePage({super.key});
-//
-//   @override
-//   State<SolitairePage> createState() => _SolitairePageState();
-// }
-//
-// class _SolitairePageState extends State<SolitairePage>
-//     with TickerProviderStateMixin {
-//   List<List<CardModel>> cardList = [];
-//   List<List<CardModel>> foundations = [[], [], [], []];
-//   List<CardModel> stockPile = [];
-//   List<CardModel> wastePile = [];
-//
-//   bool _isDragging = false;
-//   int? _draggingFromCol;
-//   int? _draggingStartIndex;
-//   List<CardModel>? _draggingCards;
-//
-//   List<_GameStateSnapshot> _history = [];
-//
-//   // ---------------- 发牌动画 ----------------
-//   List<AnimationController> _dealControllers = [];
-//   List<Animation<Offset>> _dealAnimations = [];
-//   int _dealCardCount = 0;
-//   bool _isDealing = false;
-//
-//   // --- 关键修复：把正在发牌的 CardModel 映射到动画索引（0..27） ---
-//   final Map<CardModel, int> _dealIndex = {};
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _initDealAnimations();
-//     _initializeGameWithAnimation();
-//   }
-//
-//   // ---------------- 发牌动画初始化 ----------------
-//   void _initDealAnimations() {
-//     // 发牌总数：1+2+...+7 = 28 张
-//     const int totalDeal = 28;
-//     _dealControllers = List.generate(
-//       totalDeal,
-//           (_) => AnimationController(
-//         vsync: this,
-//         duration: Duration(milliseconds: 250),
-//       ),
-//     );
-//
-//     _dealAnimations = _dealControllers
-//         .map((c) => Tween<Offset>(
-//       begin: Offset(0, -2.5), // 从上方向下飞
-//       end: Offset(0, 0),
-//     ).animate(
-//       CurvedAnimation(parent: c, curve: Curves.easeOut),
-//     ))
-//         .toList();
-//   }
-//
-//   // ---------------- 动画发牌 ----------------
-//   void _initializeGameWithAnimation() async {
-//     List<CardModel> fullDeck = [];
-//     for (var suit in Suit.values) {
-//       for (int v = 1; v <= 13; v++) {
-//         fullDeck.add(CardModel(v, suit, isFaceUp: false));
-//       }
-//     }
-//
-//     fullDeck.shuffle();
-//
-//     stockPile = List.from(fullDeck);
-//     cardList = List.generate(7, (_) => []);
-//
-//     int aniIndex = 0;
-//     _isDealing = true;
-//     _dealIndex.clear();
-//
-//     for (int col = 0; col < 7; col++) {
-//       for (int row = 0; row <= col; row++) {
-//         final card = stockPile.removeLast();
-//
-//         // 先把牌放到对应列（占位）
-//         cardList[col].add(card);
-//
-//         // 给这张牌分配顺序动画索引（严格从 0 到 27）
-//         _dealIndex[card] = aniIndex;
-//
-//         // 等一小会儿，让视觉上有间隔（越短越快）
-//         await Future.delayed(Duration(milliseconds: 120));
-//
-//         // 播放对应动画
-//         if (aniIndex < _dealControllers.length) {
-//           _dealControllers[aniIndex].forward();
-//         }
-//
-//         aniIndex++;
-//
-//         // 最后一张翻面
-//         if (row == col) card.isFaceUp = true;
-//
-//         setState(() {
-//           _dealCardCount = aniIndex;
-//         });
-//       }
-//     }
-//
-//     // 发牌结束：保持状态但不再使用 _dealIndex 里的值（可以保留或清空）
-//     _isDealing = false;
-//     // 可选：清空 _dealIndex 以节省内存（这里清空）
-//     _dealIndex.clear();
-//     setState(() {});
-//   }
-//
-//   // ---------------- Undo ----------------
-//   void _saveSnapshot() {
-//     _history.add(_GameStateSnapshot.from(
-//         cardList, foundations, stockPile, wastePile));
-//   }
-//
-//   void _undoStep() {
-//     if (_history.isEmpty) return;
-//     final last = _history.removeLast();
-//
-//     setState(() {
-//       cardList = _GameStateSnapshot.cloneColumns(last.cardList);
-//       foundations = _GameStateSnapshot.cloneColumns(last.foundations);
-//       stockPile = _GameStateSnapshot.cloneList(last.stockPile);
-//       wastePile = _GameStateSnapshot.cloneList(last.wastePile);
-//
-//       _isDragging = false;
-//       _draggingFromCol = null;
-//       _draggingStartIndex = null;
-//       _draggingCards = null;
-//     });
-//   }
-//
-//   // ---------------- 移动规则 ----------------
-//   bool canMoveToFoundation(CardModel card, List<CardModel> foundation) {
-//     if (foundation.isEmpty) return card.value == 1;
-//     final last = foundation.last;
-//     return last.suit == card.suit && last.value == card.value - 1;
-//   }
-//
-//   bool canMoveToColumn(CardModel card, List<CardModel> targetColumn) {
-//     if (targetColumn.isEmpty) return true;
-//     final targetCard = targetColumn.last;
-//     if (targetCard.value != card.value + 1) return false;
-//     return isRedSuit(targetCard.suit) != isRedSuit(card.suit);
-//   }
-//
-//   // ---------------- stock/waste ----------------
-//   void flipCardFromStock() {
-//     if (_isDealing) return;
-//     if (stockPile.isEmpty && wastePile.isEmpty) return;
-//
-//     _saveSnapshot();
-//
-//     setState(() {
-//       if (stockPile.isEmpty) {
-//         stockPile = wastePile.reversed
-//             .map((c) => CardModel(c.value, c.suit, isFaceUp: false))
-//             .toList();
-//         wastePile.clear();
-//       } else {
-//         final card = stockPile.removeLast();
-//         card.isFaceUp = true;
-//         wastePile.add(card);
-//
-//         if (wastePile.length > 3) {
-//           final firstCard = wastePile.removeAt(0);
-//           firstCard.isFaceUp = false;
-//           stockPile.insert(0, firstCard);
-//         }
-//       }
-//     });
-//   }
-//
-//   // ---------------- 牌构建 + 动画 ----------------
-//   Widget buildCard(CardModel card,
-//       {bool isDragging = false, int? aniIndex}) {
-//     Widget base = Container(
-//       width: 50,
-//       height: 90,
-//       decoration: BoxDecoration(
-//         borderRadius: BorderRadius.circular(8),
-//         color: card.isFaceUp
-//             ? (isRedSuit(card.suit) ? Colors.red : Colors.black)
-//             : Colors.blue,
-//         border: Border.all(width: 1, color: Colors.white),
-//       ),
-//       alignment: Alignment.center,
-//       child: card.isFaceUp
-//           ? Text("${suitName(card.suit)} ${card.value}",
-//           style: TextStyle(color: Colors.white, fontSize: 16))
-//           : SizedBox.shrink(),
-//     );
-//
-//     // 只有当正在发牌且该牌被分配了动画索引时，才使用 SlideTransition
-//     if (_isDealing && aniIndex != null && aniIndex >= 0 && aniIndex < _dealAnimations.length) {
-//       return SlideTransition(
-//         position: _dealAnimations[aniIndex],
-//         child: base,
-//       );
-//     }
-//
-//     return base;
-//   }
-//
-//   Widget _buildDragFeedback(List<CardModel> cards) {
-//     return Transform.scale(
-//       scale: 1.05,
-//       child: Material(
-//         color: Colors.transparent,
-//         child: SizedBox(
-//           width: 50,
-//           height: 90 + 20 * (cards.length - 1),
-//           child: Stack(
-//             children: List.generate(cards.length, (i) {
-//               return Positioned(
-//                 top: i * 20,
-//                 child: buildCard(cards[i], isDragging: true),
-//               );
-//             }),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   bool _isCardBeingDragged(int colIndex, int rowIndex) {
-//     return _isDragging &&
-//         _draggingFromCol == colIndex &&
-//         _draggingStartIndex != null &&
-//         rowIndex >= _draggingStartIndex!;
-//   }
-//
-//   // ---------------- UI ----------------
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.green.shade800,
-//       appBar: AppBar(
-//         title: Text("接龙示例（发牌动画 + 撤销）"),
-//         actions: [
-//           IconButton(icon: Icon(Icons.undo), onPressed: _undoStep),
-//         ],
-//       ),
-//       body: Column(
-//         children: [
-//           // ---------------- Stock + Waste + Foundation ----------------
-//           Container(
-//             height: 120,
-//             child: Row(
-//               children: [
-//                 GestureDetector(
-//                   onTap: flipCardFromStock,
-//                   child: Container(
-//                     width: 60,
-//                     height: 90,
-//                     margin: EdgeInsets.all(6),
-//                     decoration: BoxDecoration(
-//                       borderRadius: BorderRadius.circular(8),
-//                       color: Colors.blue,
-//                       border: Border.all(width: 1, color: Colors.white),
-//                     ),
-//                     alignment: Alignment.center,
-//                     child: stockPile.isNotEmpty
-//                         ? Text("抽牌",
-//                         style: TextStyle(color: Colors.white))
-//                         : SizedBox.shrink(),
-//                   ),
-//                 ),
-//
-//                 // waste pile (简化展示)
-//                 Stack(
-//                   children: List.generate(wastePile.length, (index) {
-//                     return Container(
-//                       margin: EdgeInsets.only(left: index * 20),
-//                       child: buildCard(wastePile[index]),
-//                     );
-//                   }),
-//                 ),
-//
-//                 // Foundation
-//                 Expanded(
-//                   child: Row(
-//                     children: List.generate(4, (fIndex) {
-//                       return Expanded(
-//                         child: Container(
-//                           height: 100,
-//                           margin: EdgeInsets.all(6),
-//                           decoration: BoxDecoration(
-//                             border:
-//                             Border.all(color: Colors.white, width: 2),
-//                           ),
-//                           alignment: Alignment.center,
-//                           child: foundations[fIndex].isEmpty
-//                               ? Text("Foundation",
-//                               style: TextStyle(color: Colors.white))
-//                               : buildCard(foundations[fIndex].last),
-//                         ),
-//                       );
-//                     }),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//
-//           // ---------------- 7 列 ----------------
-//           Expanded(
-//             child: Row(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: List.generate(cardList.length, (colIndex) {
-//                 final list = cardList[colIndex];
-//
-//                 return Expanded(
-//                   child: Container(
-//                     decoration: BoxDecoration(
-//                       border: Border.all(
-//                           color: Colors.white.withOpacity(0.3)),
-//                     ),
-//                     child: Stack(
-//                       children: List.generate(list.length, (rowIndex) {
-//                         final card = list[rowIndex];
-//
-//                         // 从 map 中读取发牌索引（若发牌中有此牌）
-//                         final int? assignedAniIndex =
-//                         _isDealing ? _dealIndex[card] : null;
-//
-//                         return Positioned(
-//                           top: rowIndex * 20,
-//                           left: 0,
-//                           right: 0,
-//                           child: card.isFaceUp
-//                               ? GestureDetector(
-//                             onTap: () {
-//                               // 你原来的自动移动逻辑如需放这里可以调用
-//                             },
-//                             child: LongPressDraggable<Map<String, dynamic>>(
-//                               delay: Duration(milliseconds: 0),
-//                               hitTestBehavior:
-//                               HitTestBehavior.translucent,
-//                               data: {
-//                                 "fromCol": colIndex,
-//                                 "startIndex": rowIndex,
-//                                 "cards": list.sublist(rowIndex),
-//                                 "fromWaste": false
-//                               },
-//                               onDragStarted: () {
-//                                 setState(() {
-//                                   _isDragging = true;
-//                                   _draggingFromCol = colIndex;
-//                                   _draggingStartIndex = rowIndex;
-//                                   _draggingCards = list.sublist(rowIndex);
-//                                 });
-//                               },
-//                               onDragCompleted: () {
-//                                 setState(() {
-//                                   _isDragging = false;
-//                                   _draggingFromCol = null;
-//                                   _draggingStartIndex = null;
-//                                   _draggingCards = null;
-//                                 });
-//                               },
-//                               onDraggableCanceled: (velocity, offset) {
-//                                 setState(() {
-//                                   _isDragging = false;
-//                                   _draggingFromCol = null;
-//                                   _draggingStartIndex = null;
-//                                   _draggingCards = null;
-//                                 });
-//                               },
-//                               feedback:
-//                               _buildDragFeedback(list.sublist(rowIndex)),
-//                               childWhenDragging:
-//                               Opacity(opacity: 0.5, child: buildCard(card)),
-//                               child: buildCard(card, aniIndex: assignedAniIndex),
-//                             ),
-//                           )
-//                               : buildCard(card, aniIndex: assignedAniIndex),
-//                         );
-//                       }),
-//                     ),
-//                   ),
-//                 );
-//               }),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-
-import 'dart:math';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 // ---------------- 花色 ----------------
 enum Suit { hearts, spades, clubs, diamonds }
@@ -584,6 +106,11 @@ class _SolitairePageState extends State<SolitairePage> {
   // 撤销栈
   List<_GameStateSnapshot> _history = [];
 
+  // 发牌动画相关
+  bool _isDealing = false;
+  int _currentDealStep = 0;
+  List<CardModel> _remainingDealCards = [];
+
   @override
   void initState() {
     super.initState();
@@ -600,22 +127,71 @@ class _SolitairePageState extends State<SolitairePage> {
 
     fullDeck.shuffle();
 
-    int index = 0;
+    // 初始化7列空列表
     for (var i = 0; i < 7; i++) {
-      List<CardModel> col = [];
-      for (var j = 0; j <= i; j++) {
-        col.add(fullDeck[index++]);
-      }
-      col.last.isFaceUp = true;
-      cardList.add(col);
+      cardList.add([]);
     }
 
-    stockPile = fullDeck.sublist(index);
+    // 设置发牌堆
+    stockPile = fullDeck;
+
+    // 开始发牌动画
+    _startDealAnimation();
+  }
+
+  void _startDealAnimation() {
+    setState(() {
+      _isDealing = true;
+      _currentDealStep = 0;
+      _remainingDealCards = List.from(stockPile);
+      stockPile.clear();
+    });
+
+    // 开始逐张发牌
+    _dealNextCard();
+  }
+
+  void _dealNextCard() {
+    if (_currentDealStep >= 28) { // 总共28张牌
+      _finishDeal();
+      return;
+    }
+
+    // 计算当前应该发到哪一列
+    int targetColumn = _currentDealStep % 7;
+    int cardsInColumn = (_currentDealStep ~/ 7) + 1;
+
+    // 检查这一列是否还需要发牌
+    if (cardList[targetColumn].length < cardsInColumn && _remainingDealCards.isNotEmpty) {
+      final card = _remainingDealCards.removeLast();
+      // 只有每列的最后一张牌是正面朝上的
+      card.isFaceUp = (cardList[targetColumn].length == cardsInColumn - 1);
+
+      setState(() {
+        cardList[targetColumn].add(card);
+        _currentDealStep++;
+      });
+
+      // 延迟发下一张牌
+      Timer(Duration(milliseconds: 150), _dealNextCard);
+    } else {
+      _currentDealStep++;
+      _dealNextCard();
+    }
+  }
+
+  void _finishDeal() {
+    setState(() {
+      _isDealing = false;
+      _remainingDealCards.clear();
+    });
   }
 
   /// ---------------- Undo ----------------
   void _saveSnapshot() {
-    _history.add(_GameStateSnapshot.from(cardList, foundations, stockPile, wastePile));
+    if (_isDealing) return;
+    _history.add(_GameStateSnapshot.from(
+        cardList, foundations, stockPile, wastePile));
   }
 
   void _undoStep() {
@@ -660,7 +236,8 @@ class _SolitairePageState extends State<SolitairePage> {
         setState(() {
           foundations[f].add(card);
           cardList[colIndex].removeLast();
-          if (cardList[colIndex].isNotEmpty) cardList[colIndex].last.isFaceUp = true;
+          if (cardList[colIndex].isNotEmpty)
+            cardList[colIndex].last.isFaceUp = true;
         });
         return;
       }
@@ -673,7 +250,10 @@ class _SolitairePageState extends State<SolitairePage> {
     _saveSnapshot();
     setState(() {
       if (stockPile.isEmpty) {
-        stockPile = wastePile.reversed.map((c) => CardModel(c.value, c.suit, isFaceUp: false)).toList();
+        stockPile = wastePile
+            .reversed
+            .map((c) => CardModel(c.value, c.suit, isFaceUp: false))
+            .toList();
         wastePile.clear();
       } else {
         final card = stockPile.removeLast();
@@ -727,15 +307,30 @@ class _SolitairePageState extends State<SolitairePage> {
       height: 90,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: card.isFaceUp ? (isRedSuit(card.suit) ? Colors.red : Colors.black) : Colors.blue,
+        color: card.isFaceUp
+            ? (isRedSuit(card.suit) ? Colors.red : Colors.black)
+            : Colors.blue,
         border: Border.all(width: 1, color: Colors.white),
         boxShadow: isDragging
-            ? [BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 8, spreadRadius: 2, offset: Offset(0, 4))]
-            : [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 2, spreadRadius: 1, offset: Offset(0, 1))],
+            ? [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 8,
+              spreadRadius: 2,
+              offset: Offset(0, 4))
+        ]
+            : [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 2,
+              spreadRadius: 1,
+              offset: Offset(0, 1))
+        ],
       ),
       alignment: Alignment.center,
       child: card.isFaceUp
-          ? Text("${suitName(card.suit)} ${card.value}", style: TextStyle(color: Colors.white, fontSize: 16))
+          ? Text("${suitName(card.suit)} ${card.value}",
+          style: TextStyle(color: Colors.white, fontSize: 16))
           : SizedBox.shrink(),
     );
   }
@@ -762,16 +357,20 @@ class _SolitairePageState extends State<SolitairePage> {
   }
 
   bool _isCardBeingDragged(int colIndex, int rowIndex) {
-    return _isDragging && _draggingFromCol == colIndex && _draggingStartIndex != null && rowIndex >= _draggingStartIndex!;
+    return _isDragging &&
+        _draggingFromCol == colIndex &&
+        _draggingStartIndex != null &&
+        rowIndex >= _draggingStartIndex!;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("接龙示例（带撤销）"),
+        title: Text(_isDealing ? "发牌中... ($_currentDealStep/28)" : "接龙示例（带撤销）"),
         actions: [
-          IconButton(icon: Icon(Icons.undo), onPressed: _undoStep),
+          if (!_isDealing)
+            IconButton(icon: Icon(Icons.undo), onPressed: _undoStep),
         ],
       ),
       body: Column(
@@ -780,19 +379,54 @@ class _SolitairePageState extends State<SolitairePage> {
             height: 120,
             child: Row(
               children: [
-                GestureDetector(
-                  onTap: flipCardFromStock,
-                  child: Container(
-                    width: 60,
-                    height: 90,
-                    margin: EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.blue,
-                      border: Border.all(width: 1, color: Colors.white),
-                    ),
-                    alignment: Alignment.center,
-                    child: stockPile.isNotEmpty ? Text("抽牌", style: TextStyle(color: Colors.white)) : SizedBox.shrink(),
+                Expanded(
+                  child: Row(
+                    children: List.generate(4, (fIndex) {
+                      return Expanded(
+                        child: DragTarget<Map<String, dynamic>>(
+                          onWillAccept: (data) {
+                            if (_isDealing) return false;
+                            List<CardModel> moving = data!['cards'];
+                            if (moving.length != 1) return false;
+                            return canMoveToFoundation(moving.first, foundations[fIndex]);
+                          },
+                          onAccept: (data) {
+                            _saveSnapshot();
+                            setState(() {
+                              CardModel card = data['cards'][0];
+                              if (data['fromWaste'] == true)
+                                wastePile.remove(card);
+                              else {
+                                int fromCol = data['fromCol'];
+                                int startIndex = data['startIndex'];
+                                cardList[fromCol].removeRange(
+                                    startIndex, cardList[fromCol].length);
+                                if (cardList[fromCol].isNotEmpty)
+                                  cardList[fromCol].last.isFaceUp = true;
+                              }
+                              foundations[fIndex].add(card);
+                              _isDragging = false;
+                              _draggingFromCol = null;
+                              _draggingStartIndex = null;
+                              _draggingCards = null;
+                            });
+                          },
+                          builder: (context, candidateData, rejectedData) {
+                            return Container(
+                              height: 100,
+                              margin: EdgeInsets.all(6),
+                              decoration:
+                              BoxDecoration(border: Border.all(color: Colors.white, width: 2)),
+                              alignment: Alignment.center,
+                              child: foundations[fIndex].isEmpty
+                                  ? Text("Foundation ${fIndex + 1}",
+                                  style: TextStyle(color: Colors.white))
+                                  : buildCard(foundations[fIndex].last),
+                            );
+                          },
+                        ),
+                      );
+                    }),
                   ),
                 ),
                 Stack(
@@ -800,8 +434,10 @@ class _SolitairePageState extends State<SolitairePage> {
                     return Container(
                       margin: EdgeInsets.only(left: index * 20),
                       child: GestureDetector(
-                        onTap: tryMoveWasteToFoundation,
-                        child: Draggable<Map<String, dynamic>>(
+                        onTap: _isDealing ? null : tryMoveWasteToFoundation,
+                        child: _isDealing
+                            ? buildCard(wastePile[index])
+                            : Draggable<Map<String, dynamic>>(
                           data: {"fromWaste": true, "cards": [wastePile[index]]},
                           onDragStarted: () {
                             setState(() {
@@ -826,55 +462,33 @@ class _SolitairePageState extends State<SolitairePage> {
                             });
                           },
                           feedback: _buildDragFeedback([wastePile[index]]),
-                          childWhenDragging: Opacity(opacity: 0.5, child: buildCard(wastePile[index])),
+                          childWhenDragging:
+                          Opacity(opacity: 0.5, child: buildCard(wastePile[index])),
                           child: buildCard(wastePile[index]),
                         ),
                       ),
                     );
                   }),
                 ),
-                Expanded(
-                  child: Row(
-                    children: List.generate(4, (fIndex) {
-                      return Expanded(
-                        child: DragTarget<Map<String, dynamic>>(
-                          onWillAccept: (data) {
-                            List<CardModel> moving = data!['cards'];
-                            if (moving.length != 1) return false;
-                            return canMoveToFoundation(moving.first, foundations[fIndex]);
-                          },
-                          onAccept: (data) {
-                            _saveSnapshot();
-                            setState(() {
-                              CardModel card = data['cards'][0];
-                              if (data['fromWaste'] == true) wastePile.remove(card);
-                              else {
-                                int fromCol = data['fromCol'];
-                                int startIndex = data['startIndex'];
-                                cardList[fromCol].removeRange(startIndex, cardList[fromCol].length);
-                                if (cardList[fromCol].isNotEmpty) cardList[fromCol].last.isFaceUp = true;
-                              }
-                              foundations[fIndex].add(card);
-                              _isDragging = false;
-                              _draggingFromCol = null;
-                              _draggingStartIndex = null;
-                              _draggingCards = null;
-                            });
-                          },
-                          builder: (context, candidateData, rejectedData) {
-                            return Container(
-                              height: 100,
-                              margin: EdgeInsets.all(6),
-                              decoration: BoxDecoration(border: Border.all(color: Colors.white, width: 2)),
-                              alignment: Alignment.center,
-                              child: foundations[fIndex].isEmpty
-                                  ? Text("Foundation ${fIndex + 1}", style: TextStyle(color: Colors.white))
-                                  : buildCard(foundations[fIndex].last),
-                            );
-                          },
-                        ),
-                      );
-                    }),
+                GestureDetector(
+                  onTap: _isDealing ? null : flipCardFromStock,
+                  child: Container(
+                    width: 60,
+                    height: 90,
+                    margin: EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: _isDealing ? Colors.grey : Colors.blue,
+                      border: Border.all(width: 1, color: Colors.white),
+                    ),
+                    alignment: Alignment.center,
+                    child: _isDealing
+                        ? CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+                        : stockPile.isNotEmpty
+                        ? Text("抽牌", style: TextStyle(color: Colors.white))
+                        : SizedBox.shrink(),
                   ),
                 ),
               ],
@@ -887,6 +501,7 @@ class _SolitairePageState extends State<SolitairePage> {
                 return Expanded(
                   child: DragTarget<Map<String, dynamic>>(
                     onWillAccept: (data) {
+                      if (_isDealing) return false;
                       List<CardModel> movingCards = data!['cards'];
                       if (movingCards.isEmpty) return false;
                       return canMoveToColumn(movingCards.first, cardList[colIndex]);
@@ -895,12 +510,15 @@ class _SolitairePageState extends State<SolitairePage> {
                       _saveSnapshot();
                       setState(() {
                         List<CardModel> movingCards = data['cards'];
-                        if (data['fromWaste'] == true) wastePile.remove(movingCards.first);
+                        if (data['fromWaste'] == true)
+                          wastePile.remove(movingCards.first);
                         else {
                           int fromCol = data['fromCol'];
                           int startIndex = data['startIndex'];
-                          cardList[fromCol].removeRange(startIndex, cardList[fromCol].length);
-                          if (cardList[fromCol].isNotEmpty) cardList[fromCol].last.isFaceUp = true;
+                          cardList[fromCol]
+                              .removeRange(startIndex, cardList[fromCol].length);
+                          if (cardList[fromCol].isNotEmpty)
+                            cardList[fromCol].last.isFaceUp = true;
                         }
                         cardList[colIndex].addAll(movingCards);
                         _isDragging = false;
@@ -911,23 +529,44 @@ class _SolitairePageState extends State<SolitairePage> {
                     },
                     builder: (context, candidateData, rejectedData) {
                       final list = cardList[colIndex];
-                      Color backgroundColor = candidateData.isNotEmpty ? Colors.green.withOpacity(0.3) : Colors.transparent;
+                      Color backgroundColor = candidateData.isNotEmpty
+                          ? Colors.green.withOpacity(0.3)
+                          : Colors.transparent;
                       return Container(
                         height: double.infinity,
-                        decoration: BoxDecoration(color: backgroundColor, border: Border.all(color: Colors.grey.withOpacity(0.5), width: 1)),
+                        decoration: BoxDecoration(
+                            color: backgroundColor,
+                            border: Border.all(
+                                color: Colors.grey.withOpacity(0.5), width: 1)),
                         child: Stack(
                           children: List.generate(list.length, (rowIndex) {
                             final card = list[rowIndex];
-                            if (_isCardBeingDragged(colIndex, rowIndex)) return Positioned(top: rowIndex * 20, left: 0, right: 0, child: SizedBox(width: 60, height: 90));
+                            if (_isCardBeingDragged(colIndex, rowIndex))
+                              return Positioned(
+                                  top: rowIndex * 20,
+                                  left: 0,
+                                  right: 0,
+                                  child: SizedBox(width: 60, height: 90));
 
                             Widget cardWidget;
                             if (card.isFaceUp) {
                               cardWidget = GestureDetector(
-                                onTap: () => tryAutoMoveToFoundation(colIndex, rowIndex),
-                                child: LongPressDraggable<Map<String, dynamic>>(
-                                  delay: Duration(milliseconds: 0),
+                                behavior: HitTestBehavior.translucent,
+                                onTap: _isDealing ? null : () {
+                                  if (rowIndex == list.length - 1)
+                                    tryAutoMoveToFoundation(colIndex, rowIndex);
+                                },
+                                child: _isDealing
+                                    ? buildCard(card)
+                                    : LongPressDraggable<Map<String, dynamic>>(
+                                  delay: Duration(milliseconds: 50),
                                   hitTestBehavior: HitTestBehavior.translucent,
-                                  data: {"fromCol": colIndex, "startIndex": rowIndex, "cards": list.sublist(rowIndex), "fromWaste": false},
+                                  data: {
+                                    "fromCol": colIndex,
+                                    "startIndex": rowIndex,
+                                    "cards": list.sublist(rowIndex),
+                                    "fromWaste": false
+                                  },
                                   onDragStarted: () {
                                     setState(() {
                                       _isDragging = true;
@@ -953,13 +592,17 @@ class _SolitairePageState extends State<SolitairePage> {
                                     });
                                   },
                                   feedback: _buildDragFeedback(list.sublist(rowIndex)),
-                                  childWhenDragging: Opacity(opacity: 0.5, child: buildCard(card)),
+                                  childWhenDragging:
+                                  Opacity(opacity: 0.5, child: buildCard(card)),
                                   child: buildCard(card),
                                 ),
                               );
-                            } else cardWidget = buildCard(card);
+                            } else {
+                              cardWidget = buildCard(card);
+                            }
 
-                            return Positioned(top: rowIndex * 20, left: 0, right: 0, child: cardWidget);
+                            return Positioned(
+                                top: rowIndex * 20, left: 0, right: 0, child: cardWidget);
                           }),
                         ),
                       );

@@ -36,6 +36,21 @@ class HissHomePage extends HissRootPage<HissHomeController>{
           ),
         ),
       ),
+      Positioned(
+        top: 118.h,
+        right: 10.w,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            HissClickWidget(
+              onTap: (){
+                controller.clickRank();
+              },
+              child: HissImagesWidget(name: "home5", width: 64.w, height: 64.w,),
+            ),
+          ],
+        ),
+      )
     ],
   );
 }

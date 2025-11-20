@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 
 // ---------------- 花色 ----------------
@@ -137,7 +136,8 @@ class _SolitairePageState extends State<SolitairePage> {
 
   /// ---------------- Undo ----------------
   void _saveSnapshot() {
-    _history.add(_GameStateSnapshot.from(cardList, foundations, stockPile, wastePile));
+    _history.add(_GameStateSnapshot.from(
+        cardList, foundations, stockPile, wastePile));
   }
 
   void _undoStep() {
@@ -182,7 +182,8 @@ class _SolitairePageState extends State<SolitairePage> {
         setState(() {
           foundations[f].add(card);
           cardList[colIndex].removeLast();
-          if (cardList[colIndex].isNotEmpty) cardList[colIndex].last.isFaceUp = true;
+          if (cardList[colIndex].isNotEmpty)
+            cardList[colIndex].last.isFaceUp = true;
         });
         return;
       }
@@ -195,7 +196,10 @@ class _SolitairePageState extends State<SolitairePage> {
     _saveSnapshot();
     setState(() {
       if (stockPile.isEmpty) {
-        stockPile = wastePile.reversed.map((c) => CardModel(c.value, c.suit, isFaceUp: false)).toList();
+        stockPile = wastePile
+            .reversed
+            .map((c) => CardModel(c.value, c.suit, isFaceUp: false))
+            .toList();
         wastePile.clear();
       } else {
         final card = stockPile.removeLast();
@@ -249,15 +253,30 @@ class _SolitairePageState extends State<SolitairePage> {
       height: 90,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: card.isFaceUp ? (isRedSuit(card.suit) ? Colors.red : Colors.black) : Colors.blue,
+        color: card.isFaceUp
+            ? (isRedSuit(card.suit) ? Colors.red : Colors.black)
+            : Colors.blue,
         border: Border.all(width: 1, color: Colors.white),
         boxShadow: isDragging
-            ? [BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 8, spreadRadius: 2, offset: Offset(0, 4))]
-            : [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 2, spreadRadius: 1, offset: Offset(0, 1))],
+            ? [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 8,
+              spreadRadius: 2,
+              offset: Offset(0, 4))
+        ]
+            : [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 2,
+              spreadRadius: 1,
+              offset: Offset(0, 1))
+        ],
       ),
       alignment: Alignment.center,
       child: card.isFaceUp
-          ? Text("${suitName(card.suit)} ${card.value}", style: TextStyle(color: Colors.white, fontSize: 16))
+          ? Text("${suitName(card.suit)} ${card.value}",
+          style: TextStyle(color: Colors.white, fontSize: 16))
           : SizedBox.shrink(),
     );
   }
@@ -284,7 +303,10 @@ class _SolitairePageState extends State<SolitairePage> {
   }
 
   bool _isCardBeingDragged(int colIndex, int rowIndex) {
-    return _isDragging && _draggingFromCol == colIndex && _draggingStartIndex != null && rowIndex >= _draggingStartIndex!;
+    return _isDragging &&
+        _draggingFromCol == colIndex &&
+        _draggingStartIndex != null &&
+        rowIndex >= _draggingStartIndex!;
   }
 
   @override
@@ -314,7 +336,9 @@ class _SolitairePageState extends State<SolitairePage> {
                       border: Border.all(width: 1, color: Colors.white),
                     ),
                     alignment: Alignment.center,
-                    child: stockPile.isNotEmpty ? Text("抽牌", style: TextStyle(color: Colors.white)) : SizedBox.shrink(),
+                    child: stockPile.isNotEmpty
+                        ? Text("抽牌", style: TextStyle(color: Colors.white))
+                        : SizedBox.shrink(),
                   ),
                 ),
                 Stack(
@@ -348,7 +372,8 @@ class _SolitairePageState extends State<SolitairePage> {
                             });
                           },
                           feedback: _buildDragFeedback([wastePile[index]]),
-                          childWhenDragging: Opacity(opacity: 0.5, child: buildCard(wastePile[index])),
+                          childWhenDragging:
+                          Opacity(opacity: 0.5, child: buildCard(wastePile[index])),
                           child: buildCard(wastePile[index]),
                         ),
                       ),
@@ -369,12 +394,15 @@ class _SolitairePageState extends State<SolitairePage> {
                             _saveSnapshot();
                             setState(() {
                               CardModel card = data['cards'][0];
-                              if (data['fromWaste'] == true) wastePile.remove(card);
+                              if (data['fromWaste'] == true)
+                                wastePile.remove(card);
                               else {
                                 int fromCol = data['fromCol'];
                                 int startIndex = data['startIndex'];
-                                cardList[fromCol].removeRange(startIndex, cardList[fromCol].length);
-                                if (cardList[fromCol].isNotEmpty) cardList[fromCol].last.isFaceUp = true;
+                                cardList[fromCol].removeRange(
+                                    startIndex, cardList[fromCol].length);
+                                if (cardList[fromCol].isNotEmpty)
+                                  cardList[fromCol].last.isFaceUp = true;
                               }
                               foundations[fIndex].add(card);
                               _isDragging = false;
@@ -387,10 +415,12 @@ class _SolitairePageState extends State<SolitairePage> {
                             return Container(
                               height: 100,
                               margin: EdgeInsets.all(6),
-                              decoration: BoxDecoration(border: Border.all(color: Colors.white, width: 2)),
+                              decoration:
+                              BoxDecoration(border: Border.all(color: Colors.white, width: 2)),
                               alignment: Alignment.center,
                               child: foundations[fIndex].isEmpty
-                                  ? Text("Foundation ${fIndex + 1}", style: TextStyle(color: Colors.white))
+                                  ? Text("Foundation ${fIndex + 1}",
+                                  style: TextStyle(color: Colors.white))
                                   : buildCard(foundations[fIndex].last),
                             );
                           },
@@ -417,12 +447,15 @@ class _SolitairePageState extends State<SolitairePage> {
                       _saveSnapshot();
                       setState(() {
                         List<CardModel> movingCards = data['cards'];
-                        if (data['fromWaste'] == true) wastePile.remove(movingCards.first);
+                        if (data['fromWaste'] == true)
+                          wastePile.remove(movingCards.first);
                         else {
                           int fromCol = data['fromCol'];
                           int startIndex = data['startIndex'];
-                          cardList[fromCol].removeRange(startIndex, cardList[fromCol].length);
-                          if (cardList[fromCol].isNotEmpty) cardList[fromCol].last.isFaceUp = true;
+                          cardList[fromCol]
+                              .removeRange(startIndex, cardList[fromCol].length);
+                          if (cardList[fromCol].isNotEmpty)
+                            cardList[fromCol].last.isFaceUp = true;
                         }
                         cardList[colIndex].addAll(movingCards);
                         _isDragging = false;
@@ -433,23 +466,44 @@ class _SolitairePageState extends State<SolitairePage> {
                     },
                     builder: (context, candidateData, rejectedData) {
                       final list = cardList[colIndex];
-                      Color backgroundColor = candidateData.isNotEmpty ? Colors.green.withOpacity(0.3) : Colors.transparent;
+                      Color backgroundColor = candidateData.isNotEmpty
+                          ? Colors.green.withOpacity(0.3)
+                          : Colors.transparent;
                       return Container(
                         height: double.infinity,
-                        decoration: BoxDecoration(color: backgroundColor, border: Border.all(color: Colors.grey.withOpacity(0.5), width: 1)),
+                        decoration: BoxDecoration(
+                            color: backgroundColor,
+                            border: Border.all(
+                                color: Colors.grey.withOpacity(0.5), width: 1)),
                         child: Stack(
                           children: List.generate(list.length, (rowIndex) {
                             final card = list[rowIndex];
-                            if (_isCardBeingDragged(colIndex, rowIndex)) return Positioned(top: rowIndex * 20, left: 0, right: 0, child: SizedBox(width: 60, height: 90));
+                            if (_isCardBeingDragged(colIndex, rowIndex))
+                              return Positioned(
+                                  top: rowIndex * 20,
+                                  left: 0,
+                                  right: 0,
+                                  child: SizedBox(width: 60, height: 90));
 
                             Widget cardWidget;
                             if (card.isFaceUp) {
+                              // ---------------- 点击 + 拖拽 ----------------
                               cardWidget = GestureDetector(
-                                onTap: () => tryAutoMoveToFoundation(colIndex, rowIndex),
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  // 仅列顶部牌可自动上 Foundation
+                                  if (rowIndex == list.length - 1)
+                                    tryAutoMoveToFoundation(colIndex, rowIndex);
+                                },
                                 child: LongPressDraggable<Map<String, dynamic>>(
-                                  delay: Duration(milliseconds: 0),
+                                  delay: Duration(milliseconds: 50),
                                   hitTestBehavior: HitTestBehavior.translucent,
-                                  data: {"fromCol": colIndex, "startIndex": rowIndex, "cards": list.sublist(rowIndex), "fromWaste": false},
+                                  data: {
+                                    "fromCol": colIndex,
+                                    "startIndex": rowIndex,
+                                    "cards": list.sublist(rowIndex),
+                                    "fromWaste": false
+                                  },
                                   onDragStarted: () {
                                     setState(() {
                                       _isDragging = true;
@@ -475,13 +529,16 @@ class _SolitairePageState extends State<SolitairePage> {
                                     });
                                   },
                                   feedback: _buildDragFeedback(list.sublist(rowIndex)),
-                                  childWhenDragging: Opacity(opacity: 0.5, child: buildCard(card)),
+                                  childWhenDragging:
+                                  Opacity(opacity: 0.5, child: buildCard(card)),
                                   child: buildCard(card),
                                 ),
                               );
-                            } else cardWidget = buildCard(card);
+                            } else
+                              cardWidget = buildCard(card);
 
-                            return Positioned(top: rowIndex * 20, left: 0, right: 0, child: cardWidget);
+                            return Positioned(
+                                top: rowIndex * 20, left: 0, right: 0, child: cardWidget);
                           }),
                         ),
                       );
