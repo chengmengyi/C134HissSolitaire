@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hiss_aaa/bean/hiss_card_bean.dart';
 import 'package:hiss_aaa/ui/page/play/hiss_play_controller.dart';
+import 'package:hiss_aaa/ui/widget/hiss_card_item_widget.dart';
+import 'package:hiss_aaa/ui/widget/hiss_deal_card_animator_widget.dart';
+import 'package:hiss_aaa/ui/widget/hiss_move_to_foundation_animator_widget.dart';
+import 'package:hiss_aaa/ui/widget/hiss_move_to_waste_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_super_prop_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_top_widget.dart';
+import 'package:hiss_aaa/utils/hiss_enum/hiss_card_type.dart';
+import 'package:hiss_aaa/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_page.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_gradient_text_widget.dart';
@@ -22,12 +29,258 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
         children: [
           HissTopWidget(),
           _playInfoWidget(),
-          Spacer(),
+          SizedBox(height: 20.h,),
+          _foundationsAndStockPileWidget(),
+          SizedBox(height: 24.h,),
+          _cardListWidget(),
           _bottomWidget(),
         ],
       ),
       HissSuperPropAnimatorWidget(),
+      HissDealCardAnimatorWidget(
+        allAnimatorCompletedCallback: (){
+          controller.onAllAnimationsCompleted();
+        },
+      ),
+      HissMoveToFoundationAnimatorWidget(),
+      HissMoveToWasteAnimatorWidget(),
     ],
+  );
+
+  _foundationsAndStockPileWidget()=>Row(
+    children: [
+      SizedBox(width: 16.w,),
+      GetBuilder<HissPlayController>(
+        id: "foundations",
+        builder: (_){
+          if(controller.cardWidth<=0){
+            return Container();
+          }
+          return SizedBox(
+            height: controller.cardHeight,
+            child: ListView.separated(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: controller.foundationsList.length,
+              itemBuilder: (context,index){
+                var list = controller.foundationsList[index];
+                Widget widget;
+                if(list.isEmpty){
+                  widget = HissImagesWidget(name: "card_a", width: controller.cardWidth, height: controller.cardHeight);
+                }else{
+                  widget = HissImagesWidget(name: getCardImages(list.last), width: controller.cardWidth, height: controller.cardHeight,);
+                }
+                return SizedBox(
+                  key: controller.foundationsGlobalKeyList[index],
+                  child: widget,
+                );
+              },
+              separatorBuilder: (context, index) => SizedBox(width: 6.w,),
+            ),
+          );
+        },
+      ),
+      SizedBox(width: 6.w,),
+      GetBuilder<HissPlayController>(
+        id: "stock_pile",
+        builder: (_){
+          if(controller.cardWidth<=0){
+            return Container();
+          }
+          var marginLeft = (controller.cardWidth+(6.w))/2;
+          return SizedBox(
+            width: controller.cardWidth*2+(6.w),
+            height: controller.cardHeight,
+            child: Stack(
+              children: List.generate(controller.wastePileList.length, (index){
+                var bean = controller.wastePileList[index];
+                double left = marginLeft * (index + (3 - controller.wastePileList.length));
+                return Container(
+                  margin: EdgeInsets.only(left: left),
+                  child: Draggable<Map<String, dynamic>>(
+                    data: {"fromWaste": true, "cards": [controller.wastePileList[index]]},
+                    onDragStarted: () {
+                      // setState(() {
+                      //   _isDragging = true;
+                      //   _draggingCards = [wastePile[index]];
+                      // });
+                    },
+                    onDragCompleted: () {
+                      controller.onDragStockPileCompleted();
+                    },
+                    onDraggableCanceled: (velocity, offset) {
+                      controller.onDraggableStockPileCanceled();
+                    },
+                    feedback: _dragFeedbackWidget([bean]),
+                    childWhenDragging: Opacity(
+                      opacity: 0.5,
+                      child: HissImagesWidget(
+                        name: getCardImages(bean),
+                        width: controller.cardWidth,
+                        height: controller.cardHeight,
+                      ),
+                    ),
+                    child: HissImagesWidget(
+                      name: getCardImages(bean),
+                      width: controller.cardWidth,
+                      height: controller.cardHeight,
+                    ),
+                  ),
+                );
+              }),
+            ),
+          );
+        },
+      ),
+      SizedBox(width: 6.w,),
+      GetBuilder<HissPlayController>(
+        id: "card_bg",
+        builder: (_){
+          if(controller.cardWidth<=0){
+            return Container();
+          }
+          return HissClickWidget(
+            onTap: (){
+              controller.clickFlipCardFromStock();
+            },
+            child: SizedBox(
+              key: controller.stockPileGlobalKey,
+              child: HissImagesWidget(name: "card_bg", width: controller.cardWidth, height: controller.cardHeight,),
+            ),
+          );
+        },
+      ),
+      SizedBox(width: 16.w,),
+    ],
+  );
+
+  _cardListWidget()=>Expanded(
+    child: Container(
+      margin: EdgeInsets.only(left: 16.w,right: 16.w),
+      child: GetBuilder<HissPlayController>(
+        id: "card_list",
+        builder: (_)=>Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: List.generate(controller.cardList.length, (index){
+            return Expanded(
+              child: _cardColumnItemWidget(controller.cardList[index],index),
+            );
+          }),
+        ),
+      ),
+    ),
+  );
+
+  _cardColumnItemWidget(List<HissCardBean> list,colIndex)=>Center(
+    child: DragTarget<Map<String, dynamic>>(
+      onWillAccept: (data){
+        return controller.onAcceptWithDetails(data, colIndex);
+      },
+      onAccept: (data){
+        controller.onAccept(data,colIndex);
+      },
+      builder: (context, candidateData, rejectedData){
+        return SizedBox(
+          height: double.infinity,
+          child: Stack(
+            children: List.generate(list.length, (rowIndex){
+              var bean = list[rowIndex];
+              if(controller.isCardBeingDragged(colIndex, rowIndex)){
+                return Container(
+                  margin: EdgeInsets.only(top: rowIndex * (8.h)),
+                  child: SizedBox(
+                    width: controller.cardWidth,
+                    height: controller.cardHeight,
+                  ),
+                );
+              }
+              var itemWidget = _cardItemWidget(bean);
+              Widget childWidget;
+              if(bean.front){
+                childWidget=HissClickWidget(
+                  onTap: (){
+                    controller.tryAutoMoveToFoundation(colIndex, rowIndex,list);
+                  },
+                  child: LongPressDraggable<Map<String, dynamic>>(
+                    delay: Duration(milliseconds: 100),
+                    hitTestBehavior: HitTestBehavior.translucent,
+                    data: {
+                      "fromCol": colIndex,
+                      "startIndex": rowIndex,
+                      "cards": list.sublist(rowIndex),
+                      "fromWaste": false
+                    },
+                    onDragStarted: () {
+                      controller.onDragStarted(colIndex,rowIndex);
+                    },
+                    onDragCompleted: () {
+                      controller.onDragCompleted();
+                    },
+                    onDraggableCanceled: (velocity, offset) {
+                      controller.onDraggableCanceled();
+                    },
+                    feedback: _dragFeedbackWidget(list.sublist(rowIndex)),
+                    childWhenDragging: Opacity(
+                      opacity: 0.5,
+                      // child: _cardItemWidget(bean),
+                      child: HissImagesWidget(
+                        name: getCardImages(bean),
+                        width: controller.cardWidth,
+                        height: controller.cardHeight,
+                      ),
+                    ),
+                    child: itemWidget,
+                  ),
+                );
+              }else{
+                childWidget=itemWidget;
+              }
+              return Container(
+                margin: EdgeInsets.only(top: rowIndex * (12.h)),
+                child: SizedBox(
+                  key: bean.globalKey,
+                  child: bean.showCard?
+                  childWidget:
+                  SizedBox(
+                    width: controller.cardWidth,
+                    height: controller.cardHeight,
+                  ),
+                ),
+              );
+            }),
+          ),
+        );
+      },
+    ),
+  );
+
+  _dragFeedbackWidget(List<HissCardBean> cards) => Transform.scale(
+    scale: 1.05,
+    child: Material(
+      color: Colors.transparent,
+      child: SizedBox(
+        width: controller.cardWidth,
+        height: controller.cardHeight + (8.h) * (cards.length - 1),
+        child: Stack(
+          children: List.generate(cards.length, (i) {
+            return Positioned(
+              top: i * (8.h),
+              child: HissImagesWidget(
+                name: getCardImages(cards[i]),
+                width: controller.cardWidth,
+                height: controller.cardHeight,
+              ),
+            );
+          }),
+        ),
+      ),
+    ),
+  );
+
+  _cardItemWidget(HissCardBean bean,{bool isDragging = false})=>HissCardItemWidget(
+    cardBean: bean,
+    cardWidth: controller.cardWidth,
+    cardHeight: controller.cardHeight,
   );
 
   _playInfoWidget()=> Container(
@@ -163,6 +416,9 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
             ),
             SizedBox(width: 22.w,),
             HissClickWidget(
+              onTap: (){
+                controller.clickBackProp();
+              },
               child: Stack(
                 alignment: Alignment.topRight,
                 children: [

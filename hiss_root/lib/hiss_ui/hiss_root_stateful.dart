@@ -31,4 +31,13 @@ abstract class HissRootStatefulState<T extends HissRootStateful> extends State<T
   bool canReceivedEventData()=>true;
 
   handleEventBusData(HissEventData data){}
+
+  @override
+  void dispose() {
+    if(canReceivedEventData()){
+      _subscription?.cancel();
+      _subscription=null;
+    }
+    super.dispose();
+  }
 }

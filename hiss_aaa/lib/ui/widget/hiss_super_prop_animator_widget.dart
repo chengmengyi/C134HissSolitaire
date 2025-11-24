@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hiss_aaa/ui/dialog/super_prop_dialog/super_prop_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_stateful.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissSuperPropAnimatorWidget extends HissRootStateful{
   @override
@@ -106,9 +108,18 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
 
   _stopAnimation() {
     _controller?.stop();
-    setState(() {
-      _isVisible = false;
-    });
+    HissRoutersUtils.instance.showDialog(
+      child: SuperPropDialog(
+        cancelCallback: (){
+          _controller?.forward();
+        },
+        claimCallback: (){
+          setState(() {
+            _isVisible = false;
+          });
+        },
+      ),
+    );
   }
 
   @override

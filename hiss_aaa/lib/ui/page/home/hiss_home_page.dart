@@ -53,6 +53,13 @@ class HissHomePage extends HissRootPage<HissHomeController>{
               },
               child: HissImagesWidget(name: "home5", width: 64.w, height: 64.w,),
             ),
+            SizedBox(height: 12.h,),
+            HissClickWidget(
+              onTap: (){
+                controller.clickGift();
+              },
+              child: HissImagesWidget(name: "home6", width: 64.w, height: 64.w,),
+            ),
           ],
         ),
       )

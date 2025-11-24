@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hiss_aaa/AnimatedCardDemo.dart';
 import 'package:hiss_aaa/test.dart';
 import 'package:hiss_aaa/ui/dialog/add_prop_dialog/add_prop_dialog.dart';
 import 'package:hiss_aaa/ui/dialog/super_prop_dialog/super_prop_dialog.dart';
@@ -12,7 +11,7 @@ import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 class HissHomeController extends HissRootController{
 
   clickPlay(){
-    // Navigator.push(buildContext, MaterialPageRoute(builder: (_)=>AnimatedCardDemo()));
+    // Navigator.push(buildContext, MaterialPageRoute(builder: (_)=>DemoPage()));
     HissRoutersUtils.instance.toNextPageByNamed(routerName: HissAAARouters.play);
   }
 
@@ -20,11 +19,15 @@ class HissHomeController extends HissRootController{
     HissRoutersUtils.instance.toNextPageByNamed(routerName: HissAAARouters.rank);
   }
 
+  clickGift(){
+    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissAAARouters.gift);
+  }
+
   test(){
     if(!kDebugMode){
       return;
     }
 
-    HissRoutersUtils.instance.showDialog(child: SuperPropDialog());
+    // HissRoutersUtils.instance.showDialog(child: SuperPropDialog());
   }
 }

@@ -4,4 +4,8 @@ class HissEventCode{
 
   static const int aUpdatePropNum=1;
   static const int aUpdateMoneyNum=2;
+  static const int aStartDealCardsAnimator=3;
+  static const int aFlipCard=4;
+  static const int aMoveCardToFoundation=5;
+  static const int aMoveCardToWaste=6;
 }
