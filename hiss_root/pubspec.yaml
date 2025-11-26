@@ -24,6 +24,7 @@ dependencies:
   audioplayers: 6.1.0
   flutter_app_lifecycle: 0.0.3
   url_launcher: 6.3.2
+  shake_animation_widget: 3.0.4
 
 dev_dependencies:
   flutter_test:

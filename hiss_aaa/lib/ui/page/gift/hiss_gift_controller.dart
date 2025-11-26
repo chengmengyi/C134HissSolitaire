@@ -1,7 +1,134 @@
+import 'package:flutter/material.dart';
+import 'package:hiss_aaa/bean/hiss_gift_bean.dart';
+import 'package:hiss_aaa/utils/hiss_enum/hiss_gift_type.dart';
+import 'package:hiss_aaa/utils/hiss_gift_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissGiftController extends HissRootController{
+
+  List<List<HissGiftBean>> giftList=[];
+
+  @override
+  void onReady() {
+    super.onReady();
+    _initList();
+  }
+
+  clickClaim(HissGiftBean bean){
+
+  }
+
+  _initList()async{
+    var list = await HissGiftUtils.instance.queryTodayGiftList();
+    if(list.isNotEmpty){
+      var reverseOdd = _splitAndReverseOdd(list,2);
+      giftList.clear();
+      giftList.addAll(reverseOdd);
+      update(["list"]);
+    }
+  }
+
+  List<List<T>> _splitAndReverseOdd<T>(List<T> list, int chunkSize) {
+    List<List<T>> result = [];
+    for (int i = 0; i < list.length; i += chunkSize) {
+      int end = (i + chunkSize > list.length) ? list.length : i + chunkSize;
+      var chunk = list.sublist(i, end);
+
+      int index = i ~/ chunkSize;
+
+      if (index.isOdd) {
+        chunk = chunk.reversed.toList();
+      }
+
+      result.add(chunk);
+    }
+
+    return result;
+  }
+
+  String getItemRowLineBg(int largeIndex,List<HissGiftBean> list){
+    if(largeIndex%2==0){
+      var last = list.last;
+      return last.giftStatus==HissGiftStatus.lock?"gift7":"gift6";
+    }else{
+      var last = list.first;
+      return last.giftStatus==HissGiftStatus.lock?"gift7":"gift6";
+    }
+  }
+
+  String getItemBg(HissGiftBean bean){
+    switch(bean.giftStatus){
+      case HissGiftStatus.lock: return "gift5";
+      case HissGiftStatus.received: return "gift3";
+      case HissGiftStatus.unReceive: return "gift4";
+      default: return "gift4";
+    }
+  }
+
+  String getItemGiftIcon(HissGiftBean bean){
+    switch(bean.giftType){
+      case HissGiftType.coins: return "icon_money2";
+      case HissGiftType.crystal: return "icon_diamond";
+      case HissGiftType.back: return "icon_back_prop";
+      case HissGiftType.tips: return "icon_tips_prop";
+      default: return "icon_money2";
+    }
+  }
+
+  Color getItemTextColor(HissGiftBean bean){
+    switch(bean.giftStatus){
+      case HissGiftStatus.lock: return "#F8E9FF".toColor();
+      case HissGiftStatus.received: return "#CCBDD3".toColor();
+      case HissGiftStatus.unReceive: return "#FFD21D".toColor();
+      default: return "#FFD21D".toColor();
+    }
+  }
+
+  Color getItemTextLineColor(HissGiftBean bean){
+    switch(bean.giftStatus){
+      case HissGiftStatus.lock: return "#521B7D".toColor();
+      case HissGiftStatus.received: return "#543F63".toColor();
+      case HissGiftStatus.unReceive: return "#6E2F15".toColor();
+      default: return "#FFD21D".toColor();
+    }
+  }
+
+  bool showTopColLine(int largeIndex,int smallIndex){
+    if(largeIndex==0){
+      return false;
+    }
+    if(largeIndex%2==0){
+      return smallIndex==0;
+    }
+    return smallIndex==1;
+  }
+
+  bool showBottomColLine(int largeIndex,int smallIndex,){
+    if(largeIndex==giftList.length-1){
+      return false;
+    }
+    if(largeIndex%2==0){
+      return smallIndex==1;
+    }
+    return smallIndex==0;
+  }
+
+  String getTopColLineImages(int largeIndex){
+    try{
+      var list = giftList[largeIndex];
+      var bean=largeIndex%2==0?list.first:list.last;
+      return bean.giftStatus==HissGiftStatus.unReceive?"gift8":"gift9";
+    }catch(e){
+      return "gift8";
+    }
+  }
+
+  String getBottomColLineImages(HissGiftBean bean){
+    return bean.giftStatus==HissGiftStatus.lock?"gift9":"gift8";
+  }
+
   clickClose(){
     HissRoutersUtils.instance.close();
   }

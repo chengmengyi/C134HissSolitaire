@@ -9,23 +9,25 @@ import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class AddPropDialogController extends HissRootController{
 
-  clickFree(HissPropType hissPropType){
+  clickFree(HissPropType hissPropType, Function() dismissCallback){
     HissAdUtils.instance.showAAAAd(
       closeAdCallback: (){
         HissUserInfoUtils.instance.updatePropNum(hissPropType: hissPropType, addNum: HissValueUtils.instance.propAddNum());
         HissRoutersUtils.instance.close();
+        dismissCallback.call();
       },
     );
   }
 
-  clickMoney(HissPropType hissPropType){
-    if(aMoney.getData()<HissValueUtils.instance.propCostMoney()){
+  clickMoney(HissPropType hissPropType, Function() dismissCallback){
+    if(aMoneyNum.getData()<HissValueUtils.instance.propCostMoney()){
       "Not enough gold coins".showToast();
       return;
     }
     HissUserInfoUtils.instance.updateMoney(-HissValueUtils.instance.propCostMoney());
     HissUserInfoUtils.instance.updatePropNum(hissPropType: hissPropType, addNum: HissValueUtils.instance.propAddNum());
     HissRoutersUtils.instance.close();
+    dismissCallback.call();
   }
 
   clickClose(){

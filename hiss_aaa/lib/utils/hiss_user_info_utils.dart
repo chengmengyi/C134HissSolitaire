@@ -9,8 +9,13 @@ class HissUserInfoUtils {
   static HissUserInfoUtils get instance=>_hissUserInfoUtils;
 
   updateMoney(int addNum){
-    aMoney.saveData(aMoney.getData()+addNum);
+    aMoneyNum.saveData(aMoneyNum.getData()+addNum);
     HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aUpdateMoneyNum));
+  }
+
+  updateDiamondNum(int addNum){
+    aDiamondNum.saveData(aDiamondNum.getData()+addNum);
+    HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aUpdateDiamondNum));
   }
 
   updatePropNum({
@@ -26,5 +31,10 @@ class HissUserInfoUtils {
         break;
     }
     HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aUpdatePropNum));
+  }
+
+  updateUserLevel(){
+    aLevel.saveData(aLevel.getData()+1);
+    HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aUpdateLevel));
   }
 }

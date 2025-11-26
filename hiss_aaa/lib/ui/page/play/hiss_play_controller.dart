@@ -1,8 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hiss_aaa/bean/game_state_snapshot_bean.dart';
 import 'package:hiss_aaa/bean/hiss_card_bean.dart';
+import 'package:hiss_aaa/bean/hiss_hint_bean.dart';
+import 'package:hiss_aaa/ui/dialog/add_prop_dialog/add_prop_dialog.dart';
+import 'package:hiss_aaa/ui/dialog/play_success_dialog/play_success_dialog.dart';
+import 'package:hiss_aaa/ui/dialog/random_prop_dialog/random_prop_dialog.dart';
 import 'package:hiss_aaa/utils/hiss_enum/hiss_card_type.dart';
+import 'package:hiss_aaa/utils/hiss_enum/hiss_prop_type.dart';
+import 'package:hiss_aaa/utils/hiss_storage.dart';
+import 'package:hiss_aaa/utils/hiss_user_info_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
@@ -11,7 +20,8 @@ import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissPlayController extends HissRootController{
-  var cardWidth=0.0,cardHeight=0.0,_canClickStockPile=true;
+  var cardWidth=0.0,cardHeight=0.0,_canClickStockPile=true,_canClickResetPlay=true,
+      currentScore=0,currentStep=0,currentTime=0,appBackground=false,_showRandomPropDialog=true;
   bool _isDragging = false;
   int? _draggingFromCol;
   int? _draggingStartIndex;
@@ -20,9 +30,24 @@ class HissPlayController extends HissRootController{
   List<HissCardBean> stockPileList=[];
   List<HissCardBean> wastePileList=[];
   GlobalKey stockPileGlobalKey=GlobalKey();
+  GlobalKey backPropGlobalKey=GlobalKey();
+  GlobalKey tipsPropGlobalKey=GlobalKey();
   // 撤销栈
   final List<GameStateSnapshotBean> _historyList = [];
   List<GlobalKey> foundationsGlobalKeyList=[GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey()];
+
+  ShakeAnimationController shakeAnimationController=ShakeAnimationController();
+  ShakeAnimationController tipsAnimationController=ShakeAnimationController();
+
+  Timer? _playGameTimer;
+  Timer? _noOperationTimer;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _startTimer();
+    _startNoOperationTimer();
+  }
 
   @override
   void onReady() {
@@ -35,6 +60,11 @@ class HissPlayController extends HissRootController{
   }
 
   _initCards(){
+    if(!_canClickResetPlay){
+      return;
+    }
+    _canClickResetPlay=false;
+    cardList.clear();
     double screenWidth = MediaQuery.of(buildContext).size.width;
     cardWidth = (screenWidth-68.w)/7;
     cardHeight = cardWidth/0.68;
@@ -115,13 +145,15 @@ class HissPlayController extends HissRootController{
       cardList[fromCol].removeRange(startIndex, cardList[fromCol].length);
       if (cardList[fromCol].isNotEmpty){
         cardList[fromCol].last.front = true;
+        currentScore+=5;
       }
     }
     cardList[colIndex].addAll(movingCards);
     _isDragging = false;
     _draggingFromCol = null;
     _draggingStartIndex = null;
-    update(["card_list","stock_pile"]);
+    currentStep++;
+    update(["card_list","stock_pile","step","score"]);
   }
 
   onDragStarted(int colIndex, int rowIndex){
@@ -129,6 +161,7 @@ class HissPlayController extends HissRootController{
     _draggingFromCol = colIndex;
     _draggingStartIndex = rowIndex;
     update(["card_list"]);
+    _cancelNoOperationTimer();
   }
 
   onDragCompleted() {
@@ -136,6 +169,7 @@ class HissPlayController extends HissRootController{
     _draggingFromCol = null;
     _draggingStartIndex = null;
     update(["card_list"]);
+    _startNoOperationTimer();
   }
 
   onDraggableCanceled(){
@@ -143,6 +177,7 @@ class HissPlayController extends HissRootController{
     _draggingFromCol = null;
     _draggingStartIndex = null;
     update(["card_list"]);
+    _startNoOperationTimer();
   }
 
   // 判断花色是否为红色
@@ -175,6 +210,17 @@ class HissPlayController extends HissRootController{
         }
       }
       update(["card_list"]);
+      _canClickResetPlay=true;
+      if(_showRandomPropDialog){
+        HissRoutersUtils.instance.showDialog(
+          child: RandomPropDialog(
+            dismissCallback: (HissPropType hissPropType){
+              _showPropMoveAnimator(hissPropType);
+            },
+          ),
+        );
+      }
+      _showRandomPropDialog=false;
     });
   }
 
@@ -196,6 +242,7 @@ class HissPlayController extends HissRootController{
     if(index<0){
       return;
     }
+    _cancelNoOperationTimer();
     card.showCard=false;
     update(["card_list"]);
     HissSendEventUtils.instance.sendEvent(
@@ -218,8 +265,34 @@ class HissPlayController extends HissRootController{
     if (cardList[colIndex].isNotEmpty){
       cardList[colIndex].last.front = true;
     }
-    update(["card_list","foundations"]);
+    currentScore+=10;
+    update(["card_list","foundations","score"]);
+    //校验游戏通关了
+    if(_checkPlayEnd()){
+      HissRoutersUtils.instance.showDialog(
+        child: PlaySuccessDialog(
+          time: currentTime,
+          score: currentScore,
+          step: currentStep,
+          dismissCallback: (){
+            HissUserInfoUtils.instance.updateUserLevel();
+            _showRandomPropDialog=true;
+            clickResetPlay();
+          },
+        ),
+      );
+    }else{
+      _startNoOperationTimer();
+    }
+  }
 
+  bool _checkPlayEnd(){
+    for (var value in foundationsList) {
+      if(value.length<13){
+        return false;
+      }
+    }
+    return true;
   }
 
   //是否可移动到func
@@ -240,6 +313,7 @@ class HissPlayController extends HissRootController{
     if (stockPileList.isEmpty && wastePileList.isEmpty){
       return;
     }
+    _cancelNoOperationTimer();
     _saveSnapshot();
     if (stockPileList.isEmpty) {
       stockPileList = wastePileList.reversed.map((c) => HissCardBean(value: c.value, cardType: c.cardType, front: c.front,isDefaultA: c.showCard,showCard: c.showCard,globalKey: c.globalKey)).toList();
@@ -269,8 +343,10 @@ class HissPlayController extends HissRootController{
         );
         await Future.delayed(Duration(milliseconds: 280));
         foundationsList[index].add(card);
-        update(["foundations"]);
+        currentScore+=10;
+        update(["foundations","score"]);
         _canClickStockPile=true;
+        _startNoOperationTimer();
         return;
       }
       HissSendEventUtils.instance.sendEvent(
@@ -294,6 +370,11 @@ class HissPlayController extends HissRootController{
     }
     update(["stock_pile"]);
     _canClickStockPile=true;
+    _startNoOperationTimer();
+  }
+
+  onDragStockPileStarted(){
+    _cancelNoOperationTimer();
   }
 
   //抽牌区域拖动完成
@@ -302,6 +383,7 @@ class HissPlayController extends HissRootController{
     _draggingFromCol = null;
     _draggingStartIndex = null;
     update(["card_list"]);
+    _startNoOperationTimer();
   }
 
   onDraggableStockPileCanceled(){
@@ -309,9 +391,21 @@ class HissPlayController extends HissRootController{
     _draggingFromCol = null;
     _draggingStartIndex = null;
     update(["card_list"]);
+    _startNoOperationTimer();
   }
 
   clickBackProp(){
+    if(aBackPropNum.getData()<=0){
+      HissRoutersUtils.instance.showDialog(
+        child: AddPropDialog(
+          hissPropType: HissPropType.back,
+          dismissCallback: (){
+            _showPropMoveAnimator(HissPropType.back);
+          },
+        ),
+      );
+      return;
+    }
     if (_historyList.isEmpty) {
       return;
     }
@@ -326,9 +420,187 @@ class HissPlayController extends HissRootController{
     _draggingFromCol = null;
     _draggingStartIndex = null;
     update(["stock_pile","foundations","card_list"]);
+    HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.back, addNum: -1);
+  }
+
+  clickHint(){
+    if(aTipsPropNum.getData()<=0){
+      HissRoutersUtils.instance.showDialog(
+        child: AddPropDialog(
+          hissPropType: HissPropType.tips,
+          dismissCallback: (){
+            _showPropMoveAnimator(HissPropType.tips);
+          },
+        ),
+      );
+      return;
+    }
+    List<HissHintBean> hints = _findMoveHints();
+    if (hints.isEmpty) {
+      shakeAnimationController.start();
+      return;
+    }
+    HissSendEventUtils.instance.sendEvent(
+      data: HissEventData(
+        eventCode: HissEventCode.aHintAnimator,
+        anyEventValue: {
+          "hints":hints,
+          "cardList":cardList,
+          "cardWidth":cardWidth,
+          "cardHeight":cardHeight,
+          "foundationsGlobalKeyList":foundationsGlobalKeyList,
+        },
+      ),
+    );
+    HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.tips, addNum: -1);
+  }
+
+  /// 查找所有可移动提示
+  List<HissHintBean> _findMoveHints() {
+    List<HissHintBean> hints = [];
+
+    // -------------------------
+    // ① 找 “列 → 列” 可移动
+    // -------------------------
+    for (int fromCol = 0; fromCol < cardList.length; fromCol++) {
+      final column = cardList[fromCol];
+
+      for (int start = 0; start < column.length; start++) {
+        final movingCards = column.sublist(start);
+
+        // 必须是翻开的
+        if (!movingCards.first.front) continue;
+
+        for (int toCol = 0; toCol < cardList.length; toCol++) {
+          if (toCol == fromCol) continue;
+
+          // 判断能否移动到该列
+          if (canMoveToColumn(movingCards.first, cardList[toCol])) {
+            hints.add(
+              HissHintBean(
+                fromCol: fromCol,
+                startIndex: start,
+                toCol: toCol,
+                cards: movingCards,
+              ),
+            );
+          }
+        }
+      }
+    }
+
+    // if (hints.isNotEmpty) return hints;
+
+    // ----------------------------------------
+    // ② 若无列→列，再找 “列顶牌 → Foundation”
+    // ----------------------------------------
+    for (int col = 0; col < cardList.length; col++) {
+      if (cardList[col].isEmpty) continue;
+
+      final topCard = cardList[col].last;
+      if (!topCard.front) continue;
+
+      for (int f = 0; f < 4; f++) {
+        if (canMoveToFoundation(topCard, foundationsList[f])) {
+          hints.add(
+            HissHintBean(
+              fromCol: col,
+              startIndex: cardList[col].length - 1,
+              toFoundation: f,
+              cards: [topCard],
+            ),
+          );
+          break;
+        }
+      }
+    }
+    return hints;
+  }
+
+  bool canMoveToFoundation(HissCardBean card, List<HissCardBean> foundation) {
+    if (foundation.isEmpty) return card.value == 1;
+    final last = foundation.last;
+    return last.cardType == card.cardType && last.value == card.value - 1;
+  }
+
+  bool canMoveToColumn(HissCardBean card, List<HissCardBean> targetColumn) {
+    if (targetColumn.isEmpty) return true;
+    final targetCard = targetColumn.last;
+    if (targetCard.value != card.value + 1) return false;
+    return isRedCard(targetCard.cardType) != isRedCard(card.cardType);
+  }
+
+  clickResetPlay(){
+    currentStep=0;
+    currentTime=0;
+    currentScore=0;
+    _startTimer();
+    _initCards();
+  }
+
+  _showPropMoveAnimator(HissPropType hissPropType){
+    HissSendEventUtils.instance.sendEvent(
+      data: HissEventData(
+        eventCode: HissEventCode.aShowPropAnimator,
+        anyEventValue: {
+          "hissPropType":hissPropType,
+          "endGlobalKey":hissPropType==HissPropType.tips?tipsPropGlobalKey:backPropGlobalKey,
+        }
+      ),
+    );
+    _startNoOperationTimer();
   }
 
   _saveSnapshot() {
     _historyList.add(GameStateSnapshotBean.from(cardList, foundationsList, stockPileList, wastePileList));
+  }
+
+  _startTimer(){
+    _playGameTimer?.cancel();
+    currentTime=0;
+    _playGameTimer=Timer.periodic(Duration(seconds: 1), (t){
+      if(appBackground){
+        return;
+      }
+      currentTime++;
+      update(["time"]);
+    });
+  }
+
+  _startNoOperationTimer(){
+    _noOperationTimer?.cancel();
+    _noOperationTimer=Timer(Duration(milliseconds: 3000), (){
+      tipsAnimationController.start(shakeCount: 3);
+    });
+  }
+
+  _cancelNoOperationTimer(){
+    _noOperationTimer?.cancel();
+    _noOperationTimer=null;
+  }
+
+  @override
+  bool canReceivedEventData() => true;
+
+  @override
+  handleEventBusData(HissEventData data) {
+    switch(data.eventCode){
+      case HissEventCode.aUpdatePropNum:
+        update(["tips_prop","back_prop"]);
+        break;
+      case HissEventCode.aUpdateLevel:
+        update(["level"]);
+        break;
+      case HissEventCode.onChangedAppLife:
+        appBackground=data.boolEventValue??false;
+        break;
+    }
+  }
+
+  @override
+  void onClose() {
+    _playGameTimer?.cancel();
+    _noOperationTimer?.cancel();
+    super.onClose();
   }
 }

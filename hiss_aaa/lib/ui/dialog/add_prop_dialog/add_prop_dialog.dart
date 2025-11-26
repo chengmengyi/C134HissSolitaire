@@ -11,8 +11,10 @@ import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class AddPropDialog extends HissRootDialog<AddPropDialogController>{
   HissPropType hissPropType;
+  Function() dismissCallback;
   AddPropDialog({
     required this.hissPropType,
+    required this.dismissCallback,
 });
   @override
   AddPropDialogController initGetController() => AddPropDialogController();
@@ -47,7 +49,7 @@ class AddPropDialog extends HissRootDialog<AddPropDialogController>{
                   children: [
                     HissClickWidget(
                       onTap: (){
-                        controller.clickMoney(hissPropType);
+                        controller.clickMoney(hissPropType,dismissCallback);
                       },
                       child: Stack(
                         alignment: Alignment.center,
@@ -73,7 +75,7 @@ class AddPropDialog extends HissRootDialog<AddPropDialogController>{
                     SizedBox(width: 6.w,),
                     HissClickWidget(
                       onTap: (){
-                        controller.clickFree(hissPropType);
+                        controller.clickFree(hissPropType,dismissCallback);
                       },
                       child: Stack(
                         alignment: Alignment.center,

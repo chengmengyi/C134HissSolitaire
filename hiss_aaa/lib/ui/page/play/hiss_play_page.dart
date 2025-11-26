@@ -3,11 +3,13 @@ import 'package:hiss_aaa/bean/hiss_card_bean.dart';
 import 'package:hiss_aaa/ui/page/play/hiss_play_controller.dart';
 import 'package:hiss_aaa/ui/widget/hiss_card_item_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_deal_card_animator_widget.dart';
+import 'package:hiss_aaa/ui/widget/hiss_hint_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_move_to_foundation_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_move_to_waste_animator_widget.dart';
+import 'package:hiss_aaa/ui/widget/hiss_prop_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_super_prop_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_top_widget.dart';
-import 'package:hiss_aaa/utils/hiss_enum/hiss_card_type.dart';
+import 'package:hiss_aaa/utils/hiss_storage.dart';
 import 'package:hiss_aaa/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_page.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
@@ -44,6 +46,8 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       ),
       HissMoveToFoundationAnimatorWidget(),
       HissMoveToWasteAnimatorWidget(),
+      HissHintAnimatorWidget(),
+      HissPropAnimatorWidget(),
     ],
   );
 
@@ -104,6 +108,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                       //   _isDragging = true;
                       //   _draggingCards = [wastePile[index]];
                       // });
+                      controller.onDragStockPileStarted();
                     },
                     onDragCompleted: () {
                       controller.onDragStockPileCompleted();
@@ -145,7 +150,14 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
             },
             child: SizedBox(
               key: controller.stockPileGlobalKey,
-              child: HissImagesWidget(name: "card_bg", width: controller.cardWidth, height: controller.cardHeight,),
+              child: ShakeAnimationWidget(
+                shakeAnimationController: controller.shakeAnimationController,
+                shakeAnimationType: ShakeAnimationType.LeftRightShake,
+                isForward: false,
+                shakeCount: 4,
+                shakeRange: 0.2,
+                child: HissImagesWidget(name: "card_bg", width: controller.cardWidth, height: controller.cardHeight,),
+              ),
             ),
           );
         },
@@ -298,15 +310,18 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    HissGradientTextWidget(
-                      textContent: "6",
-                      textSize: 16.sp,
-                      fontWeight: FontWeight.w900,
-                      outlineColor: "#943D00".toColor(),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: ["#FFB62D".toColor(),"#FF5C05".toColor(),]
+                    GetBuilder<HissPlayController>(
+                      id: "level",
+                      builder: (_)=>HissGradientTextWidget(
+                        textContent: "${aLevel.getData()}",
+                        textSize: 16.sp,
+                        fontWeight: FontWeight.w900,
+                        outlineColor: "#943D00".toColor(),
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: ["#FFB62D".toColor(),"#FF5C05".toColor(),]
+                        ),
                       ),
                     ),
                     HissTextWidget(textContent: "Level", textSize: 12.sp, textColor: "#925B33".toColor(),),
@@ -319,15 +334,18 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    HissGradientTextWidget(
-                      textContent: "6",
-                      textSize: 16.sp,
-                      fontWeight: FontWeight.w900,
-                      outlineColor: "#943D00".toColor(),
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: ["#FFB62D".toColor(),"#FF5C05".toColor(),]
+                    GetBuilder<HissPlayController>(
+                      id: "score",
+                      builder: (_)=>HissGradientTextWidget(
+                        textContent: "${controller.currentScore}",
+                        textSize: 16.sp,
+                        fontWeight: FontWeight.w900,
+                        outlineColor: "#943D00".toColor(),
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: ["#FFB62D".toColor(),"#FF5C05".toColor(),]
+                        ),
                       ),
                     ),
                     HissTextWidget(textContent: "Score", textSize: 12.sp, textColor: "#925B33".toColor(),),
@@ -340,15 +358,18 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    HissGradientTextWidget(
-                      textContent: "11:11",
-                      textSize: 16.sp,
-                      fontWeight: FontWeight.w900,
-                      outlineColor: "#943D00".toColor(),
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: ["#FFFFFF".toColor(),"#FFCD05".toColor(),]
+                    GetBuilder<HissPlayController>(
+                      id: "time",
+                      builder: (_)=>HissGradientTextWidget(
+                        textContent: formatHMS(controller.currentTime),
+                        textSize: 16.sp,
+                        fontWeight: FontWeight.w900,
+                        outlineColor: "#943D00".toColor(),
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: ["#FFFFFF".toColor(),"#FFCD05".toColor(),]
+                        ),
                       ),
                     ),
                     HissTextWidget(textContent: "Time", textSize: 12.sp, textColor: "#925B33".toColor(),),
@@ -361,15 +382,18 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    HissGradientTextWidget(
-                      textContent: "6",
-                      textSize: 16.sp,
-                      fontWeight: FontWeight.w900,
-                      outlineColor: "#943D00".toColor(),
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: ["#FFB62D".toColor(),"#FF5C05".toColor(),]
+                    GetBuilder<HissPlayController>(
+                      id: "step",
+                      builder: (_)=>HissGradientTextWidget(
+                        textContent: "${controller.currentStep}",
+                        textSize: 16.sp,
+                        fontWeight: FontWeight.w900,
+                        outlineColor: "#943D00".toColor(),
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: ["#FFB62D".toColor(),"#FF5C05".toColor(),]
+                        ),
                       ),
                     ),
                     HissTextWidget(textContent: "Move", textSize: 12.sp, textColor: "#925B33".toColor(),),
@@ -412,6 +436,9 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
             ),
             Spacer(),
             HissClickWidget(
+              onTap: (){
+                controller.clickResetPlay();
+              },
               child: HissImagesWidget(name: "play6", width: 56.w, height: 56.w),
             ),
             SizedBox(width: 22.w,),
@@ -422,25 +449,65 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
               child: Stack(
                 alignment: Alignment.topRight,
                 children: [
-                  HissImagesWidget(name: "play7", width: 56.w, height: 56.w),
-                  HissImagesWidget(name: "play8", width: 16.w, height: 16.w),
+                  SizedBox(
+                    key: controller.backPropGlobalKey,
+                    child: HissImagesWidget(name: "play7", width: 56.w, height: 56.w),
+                  ),
+                  GetBuilder<HissPlayController>(
+                    id: "back_prop",
+                    builder: (_){
+                      var data = aBackPropNum.getData();
+                      if(data<=0){
+                        return HissImagesWidget(name: "play8", width: 16.w, height: 16.w);
+                      }
+                      return Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          HissImagesWidget(name: "play10", width: 16.w, height: 16.w),
+                          HissTextWidget(textContent: "$data", textSize: 10.sp, textColor: "#FFFFFF".toColor(),fontWeight: FontWeight.bold,),
+                        ],
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
             SizedBox(width: 22.w,),
             HissClickWidget(
-              child: Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  HissImagesWidget(name: "play9", width: 56.w, height: 56.w),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      HissImagesWidget(name: "play10", width: 16.w, height: 16.w),
-                      HissTextWidget(textContent: "1", textSize: 10.sp, textColor: "#FFFFFF".toColor(),fontWeight: FontWeight.bold,),
-                    ],
-                  ),
-                ],
+              onTap: (){
+                controller.clickHint();
+              },
+              child: ShakeAnimationWidget(
+                shakeAnimationController: controller.tipsAnimationController,
+                shakeAnimationType: ShakeAnimationType.LeftRightShake,
+                isForward: false,
+                shakeCount: 4,
+                shakeRange: 0.2,
+                child: Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    SizedBox(
+                      key: controller.tipsPropGlobalKey,
+                      child: HissImagesWidget(name: "play9", width: 56.w, height: 56.w),
+                    ),
+                    GetBuilder<HissPlayController>(
+                      id: "tips_prop",
+                      builder: (_){
+                        var data = aTipsPropNum.getData();
+                        if(data<=0){
+                          return HissImagesWidget(name: "play8", width: 16.w, height: 16.w);
+                        }
+                        return Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            HissImagesWidget(name: "play10", width: 16.w, height: 16.w),
+                            HissTextWidget(textContent: "$data", textSize: 10.sp, textColor: "#FFFFFF".toColor(),fontWeight: FontWeight.bold,),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

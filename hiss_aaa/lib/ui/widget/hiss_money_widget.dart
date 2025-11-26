@@ -30,7 +30,7 @@ class _HissMoneyWidgetState extends HissRootStatefulState<HissMoneyWidget>{
           ),
         ),
         child: HissTextWidget(
-          textContent: "${aMoney.getData()}",
+          textContent: "${aMoneyNum.getData()}",
           textSize: 16.sp,
           textColor: "#FFFFFF".toColor(),
           fontWeight: FontWeight.w900,

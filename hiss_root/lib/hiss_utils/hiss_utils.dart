@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -24,4 +25,24 @@ extension ShowToast on String{
       fontSize: 16,
     );
   }
+}
+
+extension RandomList on List{
+  random()=> this[Random().nextInt(length)];
+}
+
+String formatHMS(int seconds) {
+  int h = seconds ~/ 3600;
+  int m = (seconds % 3600) ~/ 60;
+  int s = seconds % 60;
+
+  String hh = h.toString().padLeft(2, '0');
+  String mm = m.toString().padLeft(2, '0');
+  String ss = s.toString().padLeft(2, '0');
+  return "$hh:$mm:$ss";
+}
+
+String getTodayTime(){
+  var dateTime = DateTime.now();
+  return "${dateTime.year}-${dateTime.month}-${dateTime.day}";
 }
