@@ -46,3 +46,16 @@ String getTodayTime(){
   var dateTime = DateTime.now();
   return "${dateTime.year}-${dateTime.month}-${dateTime.day}";
 }
+
+String userNameStar(String name){
+  var length = name.length;
+  if(length<=1){
+    return name;
+  }else if(length<=2){
+    return "${name.substring(0,1)}*";
+  }else if(length<=3){
+    return "${name.substring(0,2)}*";
+  }else{
+    return "${name.substring(0,3)}***";
+  }
+}

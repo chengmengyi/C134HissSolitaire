@@ -1,4 +1,5 @@
 import 'package:hiss_aaa/utils/hiss_enum/hiss_prop_type.dart';
+import 'package:hiss_aaa/utils/hiss_rank_utils.dart';
 import 'package:hiss_aaa/utils/hiss_storage.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
@@ -7,6 +8,15 @@ import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 class HissUserInfoUtils {
   static final HissUserInfoUtils _hissUserInfoUtils=HissUserInfoUtils();
   static HissUserInfoUtils get instance=>_hissUserInfoUtils;
+
+  initMyInfo(){
+    if(aMyName.getData().isEmpty){
+      aMyName.saveData(HissRankUtils.instance.getRandomName());
+    }
+    if(aMyHead.getData().isEmpty){
+      aMyHead.saveData(HissRankUtils.instance.getRandomHead());
+    }
+  }
 
   updateMoney(int addNum){
     aMoneyNum.saveData(aMoneyNum.getData()+addNum);

@@ -8,6 +8,7 @@ class HissCardBean{
   bool isDefaultA;
   GlobalKey? globalKey;
   bool showCard;
+  bool? isCoins;
   HissCardBean({
     required this.value,
     required this.cardType,
@@ -15,6 +16,7 @@ class HissCardBean{
     this.isDefaultA=false,
     this.showCard=false,
     this.globalKey,
+    this.isCoins,
 });
 
   @override

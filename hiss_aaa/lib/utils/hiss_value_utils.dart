@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class HissValueUtils {
   static final HissValueUtils _hissValueUtils=HissValueUtils();
   static HissValueUtils get instance=>_hissValueUtils;
@@ -9,4 +11,9 @@ class HissValueUtils {
   int addDiamondNum()=>100;
 
   int addMoneyNum()=>100;
+
+  int lookAdAddMoneyNum()=>100;
+
+  //- a包每局给[3,5]个
+  int randomCoinsCardNum()=>Random().nextInt(3)+3;
 }

@@ -14,18 +14,32 @@ class GameStateSnapshotBean {
   });
 
   static List<List<HissCardBean>> cloneColumns(List<List<HissCardBean>> src) {
-    return src
-        .map(
-          (col) => col
-          .map((c) => HissCardBean(value: c.value, cardType: c.cardType, front: c.front,isDefaultA: c.showCard,showCard: c.showCard,globalKey: c.globalKey))
-          .toList(),
+    return src.map((col) => col.map((c) =>
+        HissCardBean(
+          value: c.value,
+          cardType: c.cardType,
+          front: c.front,
+          isDefaultA: c.showCard,
+          showCard: c.showCard,
+          globalKey: c.globalKey,
+          isCoins: c.isCoins,
+        ),
     )
-        .toList();
+        .toList(),
+    ).toList();
   }
 
   static List<HissCardBean> cloneList(List<HissCardBean> src) {
-    return src
-        .map((c) => HissCardBean(value: c.value, cardType: c.cardType, front: c.front,isDefaultA: c.showCard,showCard: c.showCard,globalKey: c.globalKey))
+    return src.map((c) => HissCardBean(
+        value: c.value,
+        cardType: c.cardType,
+        front: c.front,
+        isDefaultA: c.showCard,
+        showCard: c.showCard,
+        globalKey: c.globalKey,
+        isCoins: c.isCoins,
+      ),
+    )
         .toList();
   }
 

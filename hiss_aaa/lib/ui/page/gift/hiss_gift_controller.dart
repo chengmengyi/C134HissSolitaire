@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_aaa/bean/hiss_gift_bean.dart';
 import 'package:hiss_aaa/utils/hiss_enum/hiss_gift_type.dart';
+import 'package:hiss_aaa/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_aaa/utils/hiss_gift_utils.dart';
+import 'package:hiss_aaa/utils/hiss_user_info_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
+import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissGiftController extends HissRootController{
-
   List<List<HissGiftBean>> giftList=[];
 
   @override
@@ -17,7 +19,37 @@ class HissGiftController extends HissRootController{
   }
 
   clickClaim(HissGiftBean bean){
+    if(bean.giftStatus!=HissGiftStatus.unReceive){
+      return;
+    }
+    if(bean.showAd==1){
+      HissAdUtils.instance.showAAAAd(
+        closeAdCallback: (){
+          _addGift(bean);
+        },
+      );
+      return;
+    }
+    _addGift(bean);
+  }
 
+  _addGift(HissGiftBean bean)async{
+    switch(bean.giftType){
+      case HissGiftType.coins:
+        HissUserInfoUtils.instance.updateMoney(bean.addNum??0);
+        break;
+      case HissGiftType.tips:
+        HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.tips, addNum: bean.addNum??0);
+        break;
+      case HissGiftType.back:
+        HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.back, addNum: bean.addNum??0);
+        break;
+      case HissGiftType.crystal:
+        HissUserInfoUtils.instance.updateDiamondNum(bean.addNum??0);
+        break;
+    }
+    await HissGiftUtils.instance.updateTodayGiftList(bean);
+    _initList();
   }
 
   _initList()async{

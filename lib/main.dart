@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:hiss134/hiss_common_router/hiss_common_routers.dart';
 import 'package:hiss_aaa/utils/hiss_a_routers.dart';
 import 'package:hiss_aaa/utils/hiss_gift_utils.dart';
+import 'package:hiss_aaa/utils/hiss_rank_utils.dart';
+import 'package:hiss_aaa/utils/hiss_user_info_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_app_life_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 
@@ -24,6 +26,8 @@ void main() async{
 
   //a
   HissGiftUtils.instance.insertTodayGiftInfo();
+  HissRankUtils.instance.insertTodayRank();
+  HissUserInfoUtils.instance.initMyInfo();
 
   runApp(const MyApp());
 }

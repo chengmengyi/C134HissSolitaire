@@ -9,6 +9,11 @@ import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissMoneyWidget extends HissRootStateful{
+  GlobalKey? moneyGlobalKey;
+  HissMoneyWidget({
+    this.moneyGlobalKey,
+  });
+
   @override
   State<StatefulWidget> createState() => _HissMoneyWidgetState();
 }
@@ -16,11 +21,12 @@ class HissMoneyWidget extends HissRootStateful{
 class _HissMoneyWidgetState extends HissRootStatefulState<HissMoneyWidget>{
   @override
   initContent() => Stack(
+    key: widget.moneyGlobalKey,
     alignment: Alignment.centerLeft,
     children: [
       Container(
         margin: EdgeInsets.only(left: 4.w),
-        padding: EdgeInsets.only(left: 40.w,right: 28.w),
+        padding: EdgeInsets.only(left: 40.w,right: 28.w,top: 4.h,bottom: 4.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.w),
           gradient: LinearGradient(

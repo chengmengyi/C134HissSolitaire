@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_aaa/ui/page/home/hiss_home_controller.dart';
 import 'package:hiss_aaa/ui/widget/hiss_level_widget.dart';
+import 'package:hiss_aaa/ui/widget/hiss_pig_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_top_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_page.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
@@ -62,7 +63,12 @@ class HissHomePage extends HissRootPage<HissHomeController>{
             ),
           ],
         ),
-      )
+      ),
+      Positioned(
+        left: 12.w,
+        bottom: 210.h,
+        child: HissPigWidget(),
+      ),
     ],
   );
 }

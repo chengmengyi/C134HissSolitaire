@@ -50,26 +50,29 @@ class HissGiftPage extends HissRootPage<HissGiftController>{
       context: buildContext,
       removeTop: true,
       removeBottom: true,
-      child: ListView.builder(
-        itemCount: controller.giftList.length,
-        itemBuilder: (context,index){
-          var list = controller.giftList[index];
-          return Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.only(left: 30.w,right: 30.w),
-                child: HissImagesWidget(name: controller.getItemRowLineBg(index, list), width: double.infinity, height: 24.h),
-              ),
-              Row(
-                children: [
-                  _giftItemWidget(index,0,list.first),
-                  _giftItemWidget(index,1,list.last),
-                ],
-              ),
-            ],
-          );
-        },
+      child: GetBuilder<HissGiftController>(
+        id: "list",
+        builder: (_)=>ListView.builder(
+          itemCount: controller.giftList.length,
+          itemBuilder: (context,index){
+            var list = controller.giftList[index];
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 30.w,right: 30.w),
+                  child: HissImagesWidget(name: controller.getItemRowLineBg(index, list), width: double.infinity, height: 24.h),
+                ),
+                Row(
+                  children: [
+                    _giftItemWidget(index,0,list.first),
+                    _giftItemWidget(index,1,list.last),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
       ),
     ),
   );

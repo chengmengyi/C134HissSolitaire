@@ -6,6 +6,7 @@ import 'package:hiss_aaa/ui/widget/hiss_deal_card_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_hint_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_move_to_foundation_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_move_to_waste_animator_widget.dart';
+import 'package:hiss_aaa/ui/widget/hiss_pig_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_prop_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_super_prop_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_top_widget.dart';
@@ -29,7 +30,9 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       HissImagesWidget(name: "play_bg", width: double.infinity, height: double.infinity),
       Column(
         children: [
-          HissTopWidget(),
+          HissTopWidget(
+            moneyGlobalKey: controller.topMoneyGlobalKey,
+          ),
           _playInfoWidget(),
           SizedBox(height: 20.h,),
           _foundationsAndStockPileWidget(),
@@ -234,7 +237,6 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                     feedback: _dragFeedbackWidget(list.sublist(rowIndex)),
                     childWhenDragging: Opacity(
                       opacity: 0.5,
-                      // child: _cardItemWidget(bean),
                       child: HissImagesWidget(
                         name: getCardImages(bean),
                         width: controller.cardWidth,
@@ -416,11 +418,12 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       children: [
         Row(
           children: [
-            HissClickWidget(
-              child: HissImagesWidget(name: "play3", width: 72.w, height: 72.w),
-            ),
+            HissPigWidget(),
             Spacer(),
             HissClickWidget(
+              onTap: (){
+                controller.clickAdBtn();
+              },
               child: HissImagesWidget(name: "play4", width: 72.w, height: 72.w),
             ),
           ],

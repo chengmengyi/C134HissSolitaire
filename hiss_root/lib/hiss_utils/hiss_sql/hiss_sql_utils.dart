@@ -25,6 +25,7 @@ class HissSqlUtils{
 
   _createVersion1DB(Database db){
     db.execute('CREATE TABLE ${HissSqlName.aPlayGameRecord} (id INTEGER PRIMARY KEY AUTOINCREMENT, score INTEGER, time INTEGER,step INTEGER)');
-    db.execute('CREATE TABLE ${HissSqlName.aGiftInfo} (id INTEGER PRIMARY KEY AUTOINCREMENT, contentList TEXT, timer TEXT)');
+    db.execute('CREATE TABLE ${HissSqlName.aGiftInfo} (id INTEGER PRIMARY KEY AUTOINCREMENT, customId INTEGER, contentList TEXT, timer TEXT)');
+    db.execute('CREATE TABLE ${HissSqlName.aRankInfo} (id INTEGER PRIMARY KEY AUTOINCREMENT, contentList TEXT, timer TEXT)');
   }
 }

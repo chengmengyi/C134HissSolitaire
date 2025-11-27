@@ -1,5 +1,6 @@
 import 'package:hiss_aaa/ui/page/gift/hiss_gift_page.dart';
 import 'package:hiss_aaa/ui/page/home/hiss_home_page.dart';
+import 'package:hiss_aaa/ui/page/pig/hiss_pig_page.dart';
 import 'package:hiss_aaa/ui/page/play/hiss_play_page.dart';
 import 'package:hiss_aaa/ui/page/rank/hiss_rank_page.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
@@ -9,6 +10,7 @@ class HissAAARouters{
   static const String play="/a/play";
   static const String rank="/a/rank";
   static const String gift="/a/gift";
+  static const String pig="/a/pig";
 }
 
 var hissAAAPageList=[
@@ -30,6 +32,11 @@ var hissAAAPageList=[
   GetPage(
       name: HissAAARouters.gift,
       page: ()=> HissGiftPage(),
+      transition: Transition.fadeIn
+  ),
+  GetPage(
+      name: HissAAARouters.pig,
+      page: ()=> HissPigPage(),
       transition: Transition.fadeIn
   ),
 ];

@@ -1,10 +1,12 @@
 class HissGiftBean {
+  int? customId;
   String? giftType;
   int? addNum;
   int? showAd;
   String? giftStatus;
 
   HissGiftBean({
+    this.customId,
     this.giftType,
     this.addNum,
     this.showAd,
@@ -12,6 +14,7 @@ class HissGiftBean {
   });
 
   HissGiftBean.fromJson(dynamic json) {
+    customId = json['id'];
     giftType = json['giftType'];
     addNum = json['addNum'];
     showAd = json['showAd'];
@@ -20,6 +23,7 @@ class HissGiftBean {
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
+    map['id'] = customId;
     map['giftType'] = giftType;
     map['addNum'] = addNum;
     map['showAd'] = showAd;

@@ -37,11 +37,7 @@ class _HissCardItemWidgetState extends HissRootStatefulState<HissCardItemWidget>
   @override
   initContent() {
     if(widget.cardBean.front){
-      return HissImagesWidget(
-        name: getCardImages(widget.cardBean),
-        width: widget.cardWidth,
-        height: widget.cardHeight,
-      );
+      return _frontWidget();
     }
     return AnimatedBuilder(
       animation: _animation,
@@ -51,11 +47,7 @@ class _HissCardItemWidgetState extends HissRootStatefulState<HissCardItemWidget>
           transform: Matrix4.rotationY(_animation.value),
           alignment: Alignment.center,
           child: showFront ?
-          HissImagesWidget(
-            name: getCardImages(widget.cardBean),
-            width: widget.cardWidth,
-            height: widget.cardHeight,
-          ):
+          _frontWidget():
           Transform(
             transform: Matrix4.rotationY(pi),
             alignment: Alignment.center,
@@ -69,6 +61,12 @@ class _HissCardItemWidgetState extends HissRootStatefulState<HissCardItemWidget>
       },
     );
   }
+
+  _frontWidget()=>HissImagesWidget(
+    name: getCardImages(widget.cardBean),
+    width: widget.cardWidth,
+    height: widget.cardHeight,
+  );
 
   @override
   bool canReceivedEventData() => true;

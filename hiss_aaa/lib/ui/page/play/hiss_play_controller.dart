@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,9 @@ import 'package:hiss_aaa/utils/hiss_enum/hiss_card_type.dart';
 import 'package:hiss_aaa/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_aaa/utils/hiss_storage.dart';
 import 'package:hiss_aaa/utils/hiss_user_info_utils.dart';
+import 'package:hiss_aaa/utils/hiss_value_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
+import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
@@ -32,6 +35,7 @@ class HissPlayController extends HissRootController{
   GlobalKey stockPileGlobalKey=GlobalKey();
   GlobalKey backPropGlobalKey=GlobalKey();
   GlobalKey tipsPropGlobalKey=GlobalKey();
+  GlobalKey topMoneyGlobalKey=GlobalKey();
   // 撤销栈
   final List<GameStateSnapshotBean> _historyList = [];
   List<GlobalKey> foundationsGlobalKeyList=[GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey()];
@@ -77,24 +81,20 @@ class HissPlayController extends HissRootController{
     }
     fullDeck.shuffle();
     int index = 0;
+    var coinsCardNum=HissValueUtils.instance.randomCoinsCardNum();
+    var random = Random();
     for (var i = 0; i < 7; i++) {
       List<HissCardBean> col = [];
       for (var j = 0; j <= i; j++) {
-        col.add(fullDeck[index++]);
+        var cardBean = fullDeck[index++];
+        if(random.nextBool()&&coinsCardNum>0){
+          cardBean.isCoins=true;
+          coinsCardNum-=1;
+        }
+        col.add(cardBean);
       }
       cardList.add(col);
     }
-
-    // if(kDebugMode){
-    //   cardList[0][0].value=1;
-    //   cardList[0][0].cardType=HissCardType.hongtao;
-    //   cardList[1].last.value=1;
-    //   cardList[1].last.cardType=HissCardType.heitao;
-    //   cardList[2].last.value=1;
-    //   cardList[2].last.cardType=HissCardType.fangkuai;
-    //   cardList[3].last.value=1;
-    //   cardList[3].last.cardType=HissCardType.meihua;
-    // }
     stockPileList = fullDeck.sublist(index);
 
     update(["card_list"]);
@@ -125,6 +125,9 @@ class HissPlayController extends HissRootController{
       return true;
     }
     final targetCard = targetColumn.last;
+    if(targetCard.isCoins==true){
+      return false;
+    }
     if (targetCard.value != card.value + 1){
       return false;
     }
@@ -229,6 +232,24 @@ class HissPlayController extends HissRootController{
       return;
     }
     final card = cardList[colIndex][rowIndex];
+    if(card.isCoins==true){
+      HissSendEventUtils.instance.sendEvent(
+        data: HissEventData(
+          eventCode: HissEventCode.aMoveCardToFoundation,
+          anyEventValue: {
+            "startGlobalKey":card.globalKey,
+            "endGlobalKey":topMoneyGlobalKey,
+            "card":card,
+            "cardWidth":cardWidth,
+            "cardHeight":cardHeight,
+          },
+        ),
+      );
+      await Future.delayed(Duration(milliseconds: 280));
+      card.isCoins=false;
+      update(["card_list"]);
+      return;
+    }
     if (rowIndex != cardList[colIndex].length - 1 || !card.front){
       return;
     }
@@ -438,6 +459,7 @@ class HissPlayController extends HissRootController{
     List<HissHintBean> hints = _findMoveHints();
     if (hints.isEmpty) {
       shakeAnimationController.start();
+      HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.tips, addNum: -1);
       return;
     }
     HissSendEventUtils.instance.sendEvent(
@@ -518,13 +540,23 @@ class HissPlayController extends HissRootController{
   }
 
   bool canMoveToFoundation(HissCardBean card, List<HissCardBean> foundation) {
-    if (foundation.isEmpty) return card.value == 1;
+    if(card.isCoins==true){
+      return false;
+    }
+    if (foundation.isEmpty){
+      return card.value == 1;
+    }
     final last = foundation.last;
     return last.cardType == card.cardType && last.value == card.value - 1;
   }
 
   bool canMoveToColumn(HissCardBean card, List<HissCardBean> targetColumn) {
-    if (targetColumn.isEmpty) return true;
+    if(card.isCoins==true){
+      return false;
+    }
+    if (targetColumn.isEmpty) {
+      return true;
+    }
     final targetCard = targetColumn.last;
     if (targetCard.value != card.value + 1) return false;
     return isRedCard(targetCard.cardType) != isRedCard(card.cardType);
@@ -577,6 +609,14 @@ class HissPlayController extends HissRootController{
   _cancelNoOperationTimer(){
     _noOperationTimer?.cancel();
     _noOperationTimer=null;
+  }
+
+  clickAdBtn(){
+    HissAdUtils.instance.showAAAAd(
+      closeAdCallback: (){
+        HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.lookAdAddMoneyNum());
+      },
+    );
   }
 
   @override

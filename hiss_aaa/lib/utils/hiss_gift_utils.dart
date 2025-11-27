@@ -19,18 +19,18 @@ class HissGiftUtils{
     }
     //  - 10金币->1提醒->ad5水晶->1撤回->｜ad15金币->ad2提醒->20金币->1撤回->｜ad20金币->ad1提醒->ad1撤回->ad50金币
     List<HissGiftBean> content=[
-      HissGiftBean(giftType: HissGiftType.coins,addNum: 10,showAd: 0,giftStatus: HissGiftStatus.unReceive,),
-      HissGiftBean(giftType: HissGiftType.tips,addNum: 1,showAd: 0,giftStatus: HissGiftStatus.lock,),
-      HissGiftBean(giftType: HissGiftType.crystal,addNum: 5,showAd: 1,giftStatus: HissGiftStatus.lock,),
-      HissGiftBean(giftType: HissGiftType.back,addNum: 1,showAd: 0,giftStatus: HissGiftStatus.lock,),
-      HissGiftBean(giftType: HissGiftType.coins,addNum: 15,showAd: 1,giftStatus: HissGiftStatus.lock,),
-      HissGiftBean(giftType: HissGiftType.tips,addNum: 2,showAd: 1,giftStatus: HissGiftStatus.lock,),
-      HissGiftBean(giftType: HissGiftType.coins,addNum: 20,showAd: 0,giftStatus: HissGiftStatus.lock,),
-      HissGiftBean(giftType: HissGiftType.back,addNum: 1,showAd: 0,giftStatus: HissGiftStatus.lock,),
-      HissGiftBean(giftType: HissGiftType.coins,addNum: 20,showAd: 1,giftStatus: HissGiftStatus.lock,),
-      HissGiftBean(giftType: HissGiftType.tips,addNum: 1,showAd: 1,giftStatus: HissGiftStatus.lock,),
-      HissGiftBean(giftType: HissGiftType.back,addNum: 1,showAd: 1,giftStatus: HissGiftStatus.lock,),
-      HissGiftBean(giftType: HissGiftType.coins,addNum: 50,showAd: 1,giftStatus: HissGiftStatus.lock,),
+      HissGiftBean(customId: 1,giftType: HissGiftType.coins,addNum: 10,showAd: 0,giftStatus: HissGiftStatus.unReceive,),
+      HissGiftBean(customId: 2,giftType: HissGiftType.tips,addNum: 1,showAd: 0,giftStatus: HissGiftStatus.lock,),
+      HissGiftBean(customId: 3,giftType: HissGiftType.crystal,addNum: 5,showAd: 1,giftStatus: HissGiftStatus.lock,),
+      HissGiftBean(customId: 4,giftType: HissGiftType.back,addNum: 1,showAd: 0,giftStatus: HissGiftStatus.lock,),
+      HissGiftBean(customId: 5,giftType: HissGiftType.coins,addNum: 15,showAd: 1,giftStatus: HissGiftStatus.lock,),
+      HissGiftBean(customId: 6,giftType: HissGiftType.tips,addNum: 2,showAd: 1,giftStatus: HissGiftStatus.lock,),
+      HissGiftBean(customId: 7,giftType: HissGiftType.coins,addNum: 20,showAd: 0,giftStatus: HissGiftStatus.lock,),
+      HissGiftBean(customId: 8,giftType: HissGiftType.back,addNum: 1,showAd: 0,giftStatus: HissGiftStatus.lock,),
+      HissGiftBean(customId: 9,giftType: HissGiftType.coins,addNum: 20,showAd: 1,giftStatus: HissGiftStatus.lock,),
+      HissGiftBean(customId: 10,giftType: HissGiftType.tips,addNum: 1,showAd: 1,giftStatus: HissGiftStatus.lock,),
+      HissGiftBean(customId: 11,giftType: HissGiftType.back,addNum: 1,showAd: 1,giftStatus: HissGiftStatus.lock,),
+      HissGiftBean(customId: 12,giftType: HissGiftType.coins,addNum: 50,showAd: 1,giftStatus: HissGiftStatus.lock,),
     ];
     await database.insert(HissSqlName.aGiftInfo, {"timer":todayTime,"contentList":jsonEncode(content)});
   }
@@ -52,5 +52,22 @@ class HissGiftUtils{
     }catch(e){
       return [];
     }
+  }
+
+  updateTodayGiftList(HissGiftBean currentBean)async{
+    var todayList = await queryTodayGiftList();
+    if(todayList.isEmpty){
+      return;
+    }
+    var indexWhere = todayList.indexWhere((value)=>value.customId==currentBean.customId);
+    if(indexWhere>=0){
+      todayList[indexWhere].giftStatus=HissGiftStatus.received;
+    }
+    if(indexWhere<todayList.length-1){
+      todayList[indexWhere+1].giftStatus=HissGiftStatus.unReceive;
+    }
+    var todayTime = getTodayTime();
+    var database = await HissSqlUtils.instance.initSql();
+    await database.update(HissSqlName.aGiftInfo, {"timer":todayTime,"contentList":jsonEncode(todayList)},where: '"timer" = ? ',whereArgs: [todayTime]);
   }
 }
