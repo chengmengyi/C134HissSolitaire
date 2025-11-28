@@ -36,6 +36,7 @@ class HissPlayController extends HissRootController{
   GlobalKey backPropGlobalKey=GlobalKey();
   GlobalKey tipsPropGlobalKey=GlobalKey();
   GlobalKey topMoneyGlobalKey=GlobalKey();
+  GlobalKey diamondPigGlobalKey=GlobalKey();
   // 撤销栈
   final List<GameStateSnapshotBean> _historyList = [];
   List<GlobalKey> foundationsGlobalKeyList=[GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey()];
@@ -134,9 +135,10 @@ class HissPlayController extends HissRootController{
     return isRedCard(targetCard.cardType) != isRedCard(card.cardType);
   }
 
-  onAccept(data, colIndex){
+  onAccept(data, colIndex)async{
     _saveSnapshot();
     List<HissCardBean> movingCards = data['cards'];
+    HissCardBean? showDiamondCard;
     if (data['fromWaste'] == true){
       wastePileList.remove(movingCards.first);
       for (var value in movingCards) {
@@ -147,9 +149,13 @@ class HissPlayController extends HissRootController{
       int startIndex = data['startIndex'];
       cardList[fromCol].removeRange(startIndex, cardList[fromCol].length);
       if (cardList[fromCol].isNotEmpty){
-        cardList[fromCol].last.front = true;
-        currentScore+=5;
+        var fromLast = cardList[fromCol].last;
+        fromLast.front = true;
+        if(fromLast.isCoins!=true&&HissValueUtils.instance.showDiamondIcon()){
+          showDiamondCard=fromLast;
+        }
       }
+      currentScore+=5;
     }
     cardList[colIndex].addAll(movingCards);
     _isDragging = false;
@@ -157,6 +163,22 @@ class HissPlayController extends HissRootController{
     _draggingStartIndex = null;
     currentStep++;
     update(["card_list","stock_pile","step","score"]);
+    if(null!=showDiamondCard){
+      HissUserInfoUtils.instance.updateDiamondNum(1);
+      HissSendEventUtils.instance.sendEvent(
+        data: HissEventData(
+          eventCode: HissEventCode.aShowDiamondPigAnimator,
+          anyEventValue: {
+            "cardWidth":cardWidth,
+            "cardHeight":cardHeight,
+            "endGlobalKey":diamondPigGlobalKey,
+            "startGlobalKey":showDiamondCard.globalKey,
+          },
+        ),
+      );
+      await Future.delayed(Duration(milliseconds: 500));
+      HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aShowPigBtnTips));
+    }
   }
 
   onDragStarted(int colIndex, int rowIndex){
@@ -613,6 +635,7 @@ class HissPlayController extends HissRootController{
 
   clickAdBtn(){
     HissAdUtils.instance.showAAAAd(
+      adType: AdType.reward,
       closeAdCallback: (){
         HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.lookAdAddMoneyNum());
       },

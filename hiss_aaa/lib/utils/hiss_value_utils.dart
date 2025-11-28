@@ -16,4 +16,6 @@ class HissValueUtils {
 
   //- a包每局给[3,5]个
   int randomCoinsCardNum()=>Random().nextInt(3)+3;
+
+  bool showDiamondIcon()=>Random().nextBool();
 }

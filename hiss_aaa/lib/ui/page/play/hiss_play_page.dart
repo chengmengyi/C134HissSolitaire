@@ -3,6 +3,7 @@ import 'package:hiss_aaa/bean/hiss_card_bean.dart';
 import 'package:hiss_aaa/ui/page/play/hiss_play_controller.dart';
 import 'package:hiss_aaa/ui/widget/hiss_card_item_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_deal_card_animator_widget.dart';
+import 'package:hiss_aaa/ui/widget/hiss_diamond_pig_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_hint_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_move_to_foundation_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_move_to_waste_animator_widget.dart';
@@ -51,6 +52,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       HissMoveToWasteAnimatorWidget(),
       HissHintAnimatorWidget(),
       HissPropAnimatorWidget(),
+      HissDiamondPigAnimatorWidget(),
     ],
   );
 
@@ -418,7 +420,10 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       children: [
         Row(
           children: [
-            HissPigWidget(),
+            SizedBox(
+              key: controller.diamondPigGlobalKey,
+              child: HissPigWidget(),
+            ),
             Spacer(),
             HissClickWidget(
               onTap: (){

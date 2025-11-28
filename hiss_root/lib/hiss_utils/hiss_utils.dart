@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -58,4 +59,24 @@ String userNameStar(String name){
   }else{
     return "${name.substring(0,3)}***";
   }
+}
+
+extension StringBase64 on String{
+  String base64()=>const Utf8Decoder().convert(base64Decode(this));
+}
+
+
+showToast(String s){
+  if(s.isEmpty){
+    return;
+  }
+  Fluttertoast.showToast(
+    msg: s,
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.CENTER,
+    timeInSecForIosWeb: 1,
+    backgroundColor: Colors.black45,
+    textColor: Colors.white,
+    fontSize: 16,
+  );
 }

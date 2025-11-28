@@ -6,6 +6,7 @@ import 'package:hiss_aaa/utils/hiss_gift_utils.dart';
 import 'package:hiss_aaa/utils/hiss_user_info_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -24,6 +25,7 @@ class HissGiftController extends HissRootController{
     }
     if(bean.showAd==1){
       HissAdUtils.instance.showAAAAd(
+        adType: AdType.reward,
         closeAdCallback: (){
           _addGift(bean);
         },
@@ -151,7 +153,7 @@ class HissGiftController extends HissRootController{
     try{
       var list = giftList[largeIndex];
       var bean=largeIndex%2==0?list.first:list.last;
-      return bean.giftStatus==HissGiftStatus.unReceive?"gift8":"gift9";
+      return bean.giftStatus==HissGiftStatus.lock?"gift9":"gift8";
     }catch(e){
       return "gift8";
     }

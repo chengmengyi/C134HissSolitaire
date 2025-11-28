@@ -64,13 +64,13 @@ class _HissHintAnimatorWidgetState extends HissRootStatefulState<HissHintAnimato
     cardHeight = anyEventValue["cardHeight"];
     List<HissHintBean> hints=anyEventValue["hints"];
     List<List<HissCardBean>> cardList=anyEventValue["cardList"];
-    for (var h in hints) {
-      if (h.toCol != null) {
-        print("列 ${h.fromCol} 的 ${h.cards.length} 张牌 可移动到列 ${h.toCol}===${h.cards}");
-      } else if (h.toFoundation != null) {
-        print("列 ${h.fromCol} 顶牌可移动到 Foundation ${h.toFoundation}");
-      }
-    }
+    // for (var h in hints) {
+    //   if (h.toCol != null) {
+    //     print("列 ${h.fromCol} 的 ${h.cards.length} 张牌 可移动到列 ${h.toCol}===${h.cards}");
+    //   } else if (h.toFoundation != null) {
+    //     print("列 ${h.fromCol} 顶牌可移动到 Foundation ${h.toFoundation}");
+    //   }
+    // }
     HissHintBean hintBean = hints.random();
     fromCardList.clear();
     fromCardList.addAll(hintBean.cards);

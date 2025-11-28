@@ -12,4 +12,6 @@ class HissEventCode{
   static const int aUpdateLevel=8;
   static const int aUpdateDiamondNum=9;
   static const int aShowPropAnimator=10;
+  static const int aShowPigBtnTips=11;
+  static const int aShowDiamondPigAnimator=12;
 }

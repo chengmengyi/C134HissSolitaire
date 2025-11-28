@@ -20,7 +20,7 @@ dependencies:
   webview_flutter: 4.13.0
   fluttertoast: 8.2.12
   outlined_text: 1.0.1
-  flutter_android_ad_plugins: 0.0.5
+  flutter_android_ad_plugins: 0.0.6
   audioplayers: 6.1.0
   flutter_app_lifecycle: 0.0.3
   url_launcher: 6.3.2
