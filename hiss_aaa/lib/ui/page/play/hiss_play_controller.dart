@@ -20,6 +20,7 @@ import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissPlayController extends HissRootController{
@@ -74,12 +75,89 @@ class HissPlayController extends HissRootController{
     cardWidth = (screenWidth-68.w)/7;
     cardHeight = cardWidth/0.68;
     update(["foundations","stock_pile","card_bg"]);
+
     List<HissCardBean> fullDeck = [];
     for (var type in HissCardType.values) {
       for (int v = 1; v <= 13; v++) {
         fullDeck.add(HissCardBean(value: v, cardType: type, front: false,globalKey: GlobalKey()));
       }
     }
+    if(aLevel.getData()<=1){
+      _initLevel1Cards(fullDeck);
+    }else{
+      _initOtherLevelCards(fullDeck);
+    }
+    update(["card_list"]);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      HissSendEventUtils.instance.sendEvent(
+        data: HissEventData(
+          eventCode: HissEventCode.aStartDealCardsAnimator,
+          anyEventValue: {
+            "stockPileGlobalKey":stockPileGlobalKey,
+            "cardList": cardList,
+            "cardWidth":cardWidth,
+            "cardHeight":cardHeight,
+          },
+        ),
+      );
+    });
+  }
+
+  _initLevel1Cards(List<HissCardBean> fullDeck){
+    List<HissCardBean> chain28 = [];
+
+    for (int v = 1; v <= 7; v++) {
+      List<HissCardBean> four = fullDeck.where((e) => e.value == v).take(4).toList();
+
+      chain28.addAll(four);
+
+      for (var c in four) {
+        fullDeck.remove(c);
+      }
+    }
+
+    List<List<HissCardBean>> columns = List.generate(7, (_) => []);
+
+    int index = 0;
+
+    for (int layer = 7; layer >= 1; layer--) {
+      for (int col = 0; col < 7; col++) {
+        int height = col + 1;
+
+        if (height < layer) continue;
+
+        HissCardBean card = chain28[index++];
+        columns[col].insert(0, card);
+      }
+    }
+
+    for (var col in columns) {
+      for (int i = 0; i < col.length; i++) {
+        col[i].front = (i == col.length - 1);
+      }
+    }
+    var coinsCardNum=HissValueUtils.instance.randomCoinsCardNum();
+    var random = Random();
+    for (var value in columns) {
+      for (var value1 in value) {
+        if(random.nextBool()&&coinsCardNum>0){
+          value1.isCoins=true;
+          coinsCardNum-=1;
+        }
+      }
+    }
+
+    cardList = columns;
+
+    stockPileList.clear();
+    for (var c in fullDeck) {
+      c.front = false;
+      stockPileList.add(c);
+    }
+  }
+
+  _initOtherLevelCards(List<HissCardBean> fullDeck){
     fullDeck.shuffle();
     int index = 0;
     var coinsCardNum=HissValueUtils.instance.randomCoinsCardNum();
@@ -97,22 +175,6 @@ class HissPlayController extends HissRootController{
       cardList.add(col);
     }
     stockPileList = fullDeck.sublist(index);
-
-    update(["card_list"]);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      HissSendEventUtils.instance.sendEvent(
-        data: HissEventData(
-          eventCode: HissEventCode.aStartDealCardsAnimator,
-          anyEventValue: {
-            "stockPileGlobalKey":stockPileGlobalKey,
-            "cardList": cardList,
-            "cardWidth":cardWidth,
-            "cardHeight":cardHeight,
-          },
-        ),
-      );
-    });
   }
 
   bool onAcceptWithDetails(data,int columnIndex){
@@ -164,6 +226,7 @@ class HissPlayController extends HissRootController{
     currentStep++;
     update(["card_list","stock_pile","step","score"]);
     if(null!=showDiamondCard){
+      HissMp3Utils.instance.playOtherMp3(HissMp3Type.cunqian);
       HissUserInfoUtils.instance.updateDiamondNum(1);
       HissSendEventUtils.instance.sendEvent(
         data: HissEventData(
@@ -269,6 +332,7 @@ class HissPlayController extends HissRootController{
       );
       await Future.delayed(Duration(milliseconds: 280));
       card.isCoins=false;
+      HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.moneyCardAddNum());
       update(["card_list"]);
       return;
     }

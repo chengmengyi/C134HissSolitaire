@@ -5,3 +5,4 @@ export 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 export 'package:flutter_android_ad_plugins/hep/ad_num_hep.dart';
 export 'package:shake_animation_widget/shake_animation_widget.dart';
 export 'package:flutter_android_ad_plugins/hep/ad_type.dart';
+export 'package:webview_flutter/webview_flutter.dart';

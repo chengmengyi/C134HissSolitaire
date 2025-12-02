@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'hiss_export.dart';
 
+class HissCommonRouters{
+  static const String hissMain="/common/hissMain";
+  static const String hissUrl="/common/hissUrl";
+}
+
+
 class HissRoutersUtils{
   static final HissRoutersUtils _aaaRouters=HissRoutersUtils();
   static HissRoutersUtils get instance => _aaaRouters;
@@ -51,5 +57,12 @@ class HissRoutersUtils{
       barrierColor: Colors.black.withOpacity(0.8),
       barrierDismissible: false,
     );
+  }
+
+  toWeb({
+    required String title,
+    required String url,
+  }){
+    toNextPageByNamed(routerName: HissCommonRouters.hissUrl,params: {"title":title,"url":url});
   }
 }

@@ -77,18 +77,28 @@ class AddPropDialog extends HissRootDialog<AddPropDialogController>{
                       onTap: (){
                         controller.clickFree(hissPropType,dismissCallback);
                       },
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          HissImagesWidget(name: "btn2", width: 120.w, height: 48.h),
-                          HissTextWidget(
-                            textContent: "Free",
-                            textSize: 20.sp,
-                            textColor: "#FFFFFF".toColor(),
-                            fontWeight: FontWeight.w900,
-                            outlineColor: "#133D03".toColor(),
-                          ),
-                        ],
+                      child: SizedBox(
+                        width: 120.w,
+                        height: 48.h,
+                        child: Stack(
+                          children: [
+                            HissImagesWidget(name: "btn2", width: 120.w, height: 48.h),
+                            Align(
+                              alignment: Alignment.center,
+                              child: HissTextWidget(
+                                textContent: "Free",
+                                textSize: 20.sp,
+                                textColor: "#FFFFFF".toColor(),
+                                fontWeight: FontWeight.w900,
+                                outlineColor: "#133D03".toColor(),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: HissImagesWidget(name: "icon_video", width: 20.w, height: 20.w),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

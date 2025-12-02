@@ -7,6 +7,7 @@ import 'package:flutter_android_ad_plugins/hep/ad_type.dart';
 import 'package:flutter_android_ad_plugins/hep/ios_ad_callback.dart';
 import 'package:flutter_android_ad_plugins/hep/ios_load_ad_result_callback.dart';
 import 'package:hiss_root/hiss_utils/hiss_local.dart';
+import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissAdUtils{
@@ -57,9 +58,10 @@ class HissAdUtils{
       adType: adType,
       iosAdCallback: IosAdCallback(
         showSuccess: (ad,info){
-
+          HissMp3Utils.instance.stopBgm();
         },
         showFail: (){
+          HissMp3Utils.instance.playBgm();
           if(adType==AdType.reward){
             showToast("Failed to fetch ads. Please try again later");
           }else{
@@ -67,6 +69,7 @@ class HissAdUtils{
           }
         },
         closeAd: (ad,info,hasReward){
+          HissMp3Utils.instance.playBgm();
           closeAdCallback.call();
         },
         revenuePaid: (ad,info){

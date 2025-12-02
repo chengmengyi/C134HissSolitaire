@@ -18,4 +18,6 @@ class HissValueUtils {
   int randomCoinsCardNum()=>Random().nextInt(3)+3;
 
   bool showDiamondIcon()=>Random().nextBool();
+
+  int moneyCardAddNum()=>10;
 }

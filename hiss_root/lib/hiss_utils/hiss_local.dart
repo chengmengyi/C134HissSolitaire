@@ -12,4 +12,8 @@ class HissLocal{
   static const _debugRvAdId="40e34dd7e0600c84";
   static const _releaseRvAdId="01613654bd67b3e4";
   static String rvAdId=Platform.isAndroid&&kDebugMode?_debugRvAdId:_releaseRvAdId;
+
+  static const _debugPrivacy="https://www.baidu.com";
+  static const _releasePrivacy="";
+  static String privacyUrl=Platform.isAndroid&&kDebugMode?_debugPrivacy:_releasePrivacy;
 }

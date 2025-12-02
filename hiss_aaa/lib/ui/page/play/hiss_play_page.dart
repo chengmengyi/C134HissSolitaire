@@ -219,7 +219,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                     controller.tryAutoMoveToFoundation(colIndex, rowIndex,list);
                   },
                   child: LongPressDraggable<Map<String, dynamic>>(
-                    delay: Duration(milliseconds: 100),
+                    delay: Duration(milliseconds: 80),
                     hitTestBehavior: HitTestBehavior.translucent,
                     data: {
                       "fromCol": colIndex,

@@ -9,6 +9,8 @@ import 'package:hiss_aaa/utils/hiss_user_info_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_app_life_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +26,7 @@ void main() async{
       )
   );
   await GetStorage.init();
+  HissMp3Utils.instance.initPlayer();
   HissAppLifeUtils.instance.addLife();
 
   //a

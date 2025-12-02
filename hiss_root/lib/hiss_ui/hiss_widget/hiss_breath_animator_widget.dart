@@ -4,10 +4,12 @@ import 'package:hiss_root/hiss_ui/hiss_root_stateful.dart';
 class HissBreathAnimatorWidget extends HissRootStateful{
   bool start;
   Widget child;
+  Function(AnimationController controller)? controllerCallback;
 
   HissBreathAnimatorWidget({
     required this.start,
     required this.child,
+    this.controllerCallback,
   });
 
   @override
@@ -52,6 +54,10 @@ class _HissBreathAnimatorWidgetState extends HissRootStatefulState<HissBreathAni
       curve: Curves.easeInOut,
     ));
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(null!=widget.controllerCallback){
+        widget.controllerCallback?.call(_controller);
+        return;
+      }
       if (widget.start) {
         _controller.reset();
         _controller.repeat(reverse: true);

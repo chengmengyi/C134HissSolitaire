@@ -3,6 +3,7 @@ import 'package:flutter_app_lifecycle/flutter_app_lifecycle.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 
 class HissAppLifeUtils{
   static final HissAppLifeUtils _appLifeUtils=HissAppLifeUtils();
@@ -12,6 +13,11 @@ class HissAppLifeUtils{
     FlutterAppLifecycle.instance.setCallObserver(
       AppStateObserver(
         call: (back){
+          if(back){
+            HissMp3Utils.instance.stopBgm();
+          }else{
+            HissMp3Utils.instance.playBgm();
+          }
           HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.onChangedAppLife,boolEventValue: back));
         },
       ),

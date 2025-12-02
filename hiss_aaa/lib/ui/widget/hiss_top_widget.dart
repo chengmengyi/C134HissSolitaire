@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hiss_aaa/ui/dialog/set_dialog/set_dialog.dart';
 import 'package:hiss_aaa/ui/widget/hiss_money_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissTopWidget extends StatelessWidget{
   GlobalKey? moneyGlobalKey;
@@ -26,6 +28,9 @@ class HissTopWidget extends StatelessWidget{
               HissMoneyWidget(moneyGlobalKey: moneyGlobalKey,),
               Spacer(),
               HissClickWidget(
+                onTap: (){
+                  HissRoutersUtils.instance.showDialog(child: SetDialog());
+                },
                 child: HissImagesWidget(name: "icon_set", width: 28.w, height: 28.w,),
               ),
             ],

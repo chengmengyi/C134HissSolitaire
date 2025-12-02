@@ -5,10 +5,17 @@ import 'package:hiss_aaa/utils/hiss_value_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class AddPropDialogController extends HissRootController{
+
+  @override
+  void onInit() {
+    super.onInit();
+    HissMp3Utils.instance.playOtherMp3(HissMp3Type.prop);
+  }
 
   clickFree(HissPropType hissPropType, Function() dismissCallback){
     HissAdUtils.instance.showAAAAd(

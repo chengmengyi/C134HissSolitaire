@@ -4,11 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hiss_aaa/ui/dialog/super_prop_dialog/super_prop_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_stateful.dart';
+import 'package:hiss_root/hiss_ui/hiss_widget/hiss_breath_animator_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissSuperPropAnimatorWidget extends HissRootStateful{
@@ -20,9 +22,10 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
   AnimationController? _controller;
   Animation<Offset>? _animation;
   bool _isVisible = false,_appIsBack=false;
-  final Random _random = Random();
 
   Timer? _timer;
+
+  AnimationController? _breathAnimationController;
 
   @override
   void initState() {
@@ -50,48 +53,52 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
             ),
           );
         },
-        child: HissImagesWidget(name: "play2", width: 100.w, height: 80.w),
+        child: HissBreathAnimatorWidget(
+          start: false,
+          controllerCallback: (c){
+            _breathAnimationController=c;
+          },
+          child: HissImagesWidget(name: "play2", width: 100.w, height: 80.w),
+        ),
       );
     }
     return Container();
   }
 
-  _startAnimation() {
+  _startAnimation() async{
     final size = MediaQuery.of(context).size;
-
-    double startX = _random.nextBool() ? -100 : size.width + 100;
-    double startY = _random.nextDouble() * (size.height - 100);
+    double startX = -100;
+    double startY = (size.height - 100) / 2;
 
     double centerX = (size.width - 100) / 2;
-    double centerY = (size.height - 100) / 2;
+    double centerY = startY;
 
-    double endX = _random.nextBool() ? -100 : size.width + 100;
-    double endY = _random.nextDouble() * (size.height - 100);
+    double endX = size.width + 100;
+    double endY = startY;
 
     _controller?.dispose();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 4),
     );
-
     _animation = TweenSequence<Offset>([
       TweenSequenceItem(
         tween: Tween<Offset>(
           begin: Offset(startX, startY),
           end: Offset(centerX, centerY),
         ).chain(CurveTween(curve: Curves.easeInOut)),
-        weight: 2,
+        weight: 1, // 进入
       ),
       TweenSequenceItem(
         tween: ConstantTween<Offset>(Offset(centerX, centerY)),
-        weight: 2,
+        weight: 2, // 停留
       ),
       TweenSequenceItem(
         tween: Tween<Offset>(
           begin: Offset(centerX, centerY),
           end: Offset(endX, endY),
         ).chain(CurveTween(curve: Curves.easeInOut)),
-        weight: 2,
+        weight: 1, // 离开
       ),
     ]).animate(_controller!);
 
@@ -99,11 +106,16 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
       _isVisible = true;
     });
 
+    HissMp3Utils.instance.playOtherMp3(HissMp3Type.super_prop);
+
     _controller!.forward().whenComplete(() {
       setState(() {
         _isVisible = false;
       });
     });
+    await Future.delayed(Duration(seconds: 1));
+    _breathAnimationController?.reset();
+    _breathAnimationController?.repeat(reverse: true);
   }
 
   _stopAnimation() {
@@ -126,6 +138,8 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
   void dispose() {
     _controller?.dispose();
     _timer?.cancel();
+    _breathAnimationController?.dispose();
+    _breathAnimationController=null;
     super.dispose();
   }
 
