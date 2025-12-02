@@ -394,6 +394,7 @@ class HissPlayController extends HissRootController{
     if (!canClick||rowIndex != list.length - 1){
       return;
     }
+    canClick=false;
     final card = cardList[colIndex][rowIndex];
     if(card.isCoins==true){
       HissSendEventUtils.instance.sendEvent(
@@ -412,9 +413,12 @@ class HissPlayController extends HissRootController{
       card.isCoins=false;
       HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.moneyCardAddNum());
       update(["card_list"]);
+      await Future.delayed(Duration(milliseconds: 100));
+      canClick=true;
       return;
     }
     if (rowIndex != cardList[colIndex].length - 1 || !card.front){
+      canClick=true;
       return;
     }
     var index=-1;
@@ -425,6 +429,7 @@ class HissPlayController extends HissRootController{
       }
     }
     if(index<0){
+      canClick=true;
       return;
     }
     _cancelNoOperationTimer();
@@ -452,6 +457,8 @@ class HissPlayController extends HissRootController{
     }
     currentScore+=10;
     update(["card_list","foundations","score"]);
+    await Future.delayed(Duration(milliseconds: 100));
+    canClick=true;
     //校验游戏通关了
     _checkPlayEnd();
   }
