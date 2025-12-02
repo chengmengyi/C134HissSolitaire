@@ -440,7 +440,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
               key: controller.diamondPigGlobalKey,
               child: HissPigWidget(
                 clickCallback: (){
-
+                  controller.clickPig();
                 },
               ),
             ),
