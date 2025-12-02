@@ -319,7 +319,8 @@ class HissPlayController extends HissRootController{
       HissCardBean? card;
       for (int  i = 0; i < cardList.length; i++) {
         var value = cardList[i];
-        for (var value1 in value) {
+        if(value.isNotEmpty){
+          var value1 = value.last;
           for (int f = 0; f < 4; f++) {
             if (_canMoveToFoundation(value1, foundationsList[f])) {
               foundationIndex=f;
