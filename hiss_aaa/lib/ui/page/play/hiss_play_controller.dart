@@ -347,7 +347,7 @@ class HissPlayController extends HissRootController{
             },
           ),
         );
-        await Future.delayed(Duration(milliseconds: 320));
+        await Future.delayed(Duration(milliseconds: 280));
         card.showCard=true;
         _saveSnapshot();
         foundationsList[foundationIndex].add(card);
@@ -358,6 +358,7 @@ class HissPlayController extends HissRootController{
         currentScore+=10;
         update(["card_list","foundations","score"]);
         canClick=true;
+        await Future.delayed(Duration(milliseconds: 100));
         WidgetsBinding.instance.addPostFrameCallback((_) async{
           _checkPlayEnd();
         });
