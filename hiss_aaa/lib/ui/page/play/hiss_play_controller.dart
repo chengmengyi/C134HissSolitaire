@@ -253,55 +253,6 @@ class HissPlayController extends HissRootController{
     _checkAllCardFront();
   }
 
-  test()async {
-    var foundationIndex = -1,
-        colIndex = -1;
-    HissCardBean? card;
-    for (int i = 0; i < cardList.length; i++) {
-      var value = cardList[i];
-      for (var value1 in value) {
-        for (int f = 0; f < 4; f++) {
-          if (_canMoveToFoundation(value1, foundationsList[f])) {
-            foundationIndex = f;
-            card = value1;
-            colIndex = i;
-            break;
-          }
-        }
-      }
-    }
-
-    if (null != card) {
-      card.showCard = false;
-      update(["card_list"]);
-      HissSendEventUtils.instance.sendEvent(
-        data: HissEventData(
-          eventCode: HissEventCode.aMoveCardToFoundation,
-          anyEventValue: {
-            "startGlobalKey": card.globalKey,
-            "endGlobalKey": foundationsGlobalKeyList[foundationIndex],
-            "card": card,
-            "cardWidth": cardWidth,
-            "cardHeight": cardHeight,
-          },
-        ),
-      );
-      await Future.delayed(Duration(milliseconds: 320));
-      card.showCard = true;
-      _saveSnapshot();
-      foundationsList[foundationIndex].add(card);
-      cardList[colIndex].removeLast();
-      if (cardList[colIndex].isNotEmpty) {
-        cardList[colIndex].last.front = true;
-      }
-      currentScore += 10;
-      update(["card_list", "foundations", "score"]);
-      WidgetsBinding.instance.addPostFrameCallback((_) async{
-        test();
-      });
-    }
-  }
-
   //校验所有牌都翻开了，就全部自动收到纸牌区
   _checkAllCardFront()async{
     var allFront=true;

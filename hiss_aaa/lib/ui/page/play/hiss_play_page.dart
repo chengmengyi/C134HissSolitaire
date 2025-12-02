@@ -58,16 +58,6 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       HissPropAnimatorWidget(),
       HissDiamondPigAnimatorWidget(),
       HissMoveToFoundationAnimatorWidget(),
-      HissClickWidget(
-        onTap: (){
-          controller.test();
-        },
-        child: Container(
-          width: 100,
-          height: 100,
-          color: Colors.red,
-        ),
-      ),
     ],
   );
 
