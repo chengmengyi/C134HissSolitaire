@@ -6,30 +6,45 @@ import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
+import 'package:hiss_root/hiss_utils/hiss_export.dart';
 
-class HissMoveToFoundationAnimatorWidget extends HissRootStateful{
+class HissWasteMoveAnimatorWidget extends HissRootStateful{
   @override
-  State<StatefulWidget> createState() => _HissMoveToFoundationAnimatorWidgetState();
+  State<StatefulWidget> createState() => _HissWasteMoveAnimatorWidgetState();
 }
 
-class _HissMoveToFoundationAnimatorWidgetState extends HissRootStatefulState<HissMoveToFoundationAnimatorWidget> with TickerProviderStateMixin{
+class _HissWasteMoveAnimatorWidgetState extends HissRootStatefulState<HissWasteMoveAnimatorWidget> with TickerProviderStateMixin{
   var cardWidth=0.0,cardHeight=0.0;
   AnimationController? animationController;
   Animation<Offset>? animation;
-  HissCardBean? cardBean;
+  List<HissCardBean> cardList=[];
 
   @override
   initContent() {
     if(null==animationController||null==animation){
       return Container();
     }
+    var marginLeft = (cardWidth+(6.w))/2;
     return AnimatedBuilder(
       animation: animationController!,
       builder: (_, __) {
         return Positioned(
           left: animation!.value.dx,
           top: animation!.value.dy,
-          child: HissImagesWidget(name: getCardImages(cardBean), width: cardWidth, height: cardHeight,),
+          child: Stack(
+            children: List.generate(cardList.length, (index){
+              var bean = cardList[index];
+              double left = marginLeft * (index + (3 - cardList.length));
+              return Container(
+                margin: EdgeInsets.only(left: left),
+                child: HissImagesWidget(
+                  name: getCardImages(bean),
+                  width: cardWidth,
+                  height: cardHeight,
+                ),
+              );
+            }),
+          ),
         );
       },
     );
@@ -41,22 +56,23 @@ class _HissMoveToFoundationAnimatorWidgetState extends HissRootStatefulState<His
   @override
   handleEventBusData(HissEventData data) {
     switch(data.eventCode){
-      case HissEventCode.aMoveCardToFoundation:
-        _moveCardToFoundation(data.anyEventValue);
+      case HissEventCode.aMoveOtherWasteAnimator:
+        _moveOtherWasteAnimator(data.anyEventValue);
         break;
     }
   }
 
-  _moveCardToFoundation(anyEventValue)async{
+  _moveOtherWasteAnimator(anyEventValue)async{
     cardWidth = anyEventValue["cardWidth"];
     cardHeight = anyEventValue["cardHeight"];
-    GlobalKey startGlobalKey=anyEventValue["startGlobalKey"];
-    GlobalKey endGlobalKey=anyEventValue["endGlobalKey"];
-    cardBean=anyEventValue["card"];
-    var startRenderBox = startGlobalKey.currentContext?.findRenderObject() as RenderBox;
+    List<HissCardBean> cardList=anyEventValue["cardList"];
+    this.cardList.clear();
+    this.cardList.addAll(cardList);
+    var startRenderBox = cardList.first.globalKey?.currentContext?.findRenderObject() as RenderBox;
     var startOffset = startRenderBox.localToGlobal(Offset.zero);
-    var endRenderBox = endGlobalKey.currentContext?.findRenderObject() as RenderBox;
-    var endOffset = endRenderBox.localToGlobal(Offset.zero);
+    var marginLeft = (cardWidth+(6.w))/2;
+    var endOffset=Offset(startOffset.dx-marginLeft,startOffset.dy);
+
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),

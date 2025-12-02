@@ -375,7 +375,18 @@ class HissPlayController extends HissRootController{
     currentScore+=10;
     update(["card_list","foundations","score"]);
     //校验游戏通关了
-    if(_checkPlayEnd()){
+    _checkPlayEnd();
+  }
+
+  _checkPlayEnd(){
+    var playEnd=true;
+    for (var value in foundationsList) {
+      if(value.length<13){
+        playEnd=false;
+        break;
+      }
+    }
+    if(playEnd){
       HissRoutersUtils.instance.showDialog(
         child: PlaySuccessDialog(
           time: currentTime,
@@ -391,15 +402,6 @@ class HissPlayController extends HissRootController{
     }else{
       _startNoOperationTimer();
     }
-  }
-
-  bool _checkPlayEnd(){
-    for (var value in foundationsList) {
-      if(value.length<13){
-        return false;
-      }
-    }
-    return true;
   }
 
   //是否可移动到func
@@ -456,6 +458,18 @@ class HissPlayController extends HissRootController{
         _startNoOperationTimer();
         return;
       }
+      if(wastePileList.isNotEmpty){
+        HissSendEventUtils.instance.sendEvent(
+          data: HissEventData(
+            eventCode: HissEventCode.aMoveOtherWasteAnimator,
+            anyEventValue: {
+              "cardList":wastePileList.length<3?wastePileList:wastePileList.sublist(1,3),
+              "cardWidth":cardWidth,
+              "cardHeight":cardHeight,
+            },
+          ),
+        );
+      }
       HissSendEventUtils.instance.sendEvent(
         data: HissEventData(
           eventCode: HissEventCode.aMoveCardToWaste,
@@ -467,6 +481,7 @@ class HissPlayController extends HissRootController{
           },
         ),
       );
+
       await Future.delayed(Duration(milliseconds: 280));
       wastePileList.add(card);
       if (wastePileList.length > 3) {
@@ -476,7 +491,9 @@ class HissPlayController extends HissRootController{
       }
     }
     update(["stock_pile"]);
-    _canClickStockPile=true;
+    Future.delayed(Duration(milliseconds: 200),(){
+      _canClickStockPile=true;
+    });
     _startNoOperationTimer();
   }
 
@@ -704,6 +721,35 @@ class HissPlayController extends HissRootController{
         HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.lookAdAddMoneyNum());
       },
     );
+  }
+
+  bool foundationsOnWillAccept(Map<String, dynamic>? data, int index){
+    List<HissCardBean> moving = data!["cards"];
+    if (moving.length != 1){
+      return false;
+    }
+    return canMoveToFoundation(moving.first, foundationsList[index]);
+  }
+
+  foundationsOnAccept(Map<String, dynamic> data, int index){
+    _saveSnapshot();
+    HissCardBean card = data['cards'][0];
+    if (data['fromWaste'] == true) {
+      wastePileList.remove(card);
+      foundationsList[index].add(card);
+      _isDragging = false;
+      _draggingFromCol = null;
+      _draggingStartIndex = null;
+      update(["stock_pile","foundations",]);
+    }
+    // else {
+    //   int fromCol = data['fromCol'];
+    //   int startIndex = data['startIndex'];
+    //   cardList[fromCol].removeRange(startIndex, cardList[fromCol].length);
+    //   if (cardList[fromCol].isNotEmpty) {
+    //     cardList[fromCol].last.isFaceUp = true;
+    //   }
+    // }
   }
 
   @override

@@ -79,7 +79,7 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
     _controller?.dispose();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 4),
+      duration: const Duration(seconds: 5),
     );
     _animation = TweenSequence<Offset>([
       TweenSequenceItem(
@@ -87,7 +87,7 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
           begin: Offset(startX, startY),
           end: Offset(centerX, centerY),
         ).chain(CurveTween(curve: Curves.easeInOut)),
-        weight: 1, // 进入
+        weight: 1.5, // 进入
       ),
       TweenSequenceItem(
         tween: ConstantTween<Offset>(Offset(centerX, centerY)),
@@ -98,7 +98,7 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
           begin: Offset(centerX, centerY),
           end: Offset(endX, endY),
         ).chain(CurveTween(curve: Curves.easeInOut)),
-        weight: 1, // 离开
+        weight: 1.5, // 离开
       ),
     ]).animate(_controller!);
 
@@ -138,8 +138,6 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
   void dispose() {
     _controller?.dispose();
     _timer?.cancel();
-    _breathAnimationController?.dispose();
-    _breathAnimationController=null;
     super.dispose();
   }
 

@@ -68,4 +68,10 @@ class _HissPropAnimatorWidgetState extends HissRootStatefulState<HissPropAnimato
     animationController=null;
     setState(() {});
   }
+
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
+  }
 }

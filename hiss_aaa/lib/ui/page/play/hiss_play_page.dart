@@ -11,6 +11,7 @@ import 'package:hiss_aaa/ui/widget/hiss_pig_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_prop_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_super_prop_animator_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_top_widget.dart';
+import 'package:hiss_aaa/ui/widget/hiss_waste_move_animator_widget.dart';
 import 'package:hiss_aaa/utils/hiss_storage.dart';
 import 'package:hiss_aaa/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_page.dart';
@@ -48,11 +49,12 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
           controller.onAllAnimationsCompleted();
         },
       ),
-      HissMoveToFoundationAnimatorWidget(),
+      HissWasteMoveAnimatorWidget(),
       HissMoveToWasteAnimatorWidget(),
       HissHintAnimatorWidget(),
       HissPropAnimatorWidget(),
       HissDiamondPigAnimatorWidget(),
+      HissMoveToFoundationAnimatorWidget(),
     ],
   );
 
@@ -81,7 +83,17 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                 }
                 return SizedBox(
                   key: controller.foundationsGlobalKeyList[index],
-                  child: widget,
+                  child: DragTarget<Map<String, dynamic>>(
+                    onWillAccept: (data) {
+                      return controller.foundationsOnWillAccept(data,index);
+                    },
+                    onAccept: (data) {
+                      controller.foundationsOnAccept(data,index);
+                    },
+                    builder: (context, candidateData, rejectedData) {
+                      return widget;
+                    },
+                  ),
                 );
               },
               separatorBuilder: (context, index) => SizedBox(width: 6.w,),
@@ -105,6 +117,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                 var bean = controller.wastePileList[index];
                 double left = marginLeft * (index + (3 - controller.wastePileList.length));
                 return Container(
+                  key: bean.globalKey,
                   margin: EdgeInsets.only(left: left),
                   child: Draggable<Map<String, dynamic>>(
                     data: {"fromWaste": true, "cards": [controller.wastePileList[index]]},

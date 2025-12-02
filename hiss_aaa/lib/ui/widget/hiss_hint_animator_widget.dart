@@ -118,4 +118,10 @@ class _HissHintAnimatorWidgetState extends HissRootStatefulState<HissHintAnimato
     animationController=null;
     setState(() {});
   }
+
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
+  }
 }

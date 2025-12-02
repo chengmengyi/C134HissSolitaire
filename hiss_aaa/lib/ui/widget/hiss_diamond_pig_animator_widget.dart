@@ -73,4 +73,10 @@ class _HissDiamondPigAnimatorWidgetState extends HissRootStatefulState<HissDiamo
     animationController=null;
     setState(() {});
   }
+
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
+  }
 }

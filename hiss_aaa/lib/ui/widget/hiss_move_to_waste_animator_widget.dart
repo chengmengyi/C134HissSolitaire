@@ -72,4 +72,10 @@ class _HissMoveToWasteAnimatorWidgetState extends HissRootStatefulState<HissMove
     animationController=null;
     setState(() {});
   }
+
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
+  }
 }
