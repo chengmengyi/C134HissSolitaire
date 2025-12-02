@@ -13,6 +13,10 @@ import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissPigWidget extends HissRootStateful{
+  Function()? clickCallback;
+  HissPigWidget({
+    this.clickCallback,
+});
   @override
   State<StatefulWidget> createState() => _HissPigWidgetState();
 }
@@ -29,7 +33,11 @@ class _HissPigWidgetState extends HissRootStatefulState<HissPigWidget>{
         margin: EdgeInsets.only(top: 24.h),
         child: HissClickWidget(
           onTap: (){
-            HissRoutersUtils.instance.toNextPageByNamed(routerName: HissAAARouters.pig);
+            if(null==widget.clickCallback){
+              HissRoutersUtils.instance.toNextPageByNamed(routerName: HissAAARouters.pig);
+            }else{
+              widget.clickCallback?.call();
+            }
           },
           child: HissImagesWidget(name: "play3", width: 72.w, height: 72.w),
         ),

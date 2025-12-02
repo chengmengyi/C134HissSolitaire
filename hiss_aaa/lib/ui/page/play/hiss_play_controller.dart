@@ -9,6 +9,8 @@ import 'package:hiss_aaa/bean/hiss_hint_bean.dart';
 import 'package:hiss_aaa/ui/dialog/add_prop_dialog/add_prop_dialog.dart';
 import 'package:hiss_aaa/ui/dialog/play_success_dialog/play_success_dialog.dart';
 import 'package:hiss_aaa/ui/dialog/random_prop_dialog/random_prop_dialog.dart';
+import 'package:hiss_aaa/ui/dialog/set_dialog/set_dialog.dart';
+import 'package:hiss_aaa/utils/hiss_a_routers.dart';
 import 'package:hiss_aaa/utils/hiss_enum/hiss_card_type.dart';
 import 'package:hiss_aaa/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_aaa/utils/hiss_storage.dart';
@@ -25,7 +27,8 @@ import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissPlayController extends HissRootController{
   var cardWidth=0.0,cardHeight=0.0,_canClickStockPile=true,_canClickResetPlay=true,
-      currentScore=0,currentStep=0,currentTime=0,appBackground=false,_showRandomPropDialog=true;
+      currentScore=0,currentStep=0,currentTime=0,appBackground=false,_showRandomPropDialog=true,
+      canClick=true;
   bool _isDragging = false;
   int? _draggingFromCol;
   int? _draggingStartIndex;
@@ -62,6 +65,9 @@ class HissPlayController extends HissRootController{
   }
 
   clickHome(){
+    if(!canClick){
+      return;
+    }
     HissRoutersUtils.instance.close();
   }
 
@@ -87,7 +93,9 @@ class HissPlayController extends HissRootController{
     }else{
       _initOtherLevelCards(fullDeck);
     }
-    update(["card_list"]);
+    foundationsList=[[],[],[],[]];
+    wastePileList.clear();
+    update(["card_list","foundations","stock_pile"]);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       HissSendEventUtils.instance.sendEvent(
@@ -242,6 +250,123 @@ class HissPlayController extends HissRootController{
       await Future.delayed(Duration(milliseconds: 500));
       HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aShowPigBtnTips));
     }
+    _checkAllCardFront();
+  }
+
+  test()async {
+    var foundationIndex = -1,
+        colIndex = -1;
+    HissCardBean? card;
+    for (int i = 0; i < cardList.length; i++) {
+      var value = cardList[i];
+      for (var value1 in value) {
+        for (int f = 0; f < 4; f++) {
+          if (_canMoveToFoundation(value1, foundationsList[f])) {
+            foundationIndex = f;
+            card = value1;
+            colIndex = i;
+            break;
+          }
+        }
+      }
+    }
+
+    if (null != card) {
+      card.showCard = false;
+      update(["card_list"]);
+      HissSendEventUtils.instance.sendEvent(
+        data: HissEventData(
+          eventCode: HissEventCode.aMoveCardToFoundation,
+          anyEventValue: {
+            "startGlobalKey": card.globalKey,
+            "endGlobalKey": foundationsGlobalKeyList[foundationIndex],
+            "card": card,
+            "cardWidth": cardWidth,
+            "cardHeight": cardHeight,
+          },
+        ),
+      );
+      await Future.delayed(Duration(milliseconds: 320));
+      card.showCard = true;
+      _saveSnapshot();
+      foundationsList[foundationIndex].add(card);
+      cardList[colIndex].removeLast();
+      if (cardList[colIndex].isNotEmpty) {
+        cardList[colIndex].last.front = true;
+      }
+      currentScore += 10;
+      update(["card_list", "foundations", "score"]);
+      WidgetsBinding.instance.addPostFrameCallback((_) async{
+        test();
+      });
+    }
+  }
+
+  //校验所有牌都翻开了，就全部自动收到纸牌区
+  _checkAllCardFront()async{
+    var allFront=true;
+    for (var value in cardList) {
+      for (var value1 in value) {
+        if(!value1.front){
+          allFront=false;
+          break;
+        }
+      }
+    }
+
+    if(stockPileList.isEmpty&&wastePileList.isEmpty&&allFront){
+      var foundationIndex=-1,colIndex=-1;
+      HissCardBean? card;
+      for (int  i = 0; i < cardList.length; i++) {
+        var value = cardList[i];
+        for (var value1 in value) {
+          for (int f = 0; f < 4; f++) {
+            if (_canMoveToFoundation(value1, foundationsList[f])) {
+              foundationIndex=f;
+              card=value1;
+              colIndex=i;
+              break;
+            }
+          }
+        }
+      }
+
+      if(null!=card){
+        canClick=false;
+        card.showCard=false;
+        update(["card_list"]);
+        HissSendEventUtils.instance.sendEvent(
+          data: HissEventData(
+            eventCode: HissEventCode.aMoveCardToFoundation,
+            anyEventValue: {
+              "startGlobalKey":card.globalKey,
+              "endGlobalKey":foundationsGlobalKeyList[foundationIndex],
+              "card":card,
+              "cardWidth":cardWidth,
+              "cardHeight":cardHeight,
+            },
+          ),
+        );
+        await Future.delayed(Duration(milliseconds: 320));
+        card.showCard=true;
+        _saveSnapshot();
+        foundationsList[foundationIndex].add(card);
+        cardList[colIndex].removeLast();
+        if (cardList[colIndex].isNotEmpty){
+          cardList[colIndex].last.front = true;
+        }
+        currentScore+=10;
+        update(["card_list","foundations","score"]);
+        canClick=true;
+        WidgetsBinding.instance.addPostFrameCallback((_) async{
+          _checkPlayEnd();
+        });
+      }else{
+        canClick=true;
+      }
+    }else{
+      canClick=true;
+    }
   }
 
   onDragStarted(int colIndex, int rowIndex){
@@ -313,7 +438,7 @@ class HissPlayController extends HissRootController{
   }
 
   tryAutoMoveToFoundation(int colIndex, int rowIndex, List<HissCardBean> list,) async{
-    if (rowIndex != list.length - 1){
+    if (!canClick||rowIndex != list.length - 1){
       return;
     }
     final card = cardList[colIndex][rowIndex];
@@ -401,6 +526,7 @@ class HissPlayController extends HissRootController{
       );
     }else{
       _startNoOperationTimer();
+      _checkAllCardFront();
     }
   }
 
@@ -415,13 +541,13 @@ class HissPlayController extends HissRootController{
 
   //点击抽牌区域
   clickFlipCardFromStock()async{
-    if(!_canClickStockPile){
+    if(!_canClickStockPile||!canClick){
       return;
     }
-    _canClickStockPile=false;
     if (stockPileList.isEmpty && wastePileList.isEmpty){
       return;
     }
+    _canClickStockPile=false;
     _cancelNoOperationTimer();
     _saveSnapshot();
     if (stockPileList.isEmpty) {
@@ -456,6 +582,8 @@ class HissPlayController extends HissRootController{
         update(["foundations","score"]);
         _canClickStockPile=true;
         _startNoOperationTimer();
+        //校验游戏通关了
+        _checkPlayEnd();
         return;
       }
       if(wastePileList.isNotEmpty){
@@ -519,6 +647,9 @@ class HissPlayController extends HissRootController{
   }
 
   clickBackProp(){
+    if(!canClick){
+      return;
+    }
     if(aBackPropNum.getData()<=0){
       HissRoutersUtils.instance.showDialog(
         child: AddPropDialog(
@@ -548,6 +679,9 @@ class HissPlayController extends HissRootController{
   }
 
   clickHint(){
+    if(!canClick){
+      return;
+    }
     if(aTipsPropNum.getData()<=0){
       HissRoutersUtils.instance.showDialog(
         child: AddPropDialog(
@@ -666,6 +800,9 @@ class HissPlayController extends HissRootController{
   }
 
   clickResetPlay(){
+    if(!canClick){
+      return;
+    }
     currentStep=0;
     currentTime=0;
     currentScore=0;
@@ -714,13 +851,30 @@ class HissPlayController extends HissRootController{
     _noOperationTimer=null;
   }
 
+  clickPig(){
+    if(!canClick){
+      return;
+    }
+    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissAAARouters.pig);
+  }
+
   clickAdBtn(){
+    if(!canClick){
+      return;
+    }
     HissAdUtils.instance.showAAAAd(
       adType: AdType.reward,
       closeAdCallback: (){
         HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.lookAdAddMoneyNum());
       },
     );
+  }
+
+  clickSet(){
+    if(!canClick){
+      return;
+    }
+    HissRoutersUtils.instance.showDialog(child: SetDialog());
   }
 
   bool foundationsOnWillAccept(Map<String, dynamic>? data, int index){
@@ -750,6 +904,8 @@ class HissPlayController extends HissRootController{
     //     cardList[fromCol].last.isFaceUp = true;
     //   }
     // }
+    //校验游戏通关了
+    _checkPlayEnd();
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:hiss_aaa/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_aaa/utils/hiss_pig_utils.dart';
 import 'package:hiss_aaa/utils/hiss_storage.dart';
 import 'package:hiss_aaa/utils/hiss_user_info_utils.dart';
+import 'package:hiss_aaa/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
@@ -17,7 +18,7 @@ class HissPigController extends HissRootController{
   @override
   void onInit() {
     super.onInit();
-    currentDiamondNum=aDiamondNum.getData()%100;
+    currentDiamondNum=countCurrentDiamond();
     _initList();
   }
 
@@ -106,12 +107,11 @@ class HissPigController extends HissRootController{
   }
 
   String getDiamondIcon(){
-    var pro = getPro();
-    if(pro<=25){
+    if(currentDiamondNum<=0){
       return "pig12";
-    }else if(pro<=50){
+    }else if(currentDiamondNum<=50){
       return "pig13";
-    }else if(pro<=75){
+    }else if(currentDiamondNum<=99){
       return "pig14";
     }else{
       return "pig15";

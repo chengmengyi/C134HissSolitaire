@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:hiss_aaa/bean/hiss_rank_bean.dart';
 import 'package:hiss_aaa/utils/hiss_rank_utils.dart';
 import 'package:hiss_aaa/utils/hiss_storage.dart';
 import 'package:hiss_aaa/utils/hiss_user_info_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
+import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -12,6 +14,7 @@ class HissRankController extends HissRootController{
   HissRankBean? top3RankBean;
   HissRankBean? myRankBean;
   List<HissRankBean> otherRankList=[];
+  ScrollController scrollController=ScrollController();
   var receivedRankReward=false;
 
   @override
@@ -58,10 +61,21 @@ class HissRankController extends HissRootController{
       otherRankList.clear();
       otherRankList.addAll(list);
       update(["top3","list","my_rank"]);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if(indexWhere>=4){
+          scrollController.animateTo((64.h)*(indexWhere-4), duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+        }
+      });
     }
   }
 
   clickClose(){
     HissRoutersUtils.instance.close();
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_aaa/ui/dialog/set_dialog/set_dialog.dart';
+import 'package:hiss_aaa/ui/widget/hiss_diamond_widget.dart';
 import 'package:hiss_aaa/ui/widget/hiss_money_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
@@ -8,8 +9,10 @@ import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissTopWidget extends StatelessWidget{
   GlobalKey? moneyGlobalKey;
+  Function()? clickSetCallback;
   HissTopWidget({
     this.moneyGlobalKey,
+    this.clickSetCallback,
 });
 
   @override
@@ -26,10 +29,16 @@ class HissTopWidget extends StatelessWidget{
           child: Row(
             children: [
               HissMoneyWidget(moneyGlobalKey: moneyGlobalKey,),
+              SizedBox(width: 10.w,),
+              HissDiamondWidget(),
               Spacer(),
               HissClickWidget(
                 onTap: (){
-                  HissRoutersUtils.instance.showDialog(child: SetDialog());
+                  if(null==clickSetCallback){
+                    HissRoutersUtils.instance.showDialog(child: SetDialog());
+                  }else{
+                    clickSetCallback?.call();
+                  }
                 },
                 child: HissImagesWidget(name: "icon_set", width: 28.w, height: 28.w,),
               ),

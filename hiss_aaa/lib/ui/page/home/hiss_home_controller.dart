@@ -11,6 +11,7 @@ import 'package:hiss_aaa/ui/dialog/super_prop_dialog/super_prop_dialog.dart';
 import 'package:hiss_aaa/utils/hiss_a_routers.dart';
 import 'package:hiss_aaa/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_aaa/utils/hiss_play_record_utils.dart';
+import 'package:hiss_aaa/utils/hiss_storage.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
@@ -42,6 +43,8 @@ class HissHomeController extends HissRootController{
     }
 
     // HissRoutersUtils.instance.showDialog(child: SetDialog());
-    HissMp3Utils.instance.playOtherMp3(HissMp3Type.chupai);
+    // HissMp3Utils.instance.playOtherMp3(HissMp3Type.chupai);
+    // aDiamondNum.saveData(aDiamondNum.getData()+10);
+    aLevel.saveData(1);
   }
 }

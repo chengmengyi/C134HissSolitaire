@@ -30,7 +30,7 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
   @override
   void initState() {
     super.initState();
-    _timer=Timer.periodic(Duration(seconds: kDebugMode?10:60), (t){
+    _timer=Timer.periodic(Duration(seconds: 60), (t){
       if(_appIsBack){
         return;
       }

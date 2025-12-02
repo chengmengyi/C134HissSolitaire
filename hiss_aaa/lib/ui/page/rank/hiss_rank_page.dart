@@ -108,6 +108,7 @@ class HissRankPage extends HissRootPage<HissRankController>{
             child: GetBuilder<HissRankController>(
               id: "list",
               builder: (_)=>ListView.builder(
+                controller: controller.scrollController,
                 itemCount: controller.otherRankList.length,
                 itemBuilder: (context,index)=>_rankItemWidget(index,controller.otherRankList[index]),
               ),

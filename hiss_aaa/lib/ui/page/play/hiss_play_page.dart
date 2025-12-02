@@ -34,6 +34,9 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
         children: [
           HissTopWidget(
             moneyGlobalKey: controller.topMoneyGlobalKey,
+            clickSetCallback: (){
+              controller.clickSet();
+            },
           ),
           _playInfoWidget(),
           SizedBox(height: 20.h,),
@@ -55,6 +58,16 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       HissPropAnimatorWidget(),
       HissDiamondPigAnimatorWidget(),
       HissMoveToFoundationAnimatorWidget(),
+      HissClickWidget(
+        onTap: (){
+          controller.test();
+        },
+        child: Container(
+          width: 100,
+          height: 100,
+          color: Colors.red,
+        ),
+      ),
     ],
   );
 
@@ -435,7 +448,11 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
           children: [
             SizedBox(
               key: controller.diamondPigGlobalKey,
-              child: HissPigWidget(),
+              child: HissPigWidget(
+                clickCallback: (){
+
+                },
+              ),
             ),
             Spacer(),
             HissClickWidget(
