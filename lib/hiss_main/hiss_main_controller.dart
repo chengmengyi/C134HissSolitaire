@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_aaa/utils/hiss_a_routers.dart';
+import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
@@ -28,6 +29,7 @@ class HissMainController extends HissRootController with GetSingleTickerProvider
   }
 
   _animatorCompleted(){
-    HissRoutersUtils.instance.toNextPageCloseAllPage(routerName: HissAAARouters.home);
+    // HissRoutersUtils.instance.toNextPageCloseAllPage(routerName: HissAAARouters.home);
+    HissRoutersUtils.instance.toNextPageCloseAllPage(routerName: HissBBBRouters.home);
   }
 }

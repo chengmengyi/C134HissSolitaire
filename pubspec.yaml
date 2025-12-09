@@ -38,6 +38,8 @@ dependencies:
     path: hiss_root
   hiss_aaa:
     path: hiss_aaa
+  hiss_bbb:
+    path: hiss_bbb
 
 dev_dependencies:
   flutter_test:

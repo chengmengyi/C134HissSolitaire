@@ -6,11 +6,16 @@ import 'package:hiss_aaa/utils/hiss_gift_utils.dart';
 import 'package:hiss_aaa/utils/hiss_pig_utils.dart';
 import 'package:hiss_aaa/utils/hiss_rank_utils.dart';
 import 'package:hiss_aaa/utils/hiss_user_info_utils.dart';
+import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_app_life_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
+import 'package:hiss_bbb/utils/hiss_gift_utils.dart' as bHissGiftUtils;
+import 'package:hiss_bbb/utils/hiss_rank_utils.dart' as bHissRankUtils;
+import 'package:hiss_bbb/utils/hiss_user_info_utils.dart' as bHissUserInfoUtils;
+import 'package:hiss_bbb/utils/hiss_pig_utils.dart' as bHissPigUtils;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,13 +33,19 @@ void main() async{
   await GetStorage.init();
   HissMp3Utils.instance.initPlayer();
   HissAppLifeUtils.instance.addLife();
+  HissAdUtils.instance.initAd();
 
   //a
-  HissAdUtils.instance.initAd();
   HissGiftUtils.instance.insertTodayGiftInfo();
   HissRankUtils.instance.insertTodayRank();
   HissUserInfoUtils.instance.initMyInfo();
   HissPigUtils.instance.initPigInfo();
+
+  //b
+  bHissGiftUtils.HissGiftUtils.instance.insertTodayGiftInfo();
+  bHissRankUtils.HissRankUtils.instance.insertTodayRank();
+  bHissUserInfoUtils.HissUserInfoUtils.instance.initMyInfo();
+  bHissPigUtils.HissPigUtils.instance.initPigInfo();
 
   runApp(const MyApp());
 }
@@ -53,7 +64,7 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         initialRoute: HissCommonRouters.hissMain,
         debugShowCheckedModeBanner: false,
-        getPages: hissCommonPageList+hissAAAPageList,
+        getPages: hissCommonPageList+hissAAAPageList+hissBBBPageList,
         defaultTransition: Transition.rightToLeft,
       ),
     );
