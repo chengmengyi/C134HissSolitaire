@@ -260,6 +260,14 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  horizontal_scroller:
+    dependency: transitive
+    description:
+      name: horizontal_scroller
+      sha256: f236b2e94a7e339d98774f0c9ed0813b518d4278e20e996ec971ee6ea0793fa4
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   http:
     dependency: transitive
     description:

@@ -15,4 +15,5 @@ class HissEventCode{
   static const int aShowPigBtnTips=11;
   static const int aShowDiamondPigAnimator=12;
   static const int aMoveOtherWasteAnimator=13;
+  static const int updateHomeBottomTab=14;
 }

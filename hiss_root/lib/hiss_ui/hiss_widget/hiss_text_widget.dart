@@ -8,12 +8,14 @@ class HissTextWidget extends StatelessWidget{
   double textSize;
   Color? outlineColor;
   FontWeight? fontWeight;
+  TextOverflow? overflow;
   HissTextWidget({
     required this.textContent,
     required this.textSize,
     required this.textColor,
     this.fontWeight,
     this.outlineColor,
+    this.overflow,
 });
 
   @override
@@ -25,6 +27,7 @@ class HissTextWidget extends StatelessWidget{
         color: textColor,
         fontWeight: fontWeight,
         height: 1.0,
+        overflow: overflow,
       ),
     ),
     strokes: outlineColor==null?

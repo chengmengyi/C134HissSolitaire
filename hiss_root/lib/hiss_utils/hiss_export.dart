@@ -6,3 +6,4 @@ export 'package:flutter_ad_ios_plugins/hep/ad_num_hep.dart';
 export 'package:shake_animation_widget/shake_animation_widget.dart';
 export 'package:flutter_ad_ios_plugins/hep/ad_type.dart';
 export 'package:webview_flutter/webview_flutter.dart';
+export 'package:horizontal_scroller/HorizontalScroller.dart';

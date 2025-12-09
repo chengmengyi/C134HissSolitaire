@@ -15,6 +15,8 @@ PODS:
     - Flutter
   - hiss_aaa (0.0.1):
     - Flutter
+  - hiss_bbb (0.0.1):
+    - Flutter
   - hiss_root (0.0.1):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -37,6 +39,7 @@ DEPENDENCIES:
   - flutter_app_lifecycle (from `.symlinks/plugins/flutter_app_lifecycle/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - hiss_aaa (from `.symlinks/plugins/hiss_aaa/ios`)
+  - hiss_bbb (from `.symlinks/plugins/hiss_bbb/ios`)
   - hiss_root (from `.symlinks/plugins/hiss_root/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
@@ -62,6 +65,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/fluttertoast/ios"
   hiss_aaa:
     :path: ".symlinks/plugins/hiss_aaa/ios"
+  hiss_bbb:
+    :path: ".symlinks/plugins/hiss_bbb/ios"
   hiss_root:
     :path: ".symlinks/plugins/hiss_root/ios"
   path_provider_foundation:
@@ -82,6 +87,7 @@ SPEC CHECKSUMS:
   flutter_app_lifecycle: 96f63b433a79e643add0fd0a58eabf1a0877e176
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
   hiss_aaa: 58854e72e620fbbe4804e7dac2d2a3356a22e924
+  hiss_bbb: 042f0e13cccbf6547180892f90ae0341cb1b30a3
   hiss_root: 64d08ac86524724921a7bb14f8e7b86ebe6ef261
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   sqflite: c35dad70033b8862124f8337cc994a809fcd9fa3

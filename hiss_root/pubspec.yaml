@@ -26,6 +26,7 @@ dependencies:
   flutter_app_lifecycle: 0.0.3
   url_launcher: 6.3.2
   shake_animation_widget: 3.0.4
+  horizontal_scroller: 0.0.1
 
 dev_dependencies:
   flutter_test:

@@ -1,21 +1,23 @@
-import 'dart:math';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hiss_bbb/ui/dialog/add_prop_dialog/add_prop_dialog.dart';
-import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_dialog.dart';
-import 'package:hiss_bbb/ui/dialog/random_prop_dialog/random_prop_dialog.dart';
-import 'package:hiss_bbb/ui/dialog/set_dialog/set_dialog.dart';
-import 'package:hiss_bbb/ui/dialog/super_prop_dialog/super_prop_dialog.dart';
-import 'package:hiss_bbb/utils/hiss_b_routers.dart';
-import 'package:hiss_bbb/utils/hiss_enum/hiss_prop_type.dart';
-import 'package:hiss_bbb/utils/hiss_play_record_utils.dart';
-import 'package:hiss_bbb/utils/hiss_storage.dart';
+import 'package:hiss_bbb/ui/dialog/home_task_dialog/home_task_dialog.dart';
+import 'package:hiss_bbb/ui/page/home/cash_child/cash_child.dart';
+import 'package:hiss_bbb/ui/page/home/gift_child/gift_child.dart';
+import 'package:hiss_bbb/ui/page/home/home_child/home_child.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissHomeController extends HissRootController{
+  var tabIndex=1;
+  List<Widget> pageList=[
+    Container(),
+    HomeChild(),
+    GiftChild(),
+    CashChild(),
+  ];
 
   @override
   void onInit() {
@@ -23,27 +25,22 @@ class HissHomeController extends HissRootController{
     HissMp3Utils.instance.playBgm();
   }
 
-  clickPlay(){
-    // Navigator.push(buildContext, MaterialPageRoute(builder: (_)=>SolitairePage()));
-    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.play);
-  }
-
-  clickRank(){
-    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.rank);
-  }
-
-  clickGift(){
-    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.gift);
-  }
-
-  test()async{
-    if(!kDebugMode){
+  clickIndex(index){
+    if(tabIndex==index){
       return;
     }
-
-    // HissRoutersUtils.instance.showDialog(child: SetDialog());
-    // HissMp3Utils.instance.playOtherMp3(HissMp3Type.chupai);
-    // aDiamondNum.saveData(aDiamondNum.getData()+10);
-    bLevel.saveData(1);
+    if(index==0){
+      HissRoutersUtils.instance.showDialog(
+        child: HomeTaskDialog(
+          clickIndexCallback: (index){
+            HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.updateHomeBottomTab,intEventValue: index),);
+            clickIndex(index);
+          },
+        ),
+      );
+      return;
+    }
+    tabIndex=index;
+    update(["page"]);
   }
 }
