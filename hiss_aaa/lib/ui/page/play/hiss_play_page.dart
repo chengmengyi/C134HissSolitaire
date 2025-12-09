@@ -58,6 +58,17 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       HissPropAnimatorWidget(),
       HissDiamondPigAnimatorWidget(),
       HissMoveToFoundationAnimatorWidget(),
+
+      // HissClickWidget(
+      //   onTap: (){
+      //     controller.test();
+      //   },
+      //   child: Container(
+      //     width: 100,
+      //     height: 100,
+      //     color: Colors.red,
+      //   ),
+      // )
     ],
   );
 
@@ -382,7 +393,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                       id: "time",
                       builder: (_)=>HissGradientTextWidget(
                         textContent: formatHMS(controller.currentTime),
-                        textSize: 16.sp,
+                        textSize: 14.sp,
                         fontWeight: FontWeight.w900,
                         outlineColor: "#943D00".toColor(),
                         gradient: LinearGradient(

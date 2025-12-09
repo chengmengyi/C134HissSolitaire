@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.hiss.hiss134"
+        applicationId = "com.hisssolitaire.xmas"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 26
@@ -34,10 +34,10 @@ android {
 
     signingConfigs {
         release {
-            keyAlias 'test'
-            keyPassword '123456'
-            storeFile file('key/test.jks')
-            storePassword '123456'
+            keyAlias 'hiss'
+            keyPassword 'hiss123'
+            storeFile file('key/hiss.jks')
+            storePassword 'hiss123'
             v1SigningEnabled true
             v2SigningEnabled true
         }

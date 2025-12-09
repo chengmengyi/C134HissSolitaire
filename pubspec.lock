@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: applovin_max
-      sha256: a34f0c51781cb0ccd3246446060d7bf94d50ef74b6a83cd5611a8232bd0ebd42
+      sha256: "159b403928d6342e85d988bc8f0ea4afb52dee2791376854daddd7d4444ba833"
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.0"
+    version: "4.5.2"
   async:
     dependency: transitive
     description:
@@ -166,14 +166,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_android_ad_plugins:
+  flutter_ad_ios_plugins:
     dependency: transitive
     description:
-      name: flutter_android_ad_plugins
-      sha256: "4256b5eb83f4522450a5cd63cb13109a73b6e8c660e485eca93261049ef05fc4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.6"
+      path: "hiss_root/plugins/flutter_ad_ios_plugins-0.1.4"
+      relative: true
+    source: path
+    version: "0.1.4"
   flutter_app_lifecycle:
     dependency: transitive
     description:
@@ -491,14 +490,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.6"
-  thinkup_sdk:
-    dependency: transitive
-    description:
-      name: thinkup_sdk
-      sha256: ccc967d22330ffc401b4c9c9c1163768671310774c801f83506ee336ffa7eabb
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   typed_data:
     dependency: transitive
     description:

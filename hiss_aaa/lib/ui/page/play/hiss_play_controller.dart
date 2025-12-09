@@ -253,6 +253,56 @@ class HissPlayController extends HissRootController{
     _checkAllCardFront();
   }
 
+  test()async{
+    var foundationIndex=-1,colIndex=-1;
+    HissCardBean? card;
+    for (int  i = 0; i < cardList.length; i++) {
+      var value = cardList[i];
+      if(value.isNotEmpty){
+        var value1 = value.last;
+        for (int f = 0; f < 4; f++) {
+          if (_canMoveToFoundation(value1, foundationsList[f])) {
+            foundationIndex=f;
+            card=value1;
+            colIndex=i;
+            break;
+          }
+        }
+      }
+    }
+
+    if(null!=card) {
+      canClick = false;
+      card.showCard = false;
+      update(["card_list"]);
+      HissSendEventUtils.instance.sendEvent(
+        data: HissEventData(
+          eventCode: HissEventCode.aMoveCardToFoundation,
+          anyEventValue: {
+            "startGlobalKey": card.globalKey,
+            "endGlobalKey": foundationsGlobalKeyList[foundationIndex],
+            "card": card,
+            "cardWidth": cardWidth,
+            "cardHeight": cardHeight,
+          },
+        ),
+      );
+      await Future.delayed(Duration(milliseconds: 280));
+      card.showCard = true;
+      _saveSnapshot();
+      foundationsList[foundationIndex].add(card);
+      cardList[colIndex].removeLast();
+      if (cardList[colIndex].isNotEmpty) {
+        cardList[colIndex].last.front = true;
+      }
+      currentScore += 10;
+      update(["card_list", "foundations", "score"]);
+      canClick = true;
+      await Future.delayed(Duration(milliseconds: 50));
+      test();
+    }
+  }
+
   //校验所有牌都翻开了，就全部自动收到纸牌区
   _checkAllCardFront()async{
     var allFront=true;
@@ -310,10 +360,8 @@ class HissPlayController extends HissRootController{
         currentScore+=10;
         update(["card_list","foundations","score"]);
         canClick=true;
-        await Future.delayed(Duration(milliseconds: 100));
-        WidgetsBinding.instance.addPostFrameCallback((_) async{
-          _checkPlayEnd();
-        });
+        await Future.delayed(Duration(milliseconds: 50));
+        _checkPlayEnd();
       }else{
         canClick=true;
       }

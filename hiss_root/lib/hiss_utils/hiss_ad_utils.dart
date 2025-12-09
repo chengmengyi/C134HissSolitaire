@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:flutter_android_ad_plugins/data/ad_info_data.dart';
-import 'package:flutter_android_ad_plugins/data/config_ad_data.dart';
-import 'package:flutter_android_ad_plugins/flutter_android_ad_plugins.dart';
-import 'package:flutter_android_ad_plugins/hep/ad_type.dart';
-import 'package:flutter_android_ad_plugins/hep/ios_ad_callback.dart';
-import 'package:flutter_android_ad_plugins/hep/ios_load_ad_result_callback.dart';
+import 'package:flutter_ad_ios_plugins/data/ad_info_data.dart';
+import 'package:flutter_ad_ios_plugins/data/config_ad_data.dart';
+import 'package:flutter_ad_ios_plugins/flutter_ios_ad_hep.dart';
+import 'package:flutter_ad_ios_plugins/hep/ad_type.dart';
+import 'package:flutter_ad_ios_plugins/hep/ios_ad_callback.dart';
+import 'package:flutter_ad_ios_plugins/hep/ios_load_ad_result_callback.dart';
 import 'package:hiss_root/hiss_utils/hiss_local.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
@@ -16,10 +16,8 @@ class HissAdUtils{
 
 
   initAd(){
-    FlutterAndroidAdPlugins.instance.initMax(
+    FlutterIosAdHep.instance.initMax(
       maxKey: HissLocal.maxAdKeyBase64.base64(),
-      topOnAppId: "",
-      topOnAppKey: "",
       data: _getConfigAdData(),
       fengKongLogic: (){
         return false;
@@ -27,11 +25,9 @@ class HissAdUtils{
       iosLoadAdResultCallback: IosLoadAdResultCallback(
         startLoadAdCallback: (info){
         },
-        loadAdSuccessCallback: (maxAd,info,loadTime){
+        loadAdSuccessCallback: (maxAd,info){
         },
         loadAdFailCallback: (info){
-        },
-        initSdkSuccess: (time,platform){
         },
       ),
     );
@@ -45,7 +41,7 @@ class HissAdUtils{
       closeAdCallback.call();
       return;
     }
-    var resultData = FlutterAndroidAdPlugins.instance.getCacheResultData(adType);
+    var resultData = FlutterIosAdHep.instance.getCacheResultData(adType);
     if(null==resultData){
       if(adType==AdType.reward){
         showToast("Failed to fetch ads. Please try again later");
@@ -54,13 +50,13 @@ class HissAdUtils{
       }
       return;
     }
-    FlutterAndroidAdPlugins.instance.showAd(
+    FlutterIosAdHep.instance.showAd(
       adType: adType,
       iosAdCallback: IosAdCallback(
         showSuccess: (ad,info){
           HissMp3Utils.instance.stopBgm();
         },
-        showFail: (){
+        showFail: (ad){
           HissMp3Utils.instance.playBgm();
           if(adType==AdType.reward){
             showToast("Failed to fetch ads. Please try again later");
@@ -68,7 +64,7 @@ class HissAdUtils{
             closeAdCallback.call();
           }
         },
-        closeAd: (ad,info,hasReward){
+        closeAd: (){
           HissMp3Utils.instance.playBgm();
           closeAdCallback.call();
         },
