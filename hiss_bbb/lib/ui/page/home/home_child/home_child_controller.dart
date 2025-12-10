@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
+import 'package:hiss_bbb/utils/hiss_daily_task_utils.dart';
+import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
+import 'package:hiss_bbb/utils/hiss_task_queue_config_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
@@ -22,5 +25,6 @@ class HomeChildController extends HissRootController{
     if(!kDebugMode){
       return;
     }
+    HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.card);
   }
 }

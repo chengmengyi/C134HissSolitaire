@@ -8,17 +8,16 @@ class HissSqlUtils{
   Future<Database> initSql()async{
     var database = await openDatabase(
       "hiss.db",
-      version: 1,
+      version: 2,
       onCreate: (db,version)async{
         _createVersion1DB(db);
+        _createVersion2DB(db);
       },
-      // onUpgrade: (db,oldVersion,newVersion){
-      //   if(newVersion==2){
-      //     _createVersion2DB(db);
-      //   }else if(newVersion==3){
-      //     _createVersion3DB(db);
-      //   }
-      // },
+      onUpgrade: (db,oldVersion,newVersion){
+        if(newVersion==2){
+          _createVersion2DB(db);
+        }
+      },
     );
     return database;
   }
@@ -28,5 +27,11 @@ class HissSqlUtils{
     db.execute('CREATE TABLE ${HissSqlName.aGiftInfo} (id INTEGER PRIMARY KEY AUTOINCREMENT, customId INTEGER, contentList TEXT, timer TEXT)');
     db.execute('CREATE TABLE ${HissSqlName.aRankInfo} (id INTEGER PRIMARY KEY AUTOINCREMENT, contentList TEXT, timer TEXT)');
     db.execute('CREATE TABLE ${HissSqlName.aPigInfo} (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT, status TEXT,addNum INTEGER)');
+  }
+
+  _createVersion2DB(Database db){
+    db.execute('CREATE TABLE ${HissSqlName.bDailyTask} (id INTEGER PRIMARY KEY AUTOINCREMENT, currentPro INTEGER, totalPro INTEGER,reward INTEGER, type TEXT, timer TEXT, status TEXT)');
+    db.execute('CREATE TABLE ${HissSqlName.bGiftProgress} (id INTEGER PRIMARY KEY AUTOINCREMENT, currentPro INTEGER, totalPro INTEGER, type TEXT, status TEXT)');
+    db.execute('CREATE TABLE ${HissSqlName.bGiftRewardTaskInfo} (id INTEGER PRIMARY KEY AUTOINCREMENT, currentPro INTEGER, totalPro INTEGER, type TEXT, taskType TEXT)');
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hiss_bbb/bean/hiss_daily_task_bean.dart';
 import 'package:hiss_bbb/ui/dialog/home_task_dialog/home_task_dialog_controller.dart';
 import 'package:hiss_bbb/ui/widget/hiss_home_bottom_tab_widget.dart';
+import 'package:hiss_bbb/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_gradient_text_widget.dart';
@@ -63,9 +65,12 @@ class HomeTaskDialog extends HissRootDialog<HomeTaskDialogController>{
                   width: double.infinity,
                   height: double.infinity,
                   margin: EdgeInsets.only(left: 32.w,right: 32.w,top: 78.h,bottom: 48.h),
-                  child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (context,index)=>_taskItemWidget(),
+                  child: GetBuilder<HomeTaskDialogController>(
+                    id: "list",
+                    builder: (_)=>ListView.builder(
+                      itemCount: controller.dailyList.length,
+                      itemBuilder: (context,index)=>_taskItemWidget(controller.dailyList[index]),
+                    ),
                   ),
                 ),
               ],
@@ -85,7 +90,7 @@ class HomeTaskDialog extends HissRootDialog<HomeTaskDialogController>{
     ),
   );
 
-  _taskItemWidget()=>SizedBox(
+  _taskItemWidget(HissDailyTaskBean taskBean)=>SizedBox(
     width: double.infinity,
     height: 68.h,
     child: Stack(
@@ -100,7 +105,7 @@ class HomeTaskDialog extends HissRootDialog<HomeTaskDialogController>{
               children: [
                 HissImagesWidget(name: "home_task3", width: 36.w, height: 36.w,),
                 HissTextWidget(
-                  textContent: "\$20",
+                  textContent: "\$${taskBean.reward??0}",
                   textSize: 12.sp,
                   fontWeight: FontWeight.bold,
                   textColor: "#FFFFFF".toColor(),
@@ -114,41 +119,46 @@ class HomeTaskDialog extends HissRootDialog<HomeTaskDialogController>{
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  HissTextWidget(textContent: "Task Information Task Information Information", textSize: 12.sp, textColor: "#FFFFFF".toColor(),),
+                  HissTextWidget(textContent: controller.getTaskTitle(taskBean), textSize: 12.sp, textColor: "#FFFFFF".toColor(),),
                   SizedBox(height: 6.h,),
                   Row(
                     children: [
                       Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          height: 8.h,
-                          padding: EdgeInsets.only(left: 1.w,right: 1.w),
-                          alignment: Alignment.centerLeft,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4.w),
-                            color: "#A2532E".toColor(),
-                            border: Border.all(
-                              width: 1.5.w,
-                              color: "#FBD35F".toColor(),
-                            ),
-                          ),
-                          child: Container(
-                            width: 100,
-                            height: 4.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(2.w),
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: ["#A3ECA4".toColor(),"#4EB255".toColor()],
+                        child: LayoutBuilder(
+                          builder: (context,bc){
+                            var maxWidth = bc.maxWidth-(2.w);
+                            return Container(
+                              width: double.infinity,
+                              height: 8.h,
+                              padding: EdgeInsets.only(left: 1.w,right: 1.w),
+                              alignment: Alignment.centerLeft,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4.w),
+                                color: "#A2532E".toColor(),
+                                border: Border.all(
+                                  width: 1.5.w,
+                                  color: "#FBD35F".toColor(),
+                                ),
                               ),
-                            ),
-                          ),
+                              child: Container(
+                                width: maxWidth*getProgress(taskBean.currentPro??0, taskBean.totalPro??0),
+                                height: 4.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(2.w),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: ["#A3ECA4".toColor(),"#4EB255".toColor()],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                       SizedBox(width: 6.w,),
                       HissTextWidget(
-                        textContent: "3/10",
+                        textContent: "${taskBean.currentPro??0}/${taskBean.totalPro??0}",
                         textSize: 10.sp,
                         fontWeight: FontWeight.bold,
                         textColor: "#FFFFFF".toColor(),
@@ -161,9 +171,19 @@ class HomeTaskDialog extends HissRootDialog<HomeTaskDialogController>{
             ),
             SizedBox(width: 12.w,),
             HissClickWidget(
+              onTap: (){
+                controller.clickClaim(taskBean);
+              },
               child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  HissImagesWidget(name: "home_task4", width: 72.w, height: 32.h),
+                  HissImagesWidget(name: controller.getBtnIcon(taskBean), width: 72.w, height: 32.h),
+                  HissTextWidget(
+                    textContent: controller.getBtnText(taskBean),
+                    textSize: 14.sp,
+                    textColor: "#FFFFFF".toColor(),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ],
               ),
             ),

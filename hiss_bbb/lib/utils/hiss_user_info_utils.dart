@@ -4,6 +4,7 @@ import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissUserInfoUtils {
   static final HissUserInfoUtils _hissUserInfoUtils=HissUserInfoUtils();
@@ -18,8 +19,8 @@ class HissUserInfoUtils {
     }
   }
 
-  updateMoney(int addNum){
-    bMoneyNum.saveData(bMoneyNum.getData()+addNum);
+  updateMoney(addNum){
+    bMoneyNum.saveData(doubleAdd(bMoneyNum.getData(), addNum));
     HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aUpdateMoneyNum));
   }
 

@@ -75,6 +75,12 @@ class HissAdUtils{
     );
   }
 
+  showBBBAd({
+    required Function(bool giveReward) closeAdCallback,
+  }){
+    closeAdCallback.call(true);
+  }
+
   ConfigAdData _getConfigAdData(){
     return ConfigAdData(
       maxShowNum: 100,
