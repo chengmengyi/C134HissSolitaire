@@ -1,4 +1,12 @@
 PODS:
+  - Adjust (5.4.6):
+    - Adjust/Adjust (= 5.4.6)
+  - Adjust/Adjust (5.4.6):
+    - AdjustSignature (= 3.61.0)
+  - adjust_sdk (5.4.5):
+    - Adjust (= 5.4.6)
+    - Flutter
+  - AdjustSignature (3.61.0)
   - applovin_max (4.5.2):
     - AppLovinSDK (= 13.4.0)
     - Flutter
@@ -10,6 +18,10 @@ PODS:
   - flutter_ad_ios_plugins (0.0.1):
     - Flutter
   - flutter_app_lifecycle (0.0.1):
+    - Flutter
+  - flutter_check_adjust (0.0.1):
+    - Flutter
+  - flutter_tba_info (0.0.1):
     - Flutter
   - fluttertoast (0.0.2):
     - Flutter
@@ -32,11 +44,14 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - adjust_sdk (from `.symlinks/plugins/adjust_sdk/ios`)
   - applovin_max (from `.symlinks/plugins/applovin_max/ios`)
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/darwin`)
   - Flutter (from `Flutter`)
   - flutter_ad_ios_plugins (from `.symlinks/plugins/flutter_ad_ios_plugins/ios`)
   - flutter_app_lifecycle (from `.symlinks/plugins/flutter_app_lifecycle/ios`)
+  - flutter_check_adjust (from `.symlinks/plugins/flutter_check_adjust/ios`)
+  - flutter_tba_info (from `.symlinks/plugins/flutter_tba_info/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - hiss_aaa (from `.symlinks/plugins/hiss_aaa/ios`)
   - hiss_bbb (from `.symlinks/plugins/hiss_bbb/ios`)
@@ -48,9 +63,13 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Adjust
+    - AdjustSignature
     - AppLovinSDK
 
 EXTERNAL SOURCES:
+  adjust_sdk:
+    :path: ".symlinks/plugins/adjust_sdk/ios"
   applovin_max:
     :path: ".symlinks/plugins/applovin_max/ios"
   audioplayers_darwin:
@@ -61,6 +80,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_ad_ios_plugins/ios"
   flutter_app_lifecycle:
     :path: ".symlinks/plugins/flutter_app_lifecycle/ios"
+  flutter_check_adjust:
+    :path: ".symlinks/plugins/flutter_check_adjust/ios"
+  flutter_tba_info:
+    :path: ".symlinks/plugins/flutter_tba_info/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   hiss_aaa:
@@ -79,12 +102,17 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
+  Adjust: 293c828a88a2c280471797edb3e895c80652a786
+  adjust_sdk: c4a49624e0afc86cb438579624689e35024dcee1
+  AdjustSignature: 94b6b7f7150edbbebc4320eeaddaac881f6e8e2d
   applovin_max: 83a9a6aa424f8ce69b52b3440fe5a6399879f3d9
   AppLovinSDK: 33fcc783889e2d522ae26886b31e5551246a5b2f
   audioplayers_darwin: 4f9ca89d92d3d21cec7ec580e78ca888e5fb68bd
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_ad_ios_plugins: 39f145153e9fe06753e9b28fb7b43925ae399a71
   flutter_app_lifecycle: 96f63b433a79e643add0fd0a58eabf1a0877e176
+  flutter_check_adjust: adc82fd582b560941650bac5619ace8a6ebc890a
+  flutter_tba_info: fce89f2ce0bf3af177f0c88e99b153260bc6a7df
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
   hiss_aaa: 58854e72e620fbbe4804e7dac2d2a3356a22e924
   hiss_bbb: 042f0e13cccbf6547180892f90ae0341cb1b30a3

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/spin_reward_dialog/spin_reward_dialog_controller.dart';
 import 'package:hiss_bbb/ui/widget/hiss_video_btn_widget.dart';
+import 'package:hiss_bbb/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
@@ -9,6 +10,13 @@ import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class SpinRewardDialog extends HissRootDialog<SpinRewardDialogController>{
+  String type;
+  Function(int progress) receiveCallback;
+  SpinRewardDialog({
+    required this.type,
+    required this.receiveCallback
+});
+
   @override
   SpinRewardDialogController initGetController() => SpinRewardDialogController();
 
@@ -27,18 +35,26 @@ class SpinRewardDialog extends HissRootDialog<SpinRewardDialogController>{
                 alignment: Alignment.center,
                 children: [
                   HissImagesWidget(name: "spin2", width: 240.w, height: 240.w,),
-                  HissImagesWidget(name: "home_gift_pay", width: 200.w, height: 200.w,),
+                  HissImagesWidget(name: getGiftIcon(type), width: 200.w, height: 200.w,),
                 ],
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   HissTextWidget(
-                    textContent: "iPhone 17 pro max ×1",
+                    textContent: getGiftName(type),
                     textSize: 20.sp,
                     fontWeight: FontWeight.bold,
                     textColor: "#FFFFFF".toColor(),
                   ),
+                  SizedBox(width: 10.w,),
+                  HissTextWidget(
+                    textContent: "x1",
+                    textSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    textColor: "#FFFFFF".toColor(),
+                  ),
+                  HissImagesWidget(name: "icon_suipian", width: 16.w, height: 16.w,),
                 ],
               ),
             ],
@@ -50,7 +66,7 @@ class SpinRewardDialog extends HissRootDialog<SpinRewardDialogController>{
             width: 200.w,
             height: 52.h,
             onTap: (){
-
+              controller.clickReceive(type,receiveCallback);
             },
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/page/home/home_child/home_child_controller.dart';
+import 'package:hiss_bbb/ui/widget/hiss_bubble_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_level_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_pig_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_top_widget.dart';
@@ -68,6 +69,7 @@ class HomeChild extends HissRootChild<HomeChildController>{
         bottom: 210.h,
         child: HissPigWidget(),
       ),
+      HissBubbleWidget(),
     ],
   );
 }

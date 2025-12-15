@@ -1,3 +1,4 @@
+import 'package:hiss_bbb/utils/hiss_enum/hiss_cash_type.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 
 class HissStorageKey{
@@ -9,6 +10,7 @@ class HissStorageKey{
   static const String bMyName="bMyName";
   static const String bMyHead="bMyHead";
   static const String bReceivedRankRewardTime="bReceivedRankRewardTime";
+  static const String cashType="cashType";
 }
 
 StorageData<double> bMoneyNum=StorageData<double>(key: HissStorageKey.bMoney, defaultValue: 0.0);
@@ -21,3 +23,4 @@ StorageData<int> bLevel=StorageData<int>(key: HissStorageKey.bLevel, defaultValu
 StorageData<String> bMyName=StorageData<String>(key: HissStorageKey.bMyName, defaultValue: "");
 StorageData<String> bMyHead=StorageData<String>(key: HissStorageKey.bMyHead, defaultValue: "");
 StorageData<String> bReceivedRankRewardTime=StorageData<String>(key: HissStorageKey.bReceivedRankRewardTime, defaultValue: "");
+StorageData<String> cashTypeStorage=StorageData<String>(key: HissStorageKey.cashType, defaultValue: HissCashType.paypal);

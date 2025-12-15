@@ -119,4 +119,18 @@ class HissHomeGiftUtils{
       await database.update(HissSqlName.bGiftRewardTaskInfo, taskBean.toJson(),where: '"id" = ?',whereArgs: [value["id"]]);
     }
   }
+
+  //查询有礼物任务的奖励数据，用于显示礼物页面右上角
+  Future<List<HissGiftRewardTaskBean>> queryHasTaskGiftReward()async{
+    var database = await HissSqlUtils.instance.initSql();
+    var list = await database.query(HissSqlName.bGiftRewardTaskInfo);
+    if(list.isEmpty){
+      return [];
+    }
+    List<HissGiftRewardTaskBean> result=[];
+    for (var value in list) {
+      result.add(HissGiftRewardTaskBean.fromJson(value));
+    }
+    return result;
+  }
 }

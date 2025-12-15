@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/bean/game_state_snapshot_bean.dart';
 import 'package:hiss_bbb/bean/hiss_card_bean.dart';
@@ -15,6 +13,7 @@ import 'package:hiss_bbb/utils/hiss_enum/hiss_card_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_bbb/utils/hiss_value_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
@@ -253,56 +252,6 @@ class HissPlayController extends HissRootController{
     _checkAllCardFront();
   }
 
-  test()async{
-    var foundationIndex=-1,colIndex=-1;
-    HissCardBean? card;
-    for (int  i = 0; i < cardList.length; i++) {
-      var value = cardList[i];
-      if(value.isNotEmpty){
-        var value1 = value.last;
-        for (int f = 0; f < 4; f++) {
-          if (_canMoveToFoundation(value1, foundationsList[f])) {
-            foundationIndex=f;
-            card=value1;
-            colIndex=i;
-            break;
-          }
-        }
-      }
-    }
-
-    if(null!=card) {
-      canClick = false;
-      card.showCard = false;
-      update(["card_list"]);
-      HissSendEventUtils.instance.sendEvent(
-        data: HissEventData(
-          eventCode: HissEventCode.aMoveCardToFoundation,
-          anyEventValue: {
-            "startGlobalKey": card.globalKey,
-            "endGlobalKey": foundationsGlobalKeyList[foundationIndex],
-            "card": card,
-            "cardWidth": cardWidth,
-            "cardHeight": cardHeight,
-          },
-        ),
-      );
-      await Future.delayed(Duration(milliseconds: 280));
-      card.showCard = true;
-      _saveSnapshot();
-      foundationsList[foundationIndex].add(card);
-      cardList[colIndex].removeLast();
-      if (cardList[colIndex].isNotEmpty) {
-        cardList[colIndex].last.front = true;
-      }
-      currentScore += 10;
-      update(["card_list", "foundations", "score"]);
-      canClick = true;
-      await Future.delayed(Duration(milliseconds: 50));
-      test();
-    }
-  }
-
   //校验所有牌都翻开了，就全部自动收到纸牌区
   _checkAllCardFront()async{
     var allFront=true;
@@ -458,9 +407,9 @@ class HissPlayController extends HissRootController{
         ),
       );
       await Future.delayed(Duration(milliseconds: 280));
-      card.isCoins=false;
       HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.moneyCardAddNum());
       update(["card_list"]);
+      card.isCoins=false;
       await Future.delayed(Duration(milliseconds: 100));
       canClick=true;
       return;
@@ -502,6 +451,7 @@ class HissPlayController extends HissRootController{
     cardList[colIndex].removeLast();
     if (cardList[colIndex].isNotEmpty){
       cardList[colIndex].last.front = true;
+      HissUserInfoUtils.instance.updateMoney(HissValueConfigUtils.instance.getFlipCardAddNum());
     }
     currentScore+=10;
     update(["card_list","foundations","score"]);

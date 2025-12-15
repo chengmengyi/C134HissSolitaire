@@ -83,7 +83,7 @@ class GiftChild extends HissRootChild<GiftChildController>{
                               ],
                             ),
                             HissGradientTextWidget(
-                              textContent: controller.getGiftName(item.type),
+                              textContent: getGiftName(item.type),
                               textSize: 10.sp,
                               outlineColor: "#5D3E00".toColor(),
                               fontWeight: FontWeight.w900,
@@ -116,6 +116,30 @@ class GiftChild extends HissRootChild<GiftChildController>{
                 );
               },
             ),
+          ),
+        ),
+        Positioned(
+          top: 0,
+          right: 0,
+          child: GetBuilder<GiftChildController>(
+            id: "top_right_view",
+            builder: (_){
+              if(null==controller.hissGiftRewardTaskBean){
+                return Container();
+              }
+              return HissClickWidget(
+                onTap: (){
+                  controller.showSpinRewardTaskDialog(controller.hissGiftRewardTaskBean?.type);
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    HissImagesWidget(name: "home_gift11", width: 48.w, height: 48.w),
+                    HissImagesWidget(name: getGiftIcon(controller.hissGiftRewardTaskBean?.type), width: 40.w, height: 40.w),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ],
@@ -175,40 +199,47 @@ class GiftChild extends HissRootChild<GiftChildController>{
                       child: LayoutBuilder(
                         builder: (context,bc){
                           var height = (bc.maxHeight-(8.h))/2;
-                          return MasonryGridView.count(
-                            padding: const EdgeInsets.all(0),
-                            itemCount: 8,
-                            shrinkWrap: true,
-                            crossAxisCount: 4,
-                            mainAxisSpacing: 8.h,
-                            crossAxisSpacing: 7.w,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context,index){
-                              return Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  HissImagesWidget(name: "home_gift9", width: double.infinity, height: height,),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      HissImagesWidget(name: "home_gift_pay", width: height*0.6, height: height*0.6,),
-                                      HissGradientTextWidget(
-                                        textContent: "\$200 cash",
-                                        textSize: 10.sp,
-                                        outlineColor: "#5D3E00".toColor(),
-                                        fontWeight: FontWeight.w900,
-                                        overflow: TextOverflow.ellipsis,
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: ["#FFFFFF".toColor(),"#FFD659".toColor(),],
+                          return GetBuilder<GiftChildController>(
+                            id: "wheel",
+                            builder: (_)=>MasonryGridView.count(
+                              padding: const EdgeInsets.all(0),
+                              itemCount: controller.wheelList.length,
+                              shrinkWrap: true,
+                              crossAxisCount: 4,
+                              mainAxisSpacing: 8.h,
+                              crossAxisSpacing: 7.w,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context,index){
+                                var type = controller.wheelList[index];
+                                String icon=type.isEmpty?"icon_money3":getGiftIcon(type);
+                                String title=type.isEmpty?"\$50":getGiftName(type);
+                                var selected = controller.selectedWheelIndex==index;
+                                return Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    HissImagesWidget(name: selected?"home_gift10":"home_gift9", width: double.infinity, height: height,),
+                                    Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        HissImagesWidget(name: icon, width: height*0.6, height: height*0.6,),
+                                        HissGradientTextWidget(
+                                          textContent: title,
+                                          textSize: 10.sp,
+                                          outlineColor: "#5D3E00".toColor(),
+                                          fontWeight: FontWeight.w900,
+                                          overflow: TextOverflow.ellipsis,
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: ["#FFFFFF".toColor(),"#FFD659".toColor(),],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            },
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
                           );
                         },
                       ),

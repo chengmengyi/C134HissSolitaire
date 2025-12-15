@@ -28,6 +28,8 @@ dependencies:
   shake_animation_widget: 3.0.4
   horizontal_scroller: 0.0.1
   decimal: 3.2.4
+  flutter_tba_info: 0.0.9
+  flutter_check_adjust: 0.0.1
 
 dev_dependencies:
   flutter_test:

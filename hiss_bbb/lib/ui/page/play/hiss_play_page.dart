@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/bean/hiss_card_bean.dart';
 import 'package:hiss_bbb/ui/page/play/hiss_play_controller.dart';
+import 'package:hiss_bbb/ui/widget/hiss_bubble_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_card_item_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_deal_card_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_diamond_pig_animator_widget.dart';
@@ -58,17 +59,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       HissPropAnimatorWidget(),
       HissDiamondPigAnimatorWidget(),
       HissMoveToFoundationAnimatorWidget(),
-
-      // HissClickWidget(
-      //   onTap: (){
-      //     controller.test();
-      //   },
-      //   child: Container(
-      //     width: 100,
-      //     height: 100,
-      //     color: Colors.red,
-      //   ),
-      // )
+      HissBubbleWidget(),
     ],
   );
 

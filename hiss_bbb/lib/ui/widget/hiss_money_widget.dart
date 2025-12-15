@@ -42,7 +42,7 @@ class _HissMoneyWidgetState extends HissRootStatefulState<HissMoneyWidget>{
           fontWeight: FontWeight.w900,
         ),
       ),
-      HissImagesWidget(name: "icon_money", width: 28.w, height: 28.w),
+      HissImagesWidget(name: "icon_money4", width: 28.w, height: 28.w),
     ],
   );
 
