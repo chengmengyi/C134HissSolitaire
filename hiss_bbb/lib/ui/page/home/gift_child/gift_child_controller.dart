@@ -5,8 +5,11 @@ import 'package:hiss_bbb/ui/dialog/spin_reward_dialog/spin_reward_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/spin_reward_task_dialog/spin_reward_task_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_home_gift_type.dart';
 import 'package:hiss_bbb/utils/hiss_home_gift_utils.dart';
+import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -54,6 +57,9 @@ class GiftChildController extends HissRootController{
 
   clickCenterGift(String type){
     HissAdUtils.instance.showBBBAd(
+      adType: AdType.reward,
+      hissAdEnum: HissAdEnum.ccqes_chip_rv,
+      showAd: HissShowAdUtils.instance.showAd(AdType.reward),
       closeAdCallback: (give)async{
         if(give){
           var progress = await HissHomeGiftUtils.instance.updateHomeGiftProgress(type);
@@ -86,24 +92,41 @@ class GiftChildController extends HissRootController{
   }
 
   clickSpin(){
-    _queryHasGiftTaskRewardData();
-    if(null!=_wheelTimer){
-      _stopWheelTimer();
-      return;
-    }
-    var count=0;
-    var randWheelIndex = _getRandWheelIndex();
-    var pre3wheelIndex = _getPre3WheelIndex(randWheelIndex);
-    _wheelTimer=Timer.periodic(Duration(milliseconds: 80), (t){
-      if(count>=20&&pre3wheelIndex==selectedWheelIndex){
-        _stopWheelTimer();
-        _startWheelTimer2(randWheelIndex);
-        return;
-      }
-      count++;
-      selectedWheelIndex = _getNextWheelIndex();
-      update(["wheel"]);
-    });
+    _checkShowSpinAd(
+      callback: (){
+        _queryHasGiftTaskRewardData();
+        if(null!=_wheelTimer){
+          _stopWheelTimer();
+          return;
+        }
+        var count=0;
+        var randWheelIndex = _getRandWheelIndex();
+        var pre3wheelIndex = _getPre3WheelIndex(randWheelIndex);
+        _wheelTimer=Timer.periodic(Duration(milliseconds: 80), (t){
+          if(count>=20&&pre3wheelIndex==selectedWheelIndex){
+            _stopWheelTimer();
+            _startWheelTimer2(randWheelIndex);
+            return;
+          }
+          count++;
+          selectedWheelIndex = _getNextWheelIndex();
+          update(["wheel"]);
+        });
+      },
+    );
+  }
+
+  _checkShowSpinAd({
+    required Function() callback,
+  }){
+    HissAdUtils.instance.showBBBAd(
+      adType: AdType.reward,
+      hissAdEnum: HissAdEnum.ccqes_wheel_rv,
+      showAd: HissShowAdUtils.instance.showAd(AdType.reward),
+      closeAdCallback: (give){
+        callback.call();
+      },
+    );
   }
 
   _startWheelTimer2(int randWheelIndex){

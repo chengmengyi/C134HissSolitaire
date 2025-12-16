@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:hiss_bbb/bean/hiss_play_grade_bean.dart';
 import 'package:hiss_bbb/bean/hiss_play_record_bean.dart';
 import 'package:hiss_bbb/utils/hiss_play_record_utils.dart';
+import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_bbb/utils/hiss_value_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class PlaySuccessController extends HissRootController{
@@ -55,22 +58,30 @@ class PlaySuccessController extends HissRootController{
 
   clickOnly(){
     HissAdUtils.instance.showBBBAd(
+      adType: AdType.interstitial,
+      hissAdEnum: HissAdEnum.ccqes_settlement_int,
+      showAd: HissShowAdUtils.instance.showAd(AdType.interstitial),
       closeAdCallback: (give){
 
-      }
+      },
     );
   }
 
   clickClaim(Function() dismissCallback){
     HissAdUtils.instance.showBBBAd(
-        closeAdCallback: (give){
+      adType: AdType.reward,
+      hissAdEnum: HissAdEnum.ccqes_settlement_rv,
+      showAd: HissShowAdUtils.instance.showAd(AdType.reward),
 
+      closeAdCallback: (give){
+        if(give){
+          HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.addMoneyNum());
+          HissUserInfoUtils.instance.updateDiamondNum(HissValueUtils.instance.addDiamondNum());
         }
+        HissRoutersUtils.instance.close();
+        dismissCallback.call();
+      },
     );
-    HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.addMoneyNum());
-    HissUserInfoUtils.instance.updateDiamondNum(HissValueUtils.instance.addDiamondNum());
-    HissRoutersUtils.instance.close();
-    dismissCallback.call();
   }
 
   @override

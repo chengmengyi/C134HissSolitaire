@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hiss_aaa/utils/hiss_a_routers.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
+import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissMainController extends HissRootController with GetSingleTickerProviderStateMixin{
@@ -11,7 +13,7 @@ class HissMainController extends HissRootController with GetSingleTickerProvider
   @override
   void onInit() {
     super.onInit();
-    animationController=AnimationController(duration: const Duration(seconds: 3),vsync: this);
+    animationController=AnimationController(duration: const Duration(seconds: 12),vsync: this);
     animationController.addListener(() {
       update(["progress"]);
     });
@@ -29,7 +31,15 @@ class HissMainController extends HissRootController with GetSingleTickerProvider
   }
 
   _animatorCompleted(){
+    HissAdUtils.instance.showBBBAd(
+      adType: AdType.interstitial,
+      hissAdEnum: HissAdEnum.ccqes_launch,
+      showAd: true,
+      isOpen: true,
+      closeAdCallback: (give){
+        HissRoutersUtils.instance.toNextPageCloseAllPage(routerName: HissBBBRouters.home);
+      },
+    );
     // HissRoutersUtils.instance.toNextPageCloseAllPage(routerName: HissAAARouters.home);
-    HissRoutersUtils.instance.toNextPageCloseAllPage(routerName: HissBBBRouters.home);
   }
 }

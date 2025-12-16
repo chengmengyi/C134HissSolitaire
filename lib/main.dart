@@ -10,6 +10,7 @@ import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_bbb/utils/hiss_daily_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_home_gift_utils.dart';
 import 'package:hiss_bbb/utils/hiss_task_queue_config_utils.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_app_life_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
@@ -52,6 +53,7 @@ void main() async{
   HissTaskQueueConfigUtils.instance.initBean();
   HissDailyTaskUtils.instance.initTodayDailyTask();
   HissHomeGiftUtils.instance.initGift();
+  HissValueConfigUtils.instance.initBean();
 
   runApp(const MyApp());
 }

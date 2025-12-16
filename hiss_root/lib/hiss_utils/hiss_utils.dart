@@ -82,6 +82,16 @@ showToast(String s){
   );
 }
 
+extension Strint2Double on String{
+  double toDouble(){
+    try{
+      return double.parse(this);
+    }catch(e){
+      return 0.0;
+    }
+  }
+}
+
 double doubleAdd(num1,num2){
   try{
     return (Decimal.parse("$num1")+Decimal.parse("$num2")).toDouble();

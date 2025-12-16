@@ -1,0 +1,14 @@
+enum HissAdEnum{
+  ccqes_launch,
+  ccqes_chip_rv,
+  ccqes_wheel_rv,
+  ccqes_awardpop_int,
+  ccqes_awardprocess_int,
+  ccqes_bubble_rv,
+  ccqes_settlement_int,
+  ccqes_settlement_rv,
+  ccqes_rank_int,
+  ccqes_gift_rv,
+  ccqes_pig_int,
+  ccqes_queue_rv,
+}

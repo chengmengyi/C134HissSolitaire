@@ -144,7 +144,7 @@ class HissPlayController extends HissRootController{
         col[i].front = (i == col.length - 1);
       }
     }
-    var coinsCardNum=HissValueUtils.instance.randomCoinsCardNum();
+    var coinsCardNum=HissValueConfigUtils.instance.coinsCardNum();
     var random = Random();
     for (var value in columns) {
       for (var value1 in value) {
@@ -167,7 +167,7 @@ class HissPlayController extends HissRootController{
   _initOtherLevelCards(List<HissCardBean> fullDeck){
     fullDeck.shuffle();
     int index = 0;
-    var coinsCardNum=HissValueUtils.instance.randomCoinsCardNum();
+    var coinsCardNum=HissValueConfigUtils.instance.coinsCardNum();
     var random = Random();
     for (var i = 0; i < 7; i++) {
       List<HissCardBean> col = [];
@@ -220,7 +220,7 @@ class HissPlayController extends HissRootController{
       if (cardList[fromCol].isNotEmpty){
         var fromLast = cardList[fromCol].last;
         fromLast.front = true;
-        if(fromLast.isCoins!=true&&HissValueUtils.instance.showDiamondIcon()){
+        if(fromLast.isCoins!=true&&HissValueConfigUtils.instance.showDiamondIcon()){
           showDiamondCard=fromLast;
         }
       }
@@ -407,7 +407,7 @@ class HissPlayController extends HissRootController{
         ),
       );
       await Future.delayed(Duration(milliseconds: 280));
-      HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.moneyCardAddNum());
+      HissUserInfoUtils.instance.updateMoney(HissValueConfigUtils.instance.coinsCardAddRewardNum());
       update(["card_list"]);
       card.isCoins=false;
       await Future.delayed(Duration(milliseconds: 100));
