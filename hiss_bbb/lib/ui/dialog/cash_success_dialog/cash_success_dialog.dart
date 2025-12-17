@@ -9,6 +9,10 @@ import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class CashSuccessDialog extends HissRootDialog<CashSuccessDialogController>{
+  Function() callback;
+  CashSuccessDialog({
+    required this.callback,
+});
 
   @override
   CashSuccessDialogController initGetController() => CashSuccessDialogController();
@@ -53,7 +57,7 @@ class CashSuccessDialog extends HissRootDialog<CashSuccessDialogController>{
                 SizedBox(height: 20.h,),
                 HissClickWidget(
                   onTap: (){
-                    controller.clickOk();
+                    controller.clickOk(callback);
                   },
                   child: Stack(
                     alignment: Alignment.center,

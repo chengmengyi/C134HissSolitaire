@@ -43,4 +43,16 @@ class HissHomeController extends HissRootController{
     tabIndex=index;
     update(["page"]);
   }
+
+  @override
+  bool canReceivedEventData() => true;
+
+  @override
+  handleEventBusData(HissEventData data) {
+    switch(data.eventCode){
+      case HissEventCode.showHomeTabIndex:
+        clickIndex(data.intEventValue??1);
+        break;
+    }
+  }
 }

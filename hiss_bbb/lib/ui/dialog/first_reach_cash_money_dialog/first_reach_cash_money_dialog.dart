@@ -59,6 +59,9 @@ class FirstReachCashMoneyDialog extends HissRootDialog<FirstReachCashMoneyDialog
           ),
           SizedBox(height: 12.h,),
           HissClickWidget(
+            onTap: (){
+              controller.clickClose();
+            },
             child: HissTextWidget(
               textContent: "Later",
               textSize: 16.sp, 

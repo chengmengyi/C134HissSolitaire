@@ -155,6 +155,9 @@ class Money300700ResultDialog extends HissRootDialog<Money300700ResultDialogCont
             HissImagesWidget(name: "money3006", width: 68.w, height: 24.h,),
             Spacer(),
             HissClickWidget(
+              onTap: (){
+                controller.clickCashOut();
+              },
               child: Stack(
                 alignment: Alignment.center,
                 children: [

@@ -11,6 +11,9 @@ class HissStorageKey{
   static const String bMyHead="bMyHead";
   static const String bReceivedRankRewardTime="bReceivedRankRewardTime";
   static const String cashType="cashType";
+  static const String show300AnimatorTips="show300AnimatorTips";
+  static const String show700AnimatorTips="show700AnimatorTips";
+  static const String show1000MoneyDialog="show1000MoneyDialog";
 }
 
 StorageData<double> bMoneyNum=StorageData<double>(key: HissStorageKey.bMoney, defaultValue: 0.0);
@@ -24,3 +27,7 @@ StorageData<String> bMyName=StorageData<String>(key: HissStorageKey.bMyName, def
 StorageData<String> bMyHead=StorageData<String>(key: HissStorageKey.bMyHead, defaultValue: "");
 StorageData<String> bReceivedRankRewardTime=StorageData<String>(key: HissStorageKey.bReceivedRankRewardTime, defaultValue: "");
 StorageData<String> cashTypeStorage=StorageData<String>(key: HissStorageKey.cashType, defaultValue: HissCashType.paypal);
+
+StorageData<bool> show300AnimatorTips=StorageData<bool>(key: HissStorageKey.show300AnimatorTips, defaultValue: true);
+StorageData<bool> show700AnimatorTips=StorageData<bool>(key: HissStorageKey.show700AnimatorTips, defaultValue: true);
+StorageData<bool> show1000MoneyDialog=StorageData<bool>(key: HissStorageKey.show1000MoneyDialog, defaultValue: true);

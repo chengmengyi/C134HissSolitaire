@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:hiss_bbb/bean/hiss_card_bean.dart';
-import 'package:hiss_bbb/utils/hiss_enum/hiss_card_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_home_gift_type.dart';
+import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
+
+bool playGamePageOpen=false;
 
 String getCardImages(HissCardBean? bean){
   if(bean?.isCoins==true){
@@ -59,6 +61,18 @@ String getGiftName(String? type){
     case HissHomeGiftType.card: return "\$500 Amazon";
     case HissHomeGiftType.chuifengji: return "Dyson Hair Dryer";
     case HissHomeGiftType.package2025: return " CHANEL 2026 Handbag";
+    default: return "";
+  }
+}
+
+String getTaskTitle(String? taskName,int? totalPro){
+  switch(taskName){
+    case HissTaskType.game: return "Complete $totalPro games";
+    case HissTaskType.card: return "$totalPro cash cards";
+    case HissTaskType.tool: return "Use $totalPro tools";
+    case HissTaskType.bubbles: return "$totalPro ad bubble rewards";
+    case HissTaskType.rank: return "Rank top $totalPro today";
+    case HissTaskType.puzzle: return "$totalPro puzzle pieces";
     default: return "";
   }
 }

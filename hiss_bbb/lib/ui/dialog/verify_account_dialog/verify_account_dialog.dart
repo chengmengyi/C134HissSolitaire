@@ -11,6 +11,14 @@ import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class VerifyAccountDialog extends HissRootDialog<VerifyAccountDialogController>{
+  int cashMoney;
+  String account;
+  Function() callback;
+  VerifyAccountDialog({
+    required this.cashMoney,
+    required this.account,
+    required this.callback,
+  });
 
   @override
   VerifyAccountDialogController initGetController() => VerifyAccountDialogController();
@@ -42,7 +50,7 @@ class VerifyAccountDialog extends HissRootDialog<VerifyAccountDialogController>{
           right: 0,
           child: HissClickWidget(
             onTap: (){
-              controller.clickConfirm(); 
+              controller.clickConfirm(callback);
             },
             child: HissImagesWidget(name: "icon_close3", width: 24.w, height: 24.w,),
           ),
@@ -101,7 +109,7 @@ class VerifyAccountDialog extends HissRootDialog<VerifyAccountDialogController>{
         ),
         SizedBox(height: 10.h,),
         HissGradientTextWidget(
-          textContent: "\$1000",
+          textContent: "\$$cashMoney",
           textSize: 20.sp,
           fontWeight: FontWeight.w900,
           gradient: LinearGradient(
@@ -122,7 +130,7 @@ class VerifyAccountDialog extends HissRootDialog<VerifyAccountDialogController>{
         _infoItemWidget("Payout Platform","HissSolitaire","#E3E3E3".toColor(),""),
         _infoItemWidget("Payout Instructions","Game rewards","#F4F4F4".toColor(),""),
         _infoItemWidget("Creation time",getTodayTime(),"#E3E3E3".toColor(),""),
-        _infoItemWidget("Account information",controller.account,"#F4F4F4".toColor(),""),
+        _infoItemWidget("Account information",account,"#F4F4F4".toColor(),""),
         _infoItemWidget("Frequency","One Time","#E3E3E3".toColor(),""),
         _infoItemWidget("Payment method","","#F4F4F4".toColor(),cashTypeStorage.getData()),
       ],
@@ -161,7 +169,7 @@ class VerifyAccountDialog extends HissRootDialog<VerifyAccountDialogController>{
 
   _btnWidget()=>HissClickWidget(
     onTap: (){
-      controller.clickConfirm();
+      controller.clickConfirm(callback);
     },
     child: Container(
       width: double.infinity,

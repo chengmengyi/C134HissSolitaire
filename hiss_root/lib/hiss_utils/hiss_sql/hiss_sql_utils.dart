@@ -33,5 +33,8 @@ class HissSqlUtils{
     db.execute('CREATE TABLE ${HissSqlName.bDailyTask} (id INTEGER PRIMARY KEY AUTOINCREMENT, currentPro INTEGER, totalPro INTEGER,reward INTEGER, type TEXT, timer TEXT, status TEXT)');
     db.execute('CREATE TABLE ${HissSqlName.bGiftProgress} (id INTEGER PRIMARY KEY AUTOINCREMENT, currentPro INTEGER, totalPro INTEGER, type TEXT, status TEXT)');
     db.execute('CREATE TABLE ${HissSqlName.bGiftRewardTaskInfo} (id INTEGER PRIMARY KEY AUTOINCREMENT, currentPro INTEGER, totalPro INTEGER, type TEXT, taskType TEXT)');
+    db.execute('CREATE TABLE ${HissSqlName.bCashTaskInfo} (id INTEGER PRIMARY KEY AUTOINCREMENT, cashType TEXT, cashMoney INTEGER, taskIndex INTEGER, currentPro INTEGER, totalPro INTEGER)');
+    db.execute('CREATE TABLE ${HissSqlName.bCashRankInfo} (id INTEGER PRIMARY KEY AUTOINCREMENT, cashType TEXT, cashMoney INTEGER, currentPro INTEGER, totalPro INTEGER)');
+    db.execute('CREATE TABLE ${HissSqlName.bCashAccountInfo} (id INTEGER PRIMARY KEY AUTOINCREMENT, cashType TEXT, account TEXT)');
   }
 }

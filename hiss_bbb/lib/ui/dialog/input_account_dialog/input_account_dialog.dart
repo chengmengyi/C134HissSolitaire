@@ -9,30 +9,43 @@ import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class InputAccountDialog extends HissRootDialog<InputAccountDialogController>{
+  int cashMoney;
+  Function() callback;
+  InputAccountDialog({
+    required this.cashMoney,
+    required this.callback,
+});
+
   @override
   InputAccountDialogController initGetController() => InputAccountDialogController();
 
   @override
-  Widget initContent() => Container(
-    width: double.infinity,
-    padding: EdgeInsets.all(12.w),
-    margin: EdgeInsets.only(left: 48.w,right: 48.w,),
-    decoration: BoxDecoration(
-      color: "#FFFFFF".toColor(),
-      borderRadius: BorderRadius.circular(12.w),
-    ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _titleWidget(),
-        SizedBox(height: 24.h,),
-        _chooseTypeWidget(),
-        SizedBox(height: 12.h,),
-        _inputWidget(),
-        SizedBox(height: 24.h,),
-        _btnWidget(),
-      ],
-    ),
+  Widget initContent() => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(12.w),
+        margin: EdgeInsets.only(left: 48.w,right: 48.w,),
+        decoration: BoxDecoration(
+          color: "#FFFFFF".toColor(),
+          borderRadius: BorderRadius.circular(12.w),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _titleWidget(),
+            SizedBox(height: 24.h,),
+            _chooseTypeWidget(),
+            SizedBox(height: 12.h,),
+            _inputWidget(),
+            SizedBox(height: 24.h,),
+            _btnWidget(),
+          ],
+        ),
+      ),
+
+    ],
   );
 
   _titleWidget()=>HissTextWidget(
@@ -127,7 +140,7 @@ class InputAccountDialog extends HissRootDialog<InputAccountDialogController>{
 
   _btnWidget()=>HissClickWidget(
     onTap: (){
-      controller.clickSubmit();
+      controller.clickSubmit(cashMoney,callback);
     },
     child: Container(
       width: double.infinity,

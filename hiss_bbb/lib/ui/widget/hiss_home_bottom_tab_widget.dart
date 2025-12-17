@@ -84,6 +84,7 @@ class _HissHomeBottomTabWidgetState extends HissRootStatefulState<HissHomeBottom
   handleEventBusData(HissEventData data) {
     switch(data.eventCode){
       case HissEventCode.updateHomeBottomTab:
+      case HissEventCode.showHomeTabIndex:
         if(null!=data.intEventValue){
           _resetTab(data.intEventValue);
         }

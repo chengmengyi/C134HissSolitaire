@@ -54,6 +54,7 @@ class HissRoutersUtils{
   }){
     Get.dialog(
       child,
+      useSafeArea: false,
       barrierColor: Colors.black.withOpacity(0.8),
       barrierDismissible: false,
     );

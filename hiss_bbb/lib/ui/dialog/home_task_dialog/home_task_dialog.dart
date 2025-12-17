@@ -119,7 +119,7 @@ class HomeTaskDialog extends HissRootDialog<HomeTaskDialogController>{
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  HissTextWidget(textContent: controller.getTaskTitle(taskBean), textSize: 12.sp, textColor: "#FFFFFF".toColor(),),
+                  HissTextWidget(textContent: getTaskTitle(taskBean.type,taskBean.totalPro), textSize: 12.sp, textColor: "#FFFFFF".toColor(),),
                   SizedBox(height: 6.h,),
                   Row(
                     children: [

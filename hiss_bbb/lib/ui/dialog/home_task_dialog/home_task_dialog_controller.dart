@@ -26,18 +26,6 @@ class HomeTaskDialogController extends HissRootController{
     update(["list"]);
   }
 
-  String getTaskTitle(HissDailyTaskBean bean){
-    switch(bean.type){
-      case HissTaskType.game: return "Complete ${bean.totalPro??0} games";
-      case HissTaskType.card: return "${bean.totalPro??0} cash cards";
-      case HissTaskType.tool: return "Use ${bean.totalPro??0} tools";
-      case HissTaskType.bubbles: return "${bean.totalPro??0} ad bubble rewards";
-      case HissTaskType.rank: return "Rank top ${bean.totalPro??0} today";
-      case HissTaskType.puzzle: return "${bean.totalPro??0} puzzle pieces";
-      default: return "";
-    }
-  }
-
   String getBtnIcon(HissDailyTaskBean bean){
     switch(bean.status){
       case HissTaskStatus.canClaim: return "home_task5";

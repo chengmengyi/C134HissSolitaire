@@ -67,7 +67,8 @@ class Queue {
 class WithdrawalTask {
   WithdrawalTask({
       this.name, 
-      this.num,});
+      this.num,
+  });
 
   WithdrawalTask.fromJson(dynamic json) {
     name = json['name'];
