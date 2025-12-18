@@ -17,6 +17,7 @@ abstract class HissRootPage<T extends HissRootController> extends StatelessWidge
         bottom: true,
         child: initContent(),
       ),
+      resizeToAvoidBottomInset: false,
     );
   }
 

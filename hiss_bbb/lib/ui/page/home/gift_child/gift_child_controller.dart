@@ -3,11 +3,16 @@ import 'package:hiss_bbb/bean/hiss_gift_reward_task_bean.dart';
 import 'package:hiss_bbb/bean/hiss_home_gift_progress_bean.dart';
 import 'package:hiss_bbb/ui/dialog/spin_reward_dialog/spin_reward_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/spin_reward_task_dialog/spin_reward_task_dialog.dart';
+import 'package:hiss_bbb/utils/hiss_cash_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_home_gift_type.dart';
+import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
 import 'package:hiss_bbb/utils/hiss_home_gift_utils.dart';
 import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
+import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
@@ -62,6 +67,7 @@ class GiftChildController extends HissRootController{
       showAd: HissShowAdUtils.instance.showAd(AdType.reward),
       closeAdCallback: (give)async{
         if(give){
+          HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
           var progress = await HissHomeGiftUtils.instance.updateHomeGiftProgress(type);
           _updateTopGiftProgress(type,progress);
         }
@@ -119,6 +125,10 @@ class GiftChildController extends HissRootController{
   _checkShowSpinAd({
     required Function() callback,
   }){
+    if(wheelNum.getData()>0){
+      callback.call();
+      return;
+    }
     HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_wheel_rv,
@@ -150,6 +160,7 @@ class GiftChildController extends HissRootController{
       child: SpinRewardDialog(
         type: type,
         receiveCallback: (progress){
+          HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
           _updateTopGiftProgress(type,progress);
         },
       ),
@@ -239,6 +250,18 @@ class GiftChildController extends HissRootController{
           update(["top_right_view"]);
         });
       }
+    }
+  }
+
+  @override
+  bool canReceivedEventData() => true;
+
+  @override
+  handleEventBusData(HissEventData data) {
+    switch(data.eventCode){
+      case HissEventCode.updateWheelNum:
+        update(["wheel_btn"]);
+        break;
     }
   }
 

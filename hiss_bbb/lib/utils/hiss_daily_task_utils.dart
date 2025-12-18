@@ -51,7 +51,7 @@ class HissDailyTaskUtils {
     }
     var taskBean = HissDailyTaskBean.fromJson(list.first);
     taskBean.currentPro=(taskBean.currentPro??0)+1;
-    if((taskBean.currentPro??0)>(taskBean.totalPro??0)){
+    if((taskBean.currentPro??0)>=(taskBean.totalPro??0)){
       taskBean.currentPro=taskBean.totalPro;
       if(taskBean.status==HissTaskStatus.notClaim){
         taskBean.status=HissTaskStatus.canClaim;

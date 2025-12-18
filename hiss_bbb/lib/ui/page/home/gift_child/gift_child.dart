@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hiss_bbb/bean/hiss_home_gift_progress_bean.dart';
 import 'package:hiss_bbb/ui/page/home/gift_child/gift_child_controller.dart';
 import 'package:hiss_bbb/ui/widget/hiss_video_btn_widget.dart';
+import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_child.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
@@ -244,14 +245,17 @@ class GiftChild extends HissRootChild<GiftChildController>{
                         },
                       ),
                     ),
-                    HissVideoBtnWidget(
-                      text: "Spin",
-                      bg: "home_gift8",
-                      width: double.infinity,
-                      height: 52.h,
-                      onTap: (){
-                        controller.clickSpin();
-                      },
+                    GetBuilder<GiftChildController>(
+                      id: "wheel_btn",
+                      builder: (_)=>HissVideoBtnWidget(
+                        text: "Spin(${wheelNum.getData()})",
+                        bg: "home_gift8",
+                        width: double.infinity,
+                        height: 52.h,
+                        onTap: (){
+                          controller.clickSpin();
+                        },
+                      ),
                     ),
                   ],
                 ),

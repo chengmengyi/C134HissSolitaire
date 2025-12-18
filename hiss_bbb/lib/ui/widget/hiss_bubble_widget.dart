@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:hiss_bbb/utils/hiss_cash_task_utils.dart';
+import 'package:hiss_bbb/utils/hiss_daily_task_utils.dart';
+import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
 import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
@@ -122,6 +125,8 @@ class _HissBubbleWidgetState extends HissRootStatefulState<HissBubbleWidget>{
       closeAdCallback: (give){
         if(give){
           HissUserInfoUtils.instance.updateMoney(addNum);
+          HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.bubbles);
+          HissCashTaskUtils.instance.updateCashTask(HissTaskType.bubbles);
         }
         setState(() {
           addNum=HissValueConfigUtils.instance.getBubbleAddNum();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/add_prop_dialog/add_prop_dialog_controller.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_prop_type.dart';
-import 'package:hiss_bbb/utils/hiss_value_utils.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
@@ -37,7 +37,7 @@ class AddPropDialog extends HissRootDialog<AddPropDialogController>{
                 HissImagesWidget(name: hissPropType==HissPropType.back?"play7":"play9", width: 84.w, height: 84.w,),
                 SizedBox(height: 4.h,),
                 HissTextWidget(
-                  textContent: "+${HissValueUtils.instance.propAddNum()}",
+                  textContent: "+${HissValueConfigUtils.instance.propAddNum()}",
                   textSize: 24.sp,
                   textColor: "#FFD21D".toColor(),
                   outlineColor: "#6E2F15".toColor(),

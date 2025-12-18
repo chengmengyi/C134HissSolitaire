@@ -9,7 +9,7 @@ class HissPigUtils{
 
   initPigInfo()async{
     var database = await HissSqlUtils.instance.initSql();
-    var list = await database.query(HissSqlName.aPigInfo);
+    var list = await database.query(HissSqlName.bPigInfo);
     if(list.isNotEmpty){
       return;
     }
@@ -27,13 +27,13 @@ class HissPigUtils{
       HissPigInfoBean(type: HissPigType.coins,status: HissPigStatus.lock,addNum: 100),
     ];
     for (var value in content) {
-      await database.insert(HissSqlName.aPigInfo, value.toJson());
+      await database.insert(HissSqlName.bPigInfo, value.toJson());
     }
   }
 
   Future<List<HissPigInfoBean>> queryPigInfo()async{
     var database = await HissSqlUtils.instance.initSql();
-    var list = await database.query(HissSqlName.aPigInfo);
+    var list = await database.query(HissSqlName.bPigInfo);
     if(list.isEmpty){
       return [];
     }
@@ -47,12 +47,12 @@ class HissPigUtils{
   updateAllPigInfo(List<HissPigInfoBean> list)async{
     var database = await HissSqlUtils.instance.initSql();
     for (var value in list) {
-      await database.update(HissSqlName.aPigInfo, value.toJson(),where: '"id" = ?',whereArgs: [value.id]);
+      await database.update(HissSqlName.bPigInfo, value.toJson(),where: '"id" = ?',whereArgs: [value.id]);
     }
   }
 
   updateSinglePigInfo(HissPigInfoBean? bean)async{
     var database = await HissSqlUtils.instance.initSql();
-    await database.update(HissSqlName.aPigInfo, bean?.toJson()??{},where: '"id" = ?',whereArgs: [bean?.id]);
+    await database.update(HissSqlName.bPigInfo, bean?.toJson()??{},where: '"id" = ?',whereArgs: [bean?.id]);
   }
 }

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/bean/hiss_rank_bean.dart';
+import 'package:hiss_bbb/utils/hiss_daily_task_utils.dart';
+import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
 import 'package:hiss_bbb/utils/hiss_rank_utils.dart';
+import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
+import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -28,11 +33,18 @@ class HissRankController extends HissRootController{
     if(bean.isMe!=true||receivedRankReward||((bean.diamond??0)<=0)&&(bean.coins??0)<=0){
       return;
     }
-    receivedRankReward=true;
-    bReceivedRankRewardTime.saveData(getTodayTime());
-    HissUserInfoUtils.instance.updateDiamondNum(bean.diamond??0);
-    HissUserInfoUtils.instance.updateMoney(bean.coins??0);
-    update(["list"]);
+    HissAdUtils.instance.showBBBAd(
+      adType: AdType.interstitial,
+      hissAdEnum: HissAdEnum.ccqes_rank_int,
+      showAd: HissShowAdUtils.instance.showAd(AdType.interstitial),
+      closeAdCallback: (give){
+        receivedRankReward=true;
+        bReceivedRankRewardTime.saveData(getTodayTime());
+        HissUserInfoUtils.instance.updateDiamondNum(bean.diamond??0);
+        HissUserInfoUtils.instance.updateMoney(bean.coins??0);
+        update(["list"]);
+      },
+    );
   }
 
   _initList()async{
@@ -49,6 +61,9 @@ class HissRankController extends HissRootController{
         myRankBean=null;
       }
       top1RankBean=list.first;
+      if(top1RankBean?.isMe==true){
+        HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.rank);
+      }
       list.removeAt(0);
       if(list.isNotEmpty){
         top2RankBean=list.first;

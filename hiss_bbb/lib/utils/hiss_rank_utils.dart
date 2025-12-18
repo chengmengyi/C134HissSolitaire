@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:hiss_bbb/bean/hiss_rank_bean.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_sql/hiss_sql_name.dart';
 import 'package:hiss_root/hiss_utils/hiss_sql/hiss_sql_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
@@ -26,7 +27,7 @@ class HissRankUtils{
   insertTodayRank()async{
     var todayTime = getTodayTime();
     var database = await HissSqlUtils.instance.initSql();
-    var list = await database.query(HissSqlName.aRankInfo,where: '"timer" = ?',whereArgs: [todayTime]);
+    var list = await database.query(HissSqlName.bRankInfo,where: '"timer" = ?',whereArgs: [todayTime]);
     if(list.isNotEmpty){
       return;
     }
@@ -36,22 +37,27 @@ class HissRankUtils{
       contentList.add(HissRankBean(name: _nameList.random(),head: _headList.random(),level: random.nextInt(21)+2));
     }
     contentList.sort((a, b) => (b.level??0).compareTo((a.level??0)));
-    int value = 100;
+    int diamondMax = HissValueConfigUtils.instance.getRankDiamondMax();
+    int moneyMax = HissValueConfigUtils.instance.getRankMoneyMax();
     for (var item in contentList) {
-      item.diamond = value;
-      item.coins = value;
-      value = value - 10;
-      if (value < 0){
-        value = 0;
+      item.diamond = diamondMax;
+      item.coins = moneyMax;
+      diamondMax = diamondMax - 10;
+      if (diamondMax < 0){
+        diamondMax = 0;
+      }
+      moneyMax = moneyMax - 10;
+      if (moneyMax < 0){
+        moneyMax = 0;
       }
     }
-    await database.insert(HissSqlName.aRankInfo, {"timer":todayTime,"contentList":jsonEncode(contentList)});
+    await database.insert(HissSqlName.bRankInfo, {"timer":todayTime,"contentList":jsonEncode(contentList)});
   }
 
   Future<List<HissRankBean>> queryTodayRankList()async{
     var todayTime = getTodayTime();
     var database = await HissSqlUtils.instance.initSql();
-    var list = await database.query(HissSqlName.aRankInfo,where: '"timer" = ?',whereArgs: [todayTime]);
+    var list = await database.query(HissSqlName.bRankInfo,where: '"timer" = ?',whereArgs: [todayTime]);
     if(list.isEmpty){
       return [];
     }

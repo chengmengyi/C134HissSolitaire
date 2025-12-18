@@ -3,10 +3,13 @@ import 'package:hiss_bbb/bean/hiss_gift_bean.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_gift_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_bbb/utils/hiss_gift_utils.dart';
+import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -24,10 +27,14 @@ class HissGiftController extends HissRootController{
       return;
     }
     if(bean.showAd==1){
-      HissAdUtils.instance.showAAAAd(
+      HissAdUtils.instance.showBBBAd(
         adType: AdType.reward,
-        closeAdCallback: (){
-          _addGift(bean);
+        hissAdEnum: HissAdEnum.ccqes_gift_rv,
+        showAd: HissShowAdUtils.instance.showAd(AdType.reward),
+        closeAdCallback: (give){
+          if(give){
+            _addGift(bean);
+          }
         },
       );
       return;
@@ -57,6 +64,17 @@ class HissGiftController extends HissRootController{
   _initList()async{
     var list = await HissGiftUtils.instance.queryTodayGiftList();
     if(list.isNotEmpty){
+      var giftRewardList = HissValueConfigUtils.instance.getGiftRewardList();
+      var index=0;
+      for (var value in list) {
+        if(value.giftType!=HissGiftType.coins){
+          continue;
+        }
+        if(index<giftRewardList.length){
+          value.addNum=giftRewardList[index];
+          index++;
+        }
+      }
       var reverseOdd = _splitAndReverseOdd(list,2);
       giftList.clear();
       giftList.addAll(reverseOdd);
@@ -103,7 +121,7 @@ class HissGiftController extends HissRootController{
 
   String getItemGiftIcon(HissGiftBean bean){
     switch(bean.giftType){
-      case HissGiftType.coins: return "icon_money2";
+      case HissGiftType.coins: return "icon_money3";
       case HissGiftType.crystal: return "icon_diamond";
       case HissGiftType.back: return "icon_back_prop";
       case HissGiftType.tips: return "icon_tips_prop";

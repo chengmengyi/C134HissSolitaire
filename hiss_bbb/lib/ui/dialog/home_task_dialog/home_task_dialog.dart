@@ -67,9 +67,14 @@ class HomeTaskDialog extends HissRootDialog<HomeTaskDialogController>{
                   margin: EdgeInsets.only(left: 32.w,right: 32.w,top: 78.h,bottom: 48.h),
                   child: GetBuilder<HomeTaskDialogController>(
                     id: "list",
-                    builder: (_)=>ListView.builder(
-                      itemCount: controller.dailyList.length,
-                      itemBuilder: (context,index)=>_taskItemWidget(controller.dailyList[index]),
+                    builder: (_)=>MediaQuery.removePadding(
+                      context: buildContext,
+                      removeTop: true,
+                      removeBottom: true,
+                      child: ListView.builder(
+                        itemCount: controller.dailyList.length,
+                        itemBuilder: (context,index)=>_taskItemWidget(controller.dailyList[index]),
+                      ),
                     ),
                   ),
                 ),

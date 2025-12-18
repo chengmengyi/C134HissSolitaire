@@ -5,16 +5,20 @@ import 'package:hiss_bbb/bean/game_state_snapshot_bean.dart';
 import 'package:hiss_bbb/bean/hiss_card_bean.dart';
 import 'package:hiss_bbb/bean/hiss_hint_bean.dart';
 import 'package:hiss_bbb/ui/dialog/add_prop_dialog/add_prop_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/money_card_reward_dialog/money_card_reward_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/random_prop_dialog/random_prop_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/set_dialog/set_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
+import 'package:hiss_bbb/utils/hiss_cash_task_utils.dart';
+import 'package:hiss_bbb/utils/hiss_daily_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_card_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_prop_type.dart';
+import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
+import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
-import 'package:hiss_bbb/utils/hiss_value_utils.dart';
 import 'package:hiss_bbb/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
@@ -23,6 +27,7 @@ import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissPlayController extends HissRootController{
@@ -396,24 +401,34 @@ class HissPlayController extends HissRootController{
     canClick=false;
     final card = cardList[colIndex][rowIndex];
     if(card.isCoins==true){
-      HissSendEventUtils.instance.sendEvent(
-        data: HissEventData(
-          eventCode: HissEventCode.aMoveCardToFoundation,
-          anyEventValue: {
-            "startGlobalKey":card.globalKey,
-            "endGlobalKey":topMoneyGlobalKey,
-            "card":card,
-            "cardWidth":cardWidth,
-            "cardHeight":cardHeight,
+      var cardAddRewardNum = HissValueConfigUtils.instance.coinsCardAddRewardNum();
+      HissRoutersUtils.instance.showDialog(
+        child: MoneyCardRewardDialog(
+          reward: cardAddRewardNum,
+          callback: (double reward)async{
+            HissSendEventUtils.instance.sendEvent(
+              data: HissEventData(
+                eventCode: HissEventCode.aMoveCardToFoundation,
+                anyEventValue: {
+                  "startGlobalKey":card.globalKey,
+                  "endGlobalKey":topMoneyGlobalKey,
+                  "card":card,
+                  "cardWidth":cardWidth,
+                  "cardHeight":cardHeight,
+                },
+              ),
+            );
+            HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.card);
+            HissCashTaskUtils.instance.updateCashTask(HissTaskType.card);
+            await Future.delayed(Duration(milliseconds: 280));
+            HissUserInfoUtils.instance.updateMoney(cardAddRewardNum);
+            update(["card_list"]);
+            card.isCoins=false;
+            await Future.delayed(Duration(milliseconds: 100));
+            canClick=true;
           },
         ),
       );
-      await Future.delayed(Duration(milliseconds: 280));
-      HissUserInfoUtils.instance.updateMoney(HissValueConfigUtils.instance.coinsCardAddRewardNum());
-      update(["card_list"]);
-      card.isCoins=false;
-      await Future.delayed(Duration(milliseconds: 100));
-      canClick=true;
       return;
     }
     if (rowIndex != cardList[colIndex].length - 1 || !card.front){
@@ -472,6 +487,8 @@ class HissPlayController extends HissRootController{
       }
     }
     if(playEnd){
+      HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.game);
+      HissCashTaskUtils.instance.updateCashTask(HissTaskType.game);
       HissRoutersUtils.instance.showDialog(
         child: PlaySuccessDialog(
           time: currentTime,
@@ -636,6 +653,8 @@ class HissPlayController extends HissRootController{
     _draggingStartIndex = null;
     update(["stock_pile","foundations","card_list"]);
     HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.back, addNum: -1);
+    HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.tool);
+    HissCashTaskUtils.instance.updateCashTask(HissTaskType.tool);
   }
 
   clickHint(){
@@ -672,6 +691,8 @@ class HissPlayController extends HissRootController{
       ),
     );
     HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.tips, addNum: -1);
+    HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.tool);
+    HissCashTaskUtils.instance.updateCashTask(HissTaskType.tool);
   }
 
   /// 查找所有可移动提示
@@ -822,10 +843,12 @@ class HissPlayController extends HissRootController{
     if(!canClick){
       return;
     }
-    HissAdUtils.instance.showAAAAd(
+    HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
-      closeAdCallback: (){
-        HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.lookAdAddMoneyNum());
+      hissAdEnum: HissAdEnum.ccqes_gamead_rv,
+      showAd: HissShowAdUtils.instance.showAd(AdType.reward),
+      closeAdCallback: (give){
+        HissUserInfoUtils.instance.updateMoney(HissValueConfigUtils.instance.lookAdAddMoneyNum());
       },
     );
   }

@@ -5,8 +5,6 @@ import 'package:hiss_bbb/bean/hiss_play_grade_bean.dart';
 import 'package:hiss_bbb/bean/hiss_play_record_bean.dart';
 import 'package:hiss_bbb/utils/hiss_play_record_utils.dart';
 import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
-import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
-import 'package:hiss_bbb/utils/hiss_value_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
@@ -72,11 +70,10 @@ class PlaySuccessController extends HissRootController{
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_settlement_rv,
       showAd: HissShowAdUtils.instance.showAd(AdType.reward),
-
       closeAdCallback: (give){
         if(give){
-          HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.addMoneyNum());
-          HissUserInfoUtils.instance.updateDiamondNum(HissValueUtils.instance.addDiamondNum());
+          // HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.addMoneyNum());
+          // HissUserInfoUtils.instance.updateDiamondNum(HissValueUtils.instance.addDiamondNum());
         }
         HissRoutersUtils.instance.close();
         dismissCallback.call();

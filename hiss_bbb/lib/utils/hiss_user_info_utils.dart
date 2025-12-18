@@ -26,20 +26,19 @@ class HissUserInfoUtils {
 
   updateMoney(addNum){
     bMoneyNum.saveData(doubleAdd(bMoneyNum.getData(), addNum));
-    _show1000MoneyDialog();
-    // if(addNum>0){
-    //   var currentMoneyNum = bMoneyNum.getData();
-    //   if(currentMoneyNum>=300&&show300AnimatorTips.getData()){
-    //     show300AnimatorTips.saveData(false);
-    //     _show300700AnimatorDialog(300);
-    //   }else if(currentMoneyNum>=700&&show700AnimatorTips.getData()){
-    //     show700AnimatorTips.saveData(false);
-    //     _show300700AnimatorDialog(700);
-    //   }else if(currentMoneyNum>=HissValueConfigUtils.instance.cashList().first&&show1000MoneyDialog.getData()){
-    //     show1000MoneyDialog.saveData(false);
-    //     _show1000MoneyDialog();
-    //   }
-    // }
+    if(addNum>0){
+      var currentMoneyNum = bMoneyNum.getData();
+      if(currentMoneyNum>=300&&show300AnimatorTips.getData()){
+        show300AnimatorTips.saveData(false);
+        _show300700AnimatorDialog(300);
+      }else if(currentMoneyNum>=700&&show700AnimatorTips.getData()){
+        show700AnimatorTips.saveData(false);
+        _show300700AnimatorDialog(700);
+      }else if(currentMoneyNum>=HissValueConfigUtils.instance.cashList().first&&show1000MoneyDialog.getData()){
+        show1000MoneyDialog.saveData(false);
+        _show1000MoneyDialog();
+      }
+    }
     HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aUpdateMoneyNum));
   }
 
@@ -84,5 +83,10 @@ class HissUserInfoUtils {
   updateUserLevel(){
     bLevel.saveData(bLevel.getData()+1);
     HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aUpdateLevel));
+  }
+
+  updateWheelNum(int addNum){
+    wheelNum.saveData(wheelNum.getData()+addNum);
+    HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.updateWheelNum));
   }
 }

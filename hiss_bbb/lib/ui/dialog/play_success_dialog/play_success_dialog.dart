@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_controller.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
-import 'package:hiss_bbb/utils/hiss_value_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_gradient_text_widget.dart';
@@ -266,7 +265,7 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
       HissImagesWidget(name: "icon_diamond", width: 28.w, height: 28.w),
       SizedBox(width: 4.w,),
       HissTextWidget(
-        textContent: "${HissValueUtils.instance.addDiamondNum()}",
+        textContent: "待定",
         textSize: 14.sp,
         textColor: "#FFFFFF".toColor(),
         outlineColor: "#052B1F".toColor(),
@@ -276,7 +275,7 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
       HissImagesWidget(name: "icon_money4", width: 28.w, height: 28.w),
       SizedBox(width: 4.w,),
       HissTextWidget(
-        textContent: "${HissValueUtils.instance.addMoneyNum()}",
+        textContent: "待定",
         textSize: 14.sp,
         textColor: "#FFFFFF".toColor(),
         outlineColor: "#052B1F".toColor(),

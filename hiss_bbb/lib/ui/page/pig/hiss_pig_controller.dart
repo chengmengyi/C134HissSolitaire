@@ -2,12 +2,15 @@ import 'package:hiss_bbb/bean/hiss_pig_info_bean.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_pig_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_bbb/utils/hiss_pig_utils.dart';
+import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_bbb/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissPigController extends HissRootController{
@@ -34,9 +37,11 @@ class HissPigController extends HissRootController{
   }
 
   _lookAd(HissPigInfoBean? infoBean){
-    HissAdUtils.instance.showAAAAd(
+    HissAdUtils.instance.showBBBAd(
       adType: AdType.interstitial,
-      closeAdCallback: (){
+      hissAdEnum: HissAdEnum.ccqes_pig_int,
+      showAd: HissShowAdUtils.instance.showAd(AdType.interstitial),
+      closeAdCallback: (give){
         _receiveReward(infoBean);
       },
     );
@@ -62,10 +67,15 @@ class HissPigController extends HissRootController{
   _initList()async{
     var list = await HissPigUtils.instance.queryPigInfo();
     if(list.isNotEmpty){
+      var diamondPigRewardList = HissValueConfigUtils.instance.getDiamondPigRewardList();
+      var diamondRewardIndex=0;
       for(var index=0;index<list.length;index++){
         var infoBean = list[index];
         if(currentDiamondNum>=(index+1)*10&&infoBean.status==HissPigStatus.lock){
           infoBean.status=HissPigStatus.unReceive;
+        }
+        if(infoBean.type==HissPigType.coins&&diamondRewardIndex<diamondPigRewardList.length){
+          infoBean.addNum=diamondPigRewardList[diamondRewardIndex];
         }
       }
       HissPigUtils.instance.updateAllPigInfo(list);
@@ -99,7 +109,7 @@ class HissPigController extends HissRootController{
 
   String getItemIcon(HissPigInfoBean? bean){
     switch(bean?.type){
-      case HissPigType.coins: return "icon_money2";
+      case HissPigType.coins: return "icon_money3";
       case HissPigType.back: return "icon_back_prop";
       case HissPigType.tips: return "icon_tips_prop";
       default: return "icon_money2";

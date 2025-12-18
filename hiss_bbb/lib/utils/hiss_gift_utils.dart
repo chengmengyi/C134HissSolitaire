@@ -13,7 +13,7 @@ class HissGiftUtils{
   insertTodayGiftInfo()async{
     var todayTime = getTodayTime();
     var database = await HissSqlUtils.instance.initSql();
-    var list = await database.query(HissSqlName.aGiftInfo,where: '"timer" = ?',whereArgs: [todayTime]);
+    var list = await database.query(HissSqlName.bGiftInfo,where: '"timer" = ?',whereArgs: [todayTime]);
     if(list.isNotEmpty){
       return;
     }
@@ -32,13 +32,13 @@ class HissGiftUtils{
       HissGiftBean(customId: 11,giftType: HissGiftType.back,addNum: 1,showAd: 1,giftStatus: HissGiftStatus.lock,),
       HissGiftBean(customId: 12,giftType: HissGiftType.coins,addNum: 50,showAd: 1,giftStatus: HissGiftStatus.lock,),
     ];
-    await database.insert(HissSqlName.aGiftInfo, {"timer":todayTime,"contentList":jsonEncode(content)});
+    await database.insert(HissSqlName.bGiftInfo, {"timer":todayTime,"contentList":jsonEncode(content)});
   }
 
   Future<List<HissGiftBean>> queryTodayGiftList()async{
     var todayTime = getTodayTime();
     var database = await HissSqlUtils.instance.initSql();
-    var list = await database.query(HissSqlName.aGiftInfo,where: '"timer" = ?',whereArgs: [todayTime]);
+    var list = await database.query(HissSqlName.bGiftInfo,where: '"timer" = ?',whereArgs: [todayTime]);
     if(list.isEmpty){
       return [];
     }
@@ -68,6 +68,6 @@ class HissGiftUtils{
     }
     var todayTime = getTodayTime();
     var database = await HissSqlUtils.instance.initSql();
-    await database.update(HissSqlName.aGiftInfo, {"timer":todayTime,"contentList":jsonEncode(todayList)},where: '"timer" = ? ',whereArgs: [todayTime]);
+    await database.update(HissSqlName.bGiftInfo, {"timer":todayTime,"contentList":jsonEncode(todayList)},where: '"timer" = ? ',whereArgs: [todayTime]);
   }
 }

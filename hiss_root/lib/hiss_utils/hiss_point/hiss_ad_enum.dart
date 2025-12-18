@@ -11,4 +11,11 @@ enum HissAdEnum{
   ccqes_gift_rv,
   ccqes_pig_int,
   ccqes_queue_rv,
+  ccqes_couriertools_rv,
+  ccqes_tools_rv,
+  ccqes_tools_int,
+  ccqes_gamead_rv,
+  ccqes_card_rv,
+  ccqes_card_int,
+  ccqes_task_int,
 }

@@ -44,7 +44,13 @@ class InputAccountDialog extends HissRootDialog<InputAccountDialogController>{
           ],
         ),
       ),
-
+      SizedBox(height: 16.h,),
+      HissClickWidget(
+        onTap: (){
+          controller.clickClose();
+        },
+        child: HissImagesWidget(name: "icon_close", width: 32.w, height: 32.w),
+      ),
     ],
   );
 

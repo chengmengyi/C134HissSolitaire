@@ -6,6 +6,7 @@ import 'package:hiss_bbb/ui/dialog/first_reach_cash_money_dialog/first_reach_cas
 import 'package:hiss_bbb/ui/dialog/input_account_dialog/input_account_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/money300_700_result_dialog/money300_700_result_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/money_300_700_animator_dialog/money_300_700_animator_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/money_card_reward_dialog/money_card_reward_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/verify_account_dialog/verify_account_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
@@ -45,8 +46,13 @@ class HomeChildController extends HissRootController{
     //   child: NoMoneyDialog(),
     // );
     // HissValueConfigUtils.instance.initBean();
-    HissUserInfoUtils.instance.updateMoney(100);
+    // HissUserInfoUtils.instance.updateMoney(100);
 
     // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
+
+    // HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.game);
+
+    // HissCashTaskUtils.instance.updateCashTask(HissTaskType.bubbles);
+    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.inputAddress);
   }
 }
