@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:hiss_bbb/bean/hiss_ad_probability_bean.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_firebase_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_local.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -14,8 +15,20 @@ class HissShowAdUtils{
   HissAdProbabilityBean? _adProbabilityBean;
 
   initData(){
+    _startInitBean();
+    HissFirebaseUtils.instance.adProbabilityConfigCallback=(String s){
+      adProbabilityConfig.saveData(s);
+      _startInitBean();
+    };
+  }
+
+  _startInitBean(){
     try{
-      _adProbabilityBean=HissAdProbabilityBean.fromJson(jsonDecode(HissLocal.adProbabilityBase64.base64()));
+      var data = adProbabilityConfig.getData();
+      if(data.isEmpty){
+        data=HissLocal.adProbabilityBase64.base64();
+      }
+      _adProbabilityBean=HissAdProbabilityBean.fromJson(jsonDecode(data));
     }catch(e){
       _adProbabilityBean=HissAdProbabilityBean.fromJson(jsonDecode(HissLocal.adProbabilityBase64.base64()));
     }

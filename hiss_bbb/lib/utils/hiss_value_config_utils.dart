@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:hiss_bbb/bean/hiss_value_config_bean.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
+import 'package:hiss_root/hiss_utils/hiss_firebase_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_local.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -13,8 +14,22 @@ class HissValueConfigUtils{
   HissValueConfigBean? _configBean;
 
   initBean(){
+    _startInitBean();
+    HissFirebaseUtils.instance.valueConfigCallback=(String s){
+      if(valueConfig.getData().isEmpty){
+        valueConfig.saveData(s);
+        _startInitBean();
+      }
+    };
+  }
+
+  _startInitBean(){
     try{
-      _configBean=HissValueConfigBean.fromJson(jsonDecode(HissLocal.localRewardBase64.base64()));
+      var data = valueConfig.getData();
+      if(data.isEmpty){
+        data=HissLocal.localRewardBase64.base64();
+      }
+      _configBean=HissValueConfigBean.fromJson(jsonDecode(data));
     }catch(e){
       _configBean=HissValueConfigBean.fromJson(jsonDecode(HissLocal.localRewardBase64.base64()));
     }

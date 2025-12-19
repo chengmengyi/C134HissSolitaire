@@ -14,6 +14,7 @@ import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_root_staorage.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -210,7 +211,11 @@ class HissAdUtils{
   }
 
   ConfigAdData _getConfigAdData(){
-    var json = jsonDecode(HissLocal.adJsonBase64.base64());
+    var data = hissAdJsonConfig.getData();
+    if(data.isEmpty){
+      data=HissLocal.adJsonBase64.base64();
+    }
+    var json = jsonDecode(data);
     return ConfigAdData(
       maxShowNum: json["vpmsydhi"],
       maxClickNum: json["dtcukgha"],
@@ -238,4 +243,8 @@ class HissAdUtils{
     return resultList;
   }
 
+
+  updateConfigData(){
+    FlutterIosAdPlugins.instance.updateAdData(_getConfigAdData());
+  }
 }

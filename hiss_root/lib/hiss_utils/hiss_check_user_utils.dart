@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_check_adjust/flutter_check_adjust.dart';
 import 'package:flutter_check_adjust/request_adjust/request_adjust_callback.dart';
 import 'package:flutter_check_adjust/request_cloak/request_cloak_callback.dart';
@@ -46,6 +47,9 @@ class HissCheckUserUtils{
   }
 
   bool getUser(){
+    if(kDebugMode){
+      return true;
+    }
     if(Platform.isAndroid){
       return true;
     }

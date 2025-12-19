@@ -12,9 +12,8 @@ import 'package:hiss_bbb/utils/hiss_home_gift_utils.dart';
 import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
 import 'package:hiss_bbb/utils/hiss_task_queue_config_utils.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
-import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_app_life_utils.dart';
-import 'package:hiss_root/hiss_utils/hiss_check_user_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_connectivity_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
@@ -39,7 +38,6 @@ void main() async{
   await GetStorage.init();
   HissMp3Utils.instance.initPlayer();
   HissAppLifeUtils.instance.addLife();
-  HissAdUtils.instance.initAd();
 
   //a
   HissGiftUtils.instance.insertTodayGiftInfo();
@@ -48,7 +46,7 @@ void main() async{
   HissPigUtils.instance.initPigInfo();
 
   //b
-  HissCheckUserUtils.instance.initCheck();
+  HissConnectivityUtils.instance.initConnectivity();
   HissShowAdUtils.instance.initData();
   bHissGiftUtils.HissGiftUtils.instance.insertTodayGiftInfo();
   bHissRankUtils.HissRankUtils.instance.insertTodayRank();

@@ -50,7 +50,44 @@ PODS:
     - FlutterMacOS
   - BigoADS (5.0.0)
   - ChartboostSDK (9.10.1)
+  - connectivity_plus (0.0.1):
+    - Flutter
   - FBAudienceNetwork (6.21.0)
+  - Firebase/CoreOnly (11.15.0):
+    - FirebaseCore (~> 11.15.0)
+  - Firebase/RemoteConfig (11.15.0):
+    - Firebase/CoreOnly
+    - FirebaseRemoteConfig (~> 11.15.0)
+  - firebase_core (3.15.1):
+    - Firebase/CoreOnly (= 11.15.0)
+    - Flutter
+  - firebase_remote_config (5.4.7):
+    - Firebase/RemoteConfig (= 11.15.0)
+    - firebase_core
+    - Flutter
+  - FirebaseABTesting (11.15.0):
+    - FirebaseCore (~> 11.15.0)
+  - FirebaseCore (11.15.0):
+    - FirebaseCoreInternal (~> 11.15.0)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GoogleUtilities/Logger (~> 8.1)
+  - FirebaseCoreInternal (11.15.0):
+    - "GoogleUtilities/NSData+zlib (~> 8.1)"
+  - FirebaseInstallations (11.15.0):
+    - FirebaseCore (~> 11.15.0)
+    - GoogleUtilities/Environment (~> 8.1)
+    - GoogleUtilities/UserDefaults (~> 8.1)
+    - PromisesObjC (~> 2.4)
+  - FirebaseRemoteConfig (11.15.0):
+    - FirebaseABTesting (~> 11.0)
+    - FirebaseCore (~> 11.15.0)
+    - FirebaseInstallations (~> 11.0)
+    - FirebaseRemoteConfigInterop (~> 11.0)
+    - FirebaseSharedSwift (~> 11.0)
+    - GoogleUtilities/Environment (~> 8.1)
+    - "GoogleUtilities/NSData+zlib (~> 8.1)"
+  - FirebaseRemoteConfigInterop (11.15.0)
+  - FirebaseSharedSwift (11.15.0)
   - Flutter (1.0.0)
   - flutter_app_lifecycle (0.0.1):
     - Flutter
@@ -66,6 +103,17 @@ PODS:
   - Google-Mobile-Ads-SDK (12.14.0):
     - GoogleUserMessagingPlatform (>= 1.1)
   - GoogleUserMessagingPlatform (3.1.0)
+  - GoogleUtilities/Environment (8.1.0):
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Logger (8.1.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Privacy
+  - "GoogleUtilities/NSData+zlib (8.1.0)":
+    - GoogleUtilities/Privacy
+  - GoogleUtilities/Privacy (8.1.0)
+  - GoogleUtilities/UserDefaults (8.1.0):
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Privacy
   - hiss_aaa (0.0.1):
     - Flutter
   - hiss_bbb (0.0.1):
@@ -118,6 +166,7 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - PromisesObjC (2.4.0)
   - sqflite (0.0.3):
     - Flutter
     - FlutterMacOS
@@ -143,6 +192,9 @@ DEPENDENCIES:
   - AppLovinMediationMolocoAdapter
   - AppLovinMediationVungleAdapter
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/darwin`)
+  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
+  - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - Flutter (from `Flutter`)
   - flutter_app_lifecycle (from `.symlinks/plugins/flutter_app_lifecycle/ios`)
   - flutter_check_adjust (from `.symlinks/plugins/flutter_check_adjust/ios`)
@@ -176,13 +228,23 @@ SPEC REPOS:
     - BigoADS
     - ChartboostSDK
     - FBAudienceNetwork
+    - Firebase
+    - FirebaseABTesting
+    - FirebaseCore
+    - FirebaseCoreInternal
+    - FirebaseInstallations
+    - FirebaseRemoteConfig
+    - FirebaseRemoteConfigInterop
+    - FirebaseSharedSwift
     - Fyber_Marketplace_SDK
     - Google-Mobile-Ads-SDK
     - GoogleUserMessagingPlatform
+    - GoogleUtilities
     - InMobiSDK
     - IronSourceSDK
     - MintegralAdSDK
     - MolocoSDKiOS
+    - PromisesObjC
     - VungleAds
 
 EXTERNAL SOURCES:
@@ -192,6 +254,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/applovin_max/ios"
   audioplayers_darwin:
     :path: ".symlinks/plugins/audioplayers_darwin/darwin"
+  connectivity_plus:
+    :path: ".symlinks/plugins/connectivity_plus/ios"
+  firebase_core:
+    :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_remote_config:
+    :path: ".symlinks/plugins/firebase_remote_config/ios"
   Flutter:
     :path: Flutter
   flutter_app_lifecycle:
@@ -239,7 +307,18 @@ SPEC CHECKSUMS:
   audioplayers_darwin: 4f9ca89d92d3d21cec7ec580e78ca888e5fb68bd
   BigoADS: 789ca51394adb1adb405e7e01ec8e43d3dc14f15
   ChartboostSDK: 377d7bbec1cccba0f7119f5d0830bd1ada89b672
+  connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   FBAudienceNetwork: f4ab9e073ab98c884dbdb5ffe7c861272b380bc2
+  Firebase: d99ac19b909cd2c548339c2241ecd0d1599ab02e
+  firebase_core: ece862f94b2bc72ee0edbeec7ab5c7cb09fe1ab5
+  firebase_remote_config: 88ede24650cdf0916188dc2fe4138e3a03e62712
+  FirebaseABTesting: 5e9d432834aebf27ab72100d37af44dfbe8d82f7
+  FirebaseCore: efb3893e5b94f32b86e331e3bd6dadf18b66568e
+  FirebaseCoreInternal: 9afa45b1159304c963da48addb78275ef701c6b4
+  FirebaseInstallations: 317270fec08a5d418fdbc8429282238cab3ac843
+  FirebaseRemoteConfig: b496646b82855e174a7f1e354c65e0e913085168
+  FirebaseRemoteConfigInterop: 1c6135e8a094cc6368949f5faeeca7ee8948b8aa
+  FirebaseSharedSwift: e17c654ef1f1a616b0b33054e663ad1035c8fd40
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_app_lifecycle: 96f63b433a79e643add0fd0a58eabf1a0877e176
   flutter_check_adjust: adc82fd582b560941650bac5619ace8a6ebc890a
@@ -249,6 +328,7 @@ SPEC CHECKSUMS:
   Fyber_Marketplace_SDK: 47267f7f78339628a159ceb30392f03d62a52271
   Google-Mobile-Ads-SDK: 4534fd2dfcd3f705c5485a6633c5188d03d4eed2
   GoogleUserMessagingPlatform: befe603da6501006420c206222acd449bba45a9c
+  GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   hiss_aaa: 58854e72e620fbbe4804e7dac2d2a3356a22e924
   hiss_bbb: 042f0e13cccbf6547180892f90ae0341cb1b30a3
   hiss_root: 64d08ac86524724921a7bb14f8e7b86ebe6ef261
@@ -257,6 +337,7 @@ SPEC CHECKSUMS:
   MintegralAdSDK: da460cadeab792c79998a4af24e61d20b055e755
   MolocoSDKiOS: da68d05a112853dcdeea93adf8e41a7d5847c44a
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
+  PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   sqflite: c35dad70033b8862124f8337cc994a809fcd9fa3
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
   VungleAds: 40e87d1eaba17ac818b0f94461fd8ed21ad768dc

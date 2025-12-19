@@ -16,6 +16,9 @@ class HissStorageKey{
   static const String show1000MoneyDialog="show1000MoneyDialog";
   static const String wheelNum="wheelNum";
   static const String allMoneyNum="allMoneyNum";
+  static const String adProbabilityConfig="adProbabilityConfig";
+  static const String valueConfig="valueConfig";
+  static const String taskQueueConfig="taskQueueConfig";
 }
 
 StorageData<double> bMoneyNum=StorageData<double>(key: HissStorageKey.bMoney, defaultValue: 0.0);
@@ -31,6 +34,9 @@ StorageData<String> bMyName=StorageData<String>(key: HissStorageKey.bMyName, def
 StorageData<String> bMyHead=StorageData<String>(key: HissStorageKey.bMyHead, defaultValue: "");
 StorageData<String> bReceivedRankRewardTime=StorageData<String>(key: HissStorageKey.bReceivedRankRewardTime, defaultValue: "");
 StorageData<String> cashTypeStorage=StorageData<String>(key: HissStorageKey.cashType, defaultValue: HissCashType.paypal);
+StorageData<String> adProbabilityConfig=StorageData<String>(key: HissStorageKey.adProbabilityConfig, defaultValue: "");
+StorageData<String> valueConfig=StorageData<String>(key: HissStorageKey.valueConfig, defaultValue: "");
+StorageData<String> taskQueueConfig=StorageData<String>(key: HissStorageKey.taskQueueConfig, defaultValue: "");
 
 StorageData<bool> show300AnimatorTips=StorageData<bool>(key: HissStorageKey.show300AnimatorTips, defaultValue: true);
 StorageData<bool> show700AnimatorTips=StorageData<bool>(key: HissStorageKey.show700AnimatorTips, defaultValue: true);
