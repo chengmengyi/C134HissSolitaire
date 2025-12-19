@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/bean/hiss_rank_bean.dart';
-import 'package:hiss_bbb/ui/page/rank/hiss_rank_controller.dart';
+import 'package:hiss_bbb/ui/page/rank/bbb_hiss_rank_controller.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_page.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_breath_animator_widget.dart';
@@ -11,10 +11,10 @@ import 'package:hiss_root/hiss_ui/hiss_widget/hiss_text_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
-class HissRankPage extends HissRootPage<HissRankController>{
+class BBBHissRankPage extends HissRootPage<BBBHissRankController>{
 
   @override
-  HissRankController initGetController() => HissRankController();
+  BBBHissRankController initGetController() => BBBHissRankController();
 
   @override
   Widget initContent() => Stack(
@@ -105,7 +105,7 @@ class HissRankPage extends HissRootPage<HissRankController>{
             context: buildContext,
             removeTop: true,
             removeBottom: true,
-            child: GetBuilder<HissRankController>(
+            child: GetBuilder<BBBHissRankController>(
               id: "list",
               builder: (_)=>ListView.builder(
                 controller: controller.scrollController,
@@ -224,7 +224,7 @@ class HissRankPage extends HissRootPage<HissRankController>{
 
   _myRankItemWidget()=>Align(
     alignment: Alignment.bottomCenter,
-    child: GetBuilder<HissRankController>(
+    child: GetBuilder<BBBHissRankController>(
       id: "my_rank",
       builder: (_)=>Visibility(
         visible: null!=controller.myRankBean,
@@ -311,7 +311,7 @@ class HissRankPage extends HissRootPage<HissRankController>{
           )
         ],
       ),
-      GetBuilder<HissRankController>(
+      GetBuilder<BBBHissRankController>(
         id: "top3",
         builder: (_)=>Row(
           mainAxisSize: MainAxisSize.min,

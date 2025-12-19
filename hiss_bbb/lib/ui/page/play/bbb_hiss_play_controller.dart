@@ -30,7 +30,7 @@ import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
-class HissPlayController extends HissRootController{
+class BBBHissPlayController extends HissRootController{
   var cardWidth=0.0,cardHeight=0.0,_canClickStockPile=true,_canClickResetPlay=true,
       currentScore=0,currentStep=0,currentTime=0,appBackground=false,_showRandomPropDialog=true,
       canClick=true;
@@ -46,6 +46,7 @@ class HissPlayController extends HissRootController{
   GlobalKey tipsPropGlobalKey=GlobalKey();
   GlobalKey topMoneyGlobalKey=GlobalKey();
   GlobalKey diamondPigGlobalKey=GlobalKey();
+  GlobalKey giftPuzzleGlobalKey=GlobalKey();
   // 撤销栈
   final List<GameStateSnapshotBean> _historyList = [];
   List<GlobalKey> foundationsGlobalKeyList=[GlobalKey(),GlobalKey(),GlobalKey(),GlobalKey()];
@@ -152,15 +153,8 @@ class HissPlayController extends HissRootController{
       }
     }
     var coinsCardNum=HissValueConfigUtils.instance.coinsCardNum();
-    var random = Random();
-    for (var value in columns) {
-      for (var value1 in value) {
-        if(random.nextBool()&&coinsCardNum>0){
-          value1.isCoins=true;
-          coinsCardNum-=1;
-        }
-      }
-    }
+    var giftPuzzleNum = HissValueConfigUtils.instance.getGiftPuzzleNum();
+    _randomSetCoinsAndGifts(columns,coinsCardNum,giftPuzzleNum);
 
     cardList = columns;
 
@@ -174,22 +168,63 @@ class HissPlayController extends HissRootController{
   _initOtherLevelCards(List<HissCardBean> fullDeck){
     fullDeck.shuffle();
     int index = 0;
-    var coinsCardNum=HissValueConfigUtils.instance.coinsCardNum();
-    var random = Random();
     for (var i = 0; i < 7; i++) {
       List<HissCardBean> col = [];
       for (var j = 0; j <= i; j++) {
         var cardBean = fullDeck[index++];
-        if(random.nextBool()&&coinsCardNum>0){
-          cardBean.isCoins=true;
-          coinsCardNum-=1;
-        }
         col.add(cardBean);
       }
       cardList.add(col);
     }
+
+    var coinsCardNum=HissValueConfigUtils.instance.coinsCardNum();
+    var giftPuzzleNum = HissValueConfigUtils.instance.getGiftPuzzleNum();
+    _randomSetCoinsAndGifts(cardList,coinsCardNum,giftPuzzleNum);
     stockPileList = fullDeck.sublist(index);
   }
+
+  _randomSetCoinsAndGifts(List<List<HissCardBean>> list2D, int coinsNum, int puzzleNum,) {
+    final random = Random();
+    final allPos = <_Pos>[];
+
+    for (int i = 0; i < list2D.length; i++) {
+      final row = list2D[i];
+      if (row.isEmpty) continue;
+
+      for (int j = 0; j < row.length; j++) {
+        final item = row[j];
+        item.isCoins = false;
+        item.isGift = false;
+
+        if (j == row.length - 1) continue;
+
+        allPos.add(_Pos(i, j));
+      }
+    }
+    if (allPos.isEmpty) return;
+    allPos.shuffle(random);
+    final coinsCount = coinsNum.clamp(0, allPos.length);
+
+    final usedPos = <_Pos>{};
+
+    for (int i = 0; i < coinsCount; i++) {
+      final p = allPos[i];
+      list2D[p.i][p.j].isCoins = true;
+      usedPos.add(p);
+    }
+    final giftCandidates =
+    allPos.where((p) => !usedPos.contains(p)).toList();
+
+    if (giftCandidates.isEmpty) return;
+    giftCandidates.shuffle(random);
+    final giftCount = puzzleNum.clamp(0, giftCandidates.length);
+
+    for (int i = 0; i < giftCount; i++) {
+      final p = giftCandidates[i];
+      list2D[p.i][p.j].isGift = true;
+    }
+  }
+
 
   bool onAcceptWithDetails(data,int columnIndex){
     List<HissCardBean> movingCards = data!['cards'];
@@ -215,6 +250,7 @@ class HissPlayController extends HissRootController{
     _saveSnapshot();
     List<HissCardBean> movingCards = data['cards'];
     HissCardBean? showDiamondCard;
+    HissCardBean? showGiftPuzzleCard;
     if (data['fromWaste'] == true){
       wastePileList.remove(movingCards.first);
       for (var value in movingCards) {
@@ -227,8 +263,12 @@ class HissPlayController extends HissRootController{
       if (cardList[fromCol].isNotEmpty){
         var fromLast = cardList[fromCol].last;
         fromLast.front = true;
-        if(fromLast.isCoins!=true&&HissValueConfigUtils.instance.showDiamondIcon()){
-          showDiamondCard=fromLast;
+        if(fromLast.isCoins!=true){
+          if(fromLast.isGift==true){
+            showGiftPuzzleCard=fromLast;
+          }else if(HissValueConfigUtils.instance.showDiamondIcon()){
+            showDiamondCard=fromLast;
+          }
         }
       }
       currentScore+=5;
@@ -239,23 +279,7 @@ class HissPlayController extends HissRootController{
     _draggingStartIndex = null;
     currentStep++;
     update(["card_list","stock_pile","step","score"]);
-    if(null!=showDiamondCard){
-      HissMp3Utils.instance.playOtherMp3(HissMp3Type.cunqian);
-      HissUserInfoUtils.instance.updateDiamondNum(1);
-      HissSendEventUtils.instance.sendEvent(
-        data: HissEventData(
-          eventCode: HissEventCode.aShowDiamondPigAnimator,
-          anyEventValue: {
-            "cardWidth":cardWidth,
-            "cardHeight":cardHeight,
-            "endGlobalKey":diamondPigGlobalKey,
-            "startGlobalKey":showDiamondCard.globalKey,
-          },
-        ),
-      );
-      await Future.delayed(Duration(milliseconds: 500));
-      HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aShowPigBtnTips));
-    }
+    _checkIsDiamondOrGiftPuzzle(showDiamondCard,showGiftPuzzleCard);
     _checkAllCardFront();
   }
 
@@ -469,6 +493,17 @@ class HissPlayController extends HissRootController{
     if (cardList[colIndex].isNotEmpty){
       cardList[colIndex].last.front = true;
       HissUserInfoUtils.instance.updateMoney(HissValueConfigUtils.instance.getFlipCardAddNum());
+      var last = cardList[colIndex].last;
+      HissCardBean? showDiamondCard;
+      HissCardBean? showGiftPuzzleCard;
+      if(last.isCoins!=true){
+        if(last.isGift==true){
+          showGiftPuzzleCard=last;
+        }else if(HissValueConfigUtils.instance.showDiamondIcon()){
+          showDiamondCard=last;
+        }
+      }
+      _checkIsDiamondOrGiftPuzzle(showDiamondCard,showGiftPuzzleCard);
     }
     currentScore+=10;
     update(["card_list","foundations","score"]);
@@ -476,6 +511,41 @@ class HissPlayController extends HissRootController{
     canClick=true;
     //校验游戏通关了
     _checkPlayEnd();
+  }
+
+  _checkIsDiamondOrGiftPuzzle(HissCardBean? diamondCardBean,HissCardBean? giftPuzzleCardBean)async{
+    if(null!=diamondCardBean){
+      HissMp3Utils.instance.playOtherMp3(HissMp3Type.cunqian);
+      HissUserInfoUtils.instance.updateDiamondNum(1);
+      HissSendEventUtils.instance.sendEvent(
+        data: HissEventData(
+          eventCode: HissEventCode.aShowDiamondPigAnimator,
+          anyEventValue: {
+            "cardWidth":cardWidth,
+            "cardHeight":cardHeight,
+            "endGlobalKey":diamondPigGlobalKey,
+            "startGlobalKey":diamondCardBean.globalKey,
+          },
+        ),
+      );
+      await Future.delayed(Duration(milliseconds: 500));
+      HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aShowPigBtnTips));
+    }
+    if(null!=giftPuzzleCardBean){
+      HissSendEventUtils.instance.sendEvent(
+        data: HissEventData(
+          eventCode: HissEventCode.showGiftPuzzleAnimator,
+          anyEventValue: {
+            "cardWidth":cardWidth,
+            "cardHeight":cardHeight,
+            "endGlobalKey":giftPuzzleGlobalKey,
+            "startGlobalKey":giftPuzzleCardBean.globalKey,
+          },
+        ),
+      );
+      await Future.delayed(Duration(milliseconds: 500));
+      HissUserInfoUtils.instance.updateWheelNum(1);
+    }
   }
 
   _checkPlayEnd(){
@@ -860,6 +930,10 @@ class HissPlayController extends HissRootController{
     HissRoutersUtils.instance.showDialog(child: SetDialog());
   }
 
+  clickGiftBtn(){
+    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.wheel);
+  }
+
   bool foundationsOnWillAccept(Map<String, dynamic>? data, int index){
     List<HissCardBean> moving = data!["cards"];
     if (moving.length != 1){
@@ -906,6 +980,9 @@ class HissPlayController extends HissRootController{
       case HissEventCode.onChangedAppLife:
         appBackground=data.boolEventValue??false;
         break;
+      case HissEventCode.updateWheelNum:
+        update(["wheel_num"]);
+        break;
     }
   }
 
@@ -916,4 +993,19 @@ class HissPlayController extends HissRootController{
     playGamePageOpen=false;
     super.onClose();
   }
+}
+
+class _Pos {
+  final int i;
+  final int j;
+
+  _Pos(this.i, this.j);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is _Pos && i == other.i && j == other.j;
+
+  @override
+  int get hashCode => i.hashCode ^ j.hashCode;
 }

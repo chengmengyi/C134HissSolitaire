@@ -10,6 +10,7 @@ class HissValueConfigBean {
       this.rankReward, 
       this.cyclicReward, 
       this.diamondPig,
+      this.bubble,
   });
 
   HissValueConfigBean.fromJson(dynamic json) {
@@ -41,6 +42,7 @@ class HissValueConfigBean {
       });
     }
     diamondPig = json['diamond_pig'] != null ? json['diamond_pig'].cast<int>() : [];
+    diamondPig = json['bubble'] != null ? json['bubble'].cast<int>() : [];
   }
   List<int>? giftPuzzle;
   CashCard? cashCard;
@@ -50,6 +52,7 @@ class HissValueConfigBean {
   List<RankReward>? rankReward;
   List<CyclicReward>? cyclicReward;
   List<int>? diamondPig;
+  List<int>? bubble;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -71,6 +74,7 @@ class HissValueConfigBean {
       map['cyclic_reward'] = cyclicReward?.map((v) => v.toJson()).toList();
     }
     map['diamond_pig'] = diamondPig;
+    map['bubble'] = bubble;
     return map;
   }
 

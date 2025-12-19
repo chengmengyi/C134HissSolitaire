@@ -29,12 +29,30 @@ class HissValueConfigUtils{
   int lookAdAddMoneyNum()=>100;
 
   //悬浮气泡
-  double getBubbleAddNum()=> 10.2;
+  double getBubbleAddNum()=> _getRandomDouble(_configBean?.bubble??[10,15]);
 
   //翻开一张牌
-  double getFlipCardAddNum()=>5.0;
+  double getFlipCardAddNum(){
+    var list = _configBean?.openCollectCard??[];
+    if(list.isEmpty){
+      return 0.5;
+    }
+    var data = bMoneyNum.getData();
+    var last = list.last;
+    if(data>=(last.max??1000)){
+      return last.reward??0.5;
+    }
+    for(var value in list){
+      if(data>=(value.min??0)&&data<(value.max??0)){
+        return value.reward??0.5;
+      }
+    }
+    return 0.5;
+  }
 
   List<int> cashList()=>[1000,1200,1500];
+
+  int getGiftPuzzleNum()=>_randomMinAndMax(_configBean?.giftPuzzle??[3,5]);
 
   int coinsCardNum()=>_randomMinAndMax(_configBean?.cashCard?.num??[4,7]);
 

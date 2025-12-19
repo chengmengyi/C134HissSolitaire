@@ -2,9 +2,11 @@ import 'dart:math';
 
 import 'package:hiss_bbb/bean/hiss_gift_reward_task_bean.dart';
 import 'package:hiss_bbb/bean/hiss_home_gift_progress_bean.dart';
+import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_gift_reward_task_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_home_gift_type.dart';
 import 'package:hiss_bbb/utils/hiss_task_queue_config_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_sql/hiss_sql_name.dart';
 import 'package:hiss_root/hiss_utils/hiss_sql/hiss_sql_utils.dart';
 
@@ -92,6 +94,7 @@ class HissHomeGiftUtils{
     if(list.isEmpty){
       return;
     }
+    bool hasKuaiDi=false;
     for (var value in list) {
       var taskBean = HissGiftRewardTaskBean.fromJson(value);
       taskBean.currentPro=(taskBean.currentPro??0)+1;
@@ -99,8 +102,12 @@ class HissHomeGiftUtils{
         taskBean.currentPro=0;
         taskBean.totalPro=100;
         taskBean.taskType=HissGiftRewardTaskType.kuaidi;
+        hasKuaiDi=true;
       }
       await database.update(HissSqlName.bGiftRewardTaskInfo, taskBean.toJson(),where: '"id" = ?',whereArgs: [value["id"]]);
+    }
+    if(hasKuaiDi){
+      HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.inputAddress);
     }
   }
 

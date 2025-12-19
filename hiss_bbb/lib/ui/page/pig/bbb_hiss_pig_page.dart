@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hiss_bbb/ui/page/pig/hiss_pig_controller.dart';
+import 'package:hiss_bbb/ui/page/pig/bbb_hiss_pig_controller.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_pig_type.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_page.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
@@ -9,10 +9,10 @@ import 'package:hiss_root/hiss_ui/hiss_widget/hiss_text_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
-class HissPigPage extends HissRootPage<HissPigController>{
+class BBBHissPigPage extends HissRootPage<BBBHissPigController>{
 
   @override
-  HissPigController initGetController() => HissPigController();
+  BBBHissPigController initGetController() => BBBHissPigController();
 
   @override
   Widget initContent() => Stack(
@@ -81,7 +81,7 @@ class HissPigPage extends HissRootPage<HissPigController>{
     ),
   );
 
-  _listWidget()=>GetBuilder<HissPigController>(
+  _listWidget()=>GetBuilder<BBBHissPigController>(
     id: "list",
     builder: (_)=>Row(
       children: [

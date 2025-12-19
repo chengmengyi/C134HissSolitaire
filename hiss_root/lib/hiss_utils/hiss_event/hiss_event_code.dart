@@ -20,4 +20,5 @@ class HissEventCode{
   static const int showHomeTabIndex=16;
   static const int updateCashTypeTab=17;
   static const int updateWheelNum=18;
+  static const int showGiftPuzzleAnimator=19;
 }

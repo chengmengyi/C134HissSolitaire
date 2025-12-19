@@ -14,6 +14,7 @@ import 'package:hiss_bbb/utils/hiss_cash_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_daily_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_cash_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
+import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_task_queue_config_utils.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
@@ -22,7 +23,7 @@ import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
-class HomeChildController extends HissRootController{
+class BBBHomeChildController extends HissRootController{
   clickPlay(){
     // Navigator.push(buildContext, MaterialPageRoute(builder: (_)=>SolitairePage()));
     HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.play);
@@ -53,6 +54,10 @@ class HomeChildController extends HissRootController{
     // HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.game);
 
     // HissCashTaskUtils.instance.updateCashTask(HissTaskType.bubbles);
-    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.inputAddress);
+    // HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.inputAddress);
+
+    HissRoutersUtils.instance.showDialog(
+      child: FirstReachCashMoneyDialog(),
+    );
   }
 }

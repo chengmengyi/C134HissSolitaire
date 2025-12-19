@@ -27,6 +27,7 @@ class HissUserInfoUtils {
   updateMoney(addNum){
     bMoneyNum.saveData(doubleAdd(bMoneyNum.getData(), addNum));
     if(addNum>0){
+      allMoneyNum.saveData(allMoneyNum.getData()+addNum);
       var currentMoneyNum = bMoneyNum.getData();
       if(currentMoneyNum>=300&&show300AnimatorTips.getData()){
         show300AnimatorTips.saveData(false);

@@ -13,7 +13,7 @@ import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
-class HissPigController extends HissRootController{
+class BBBHissPigController extends HissRootController{
   var currentDiamondNum=0;
   HissPigInfoBean? lastPigBean;
   List<HissPigInfoBean> pigList=[];

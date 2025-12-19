@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hiss_bbb/ui/page/input_address/input_address_controller.dart';
+import 'package:hiss_bbb/ui/page/input_address/bbb_input_address_controller.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_page.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
@@ -8,9 +8,9 @@ import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
-class InputAddressPage extends HissRootPage<InputAddressController>{
+class BBBInputAddressPage extends HissRootPage<BBBInputAddressController>{
   @override
-  InputAddressController initGetController() => InputAddressController();
+  BBBInputAddressController initGetController() => BBBInputAddressController();
 
   @override
   Widget initContent() =>Container(
@@ -301,7 +301,7 @@ class InputAddressPage extends HissRootPage<InputAddressController>{
             ),
           ],
         ),
-        GetBuilder<InputAddressController>(
+        GetBuilder<BBBInputAddressController>(
           id: "input_tips",
           builder: (_)=>Visibility(
             visible: controller.inputTips.isNotEmpty,

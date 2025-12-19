@@ -13,7 +13,7 @@ import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
-class HissRankController extends HissRootController{
+class BBBHissRankController extends HissRootController{
   HissRankBean? top1RankBean;
   HissRankBean? top2RankBean;
   HissRankBean? top3RankBean;

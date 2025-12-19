@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/money300_700_result_dialog/money300_700_result_dialog_controller.dart';
 import 'package:hiss_bbb/ui/widget/hiss_cash_barrage_widget.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
+import 'package:hiss_bbb/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_gradient_text_widget.dart';
@@ -175,31 +177,36 @@ class Money300700ResultDialog extends HissRootDialog<Money300700ResultDialogCont
           ],
         ),
         SizedBox(height: 8.h,),
-        HissTextWidget(textContent: "Accumulate \$1000 to cash out.", textSize: 14.sp, textColor: "#FFFFFF".toColor(),),
+        HissTextWidget(textContent: "Accumulate \$${HissValueConfigUtils.instance.cashList().first} to cash out.", textSize: 14.sp, textColor: "#FFFFFF".toColor(),),
         SizedBox(height: 4.h,),
-        Container(
-          width: double.infinity,
-          height: 8.h,
-          alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(left: 1.w,right: 1.w),
-          decoration: BoxDecoration(
-            color: "#A2532E".toColor(),
-            borderRadius: BorderRadius.circular(4.w),
-            border: Border.all(
-              width: 1.5.w,
-              color: "#FBD35F".toColor(),
-            ),
-          ),
-          child: Container(
-            width: 100,
-            height: 4.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(2.w),
-              gradient: LinearGradient(
-                colors: ["#A3ECA4".toColor(),"#4EB255".toColor(),]
+        LayoutBuilder(
+          builder: (context,bc){
+            var maxWidth = bc.maxWidth-2.w;
+            return Container(
+              width: double.infinity,
+              height: 8.h,
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 1.w,right: 1.w),
+              decoration: BoxDecoration(
+                color: "#A2532E".toColor(),
+                borderRadius: BorderRadius.circular(4.w),
+                border: Border.all(
+                  width: 1.5.w,
+                  color: "#FBD35F".toColor(),
+                ),
               ),
-            ),
-          ),
+              child: Container(
+                width: maxWidth*getProgress(bMoneyNum.getData().toInt(), HissValueConfigUtils.instance.cashList().first),
+                height: 4.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2.w),
+                  gradient: LinearGradient(
+                      colors: ["#A3ECA4".toColor(),"#4EB255".toColor(),]
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ],
     ),

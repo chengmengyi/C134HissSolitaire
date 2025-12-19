@@ -13,7 +13,7 @@ import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
-class HissGiftController extends HissRootController{
+class BBBHissGiftController extends HissRootController{
   List<List<HissGiftBean>> giftList=[];
 
   @override

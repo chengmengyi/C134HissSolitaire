@@ -1,9 +1,10 @@
-import 'package:hiss_bbb/ui/page/gift/hiss_gift_page.dart';
-import 'package:hiss_bbb/ui/page/home/hiss_home_page.dart';
-import 'package:hiss_bbb/ui/page/input_address/input_address_page.dart';
-import 'package:hiss_bbb/ui/page/pig/hiss_pig_page.dart';
-import 'package:hiss_bbb/ui/page/play/hiss_play_page.dart';
-import 'package:hiss_bbb/ui/page/rank/hiss_rank_page.dart';
+import 'package:hiss_bbb/ui/page/gift/bbb_hiss_gift_page.dart';
+import 'package:hiss_bbb/ui/page/home/bbb_hiss_home_page.dart';
+import 'package:hiss_bbb/ui/page/input_address/bbb_input_address_page.dart';
+import 'package:hiss_bbb/ui/page/pig/bbb_hiss_pig_page.dart';
+import 'package:hiss_bbb/ui/page/play/bbb_hiss_play_page.dart';
+import 'package:hiss_bbb/ui/page/rank/bbb_hiss_rank_page.dart';
+import 'package:hiss_bbb/ui/page/wheel/bbb_wheel_page.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 
 class HissBBBRouters{
@@ -13,37 +14,43 @@ class HissBBBRouters{
   static const String gift="/b/gift";
   static const String pig="/b/pig";
   static const String inputAddress="/b/inputAddress";
+  static const String wheel="/b/wheel";
 }
 
 var hissBBBPageList=[
   GetPage(
       name: HissBBBRouters.home,
-      page: ()=> HissHomePage(),
+      page: ()=> BBBHissHomePage(),
       transition: Transition.fadeIn
   ),
   GetPage(
       name: HissBBBRouters.play,
-      page: ()=> HissPlayPage(),
+      page: ()=> BBBHissPlayPage(),
       transition: Transition.fadeIn
   ),
   GetPage(
       name: HissBBBRouters.rank,
-      page: ()=> HissRankPage(),
+      page: ()=> BBBHissRankPage(),
       transition: Transition.fadeIn
   ),
   GetPage(
       name: HissBBBRouters.gift,
-      page: ()=> HissGiftPage(),
+      page: ()=> BBBHissGiftPage(),
       transition: Transition.fadeIn
   ),
   GetPage(
       name: HissBBBRouters.pig,
-      page: ()=> HissPigPage(),
+      page: ()=> BBBHissPigPage(),
       transition: Transition.fadeIn
   ),
   GetPage(
       name: HissBBBRouters.inputAddress,
-      page: ()=> InputAddressPage(),
+      page: ()=> BBBInputAddressPage(),
+      transition: Transition.fadeIn
+  ),
+  GetPage(
+      name: HissBBBRouters.wheel,
+      page: ()=> BBBWheelPage(),
       transition: Transition.fadeIn
   ),
 ];

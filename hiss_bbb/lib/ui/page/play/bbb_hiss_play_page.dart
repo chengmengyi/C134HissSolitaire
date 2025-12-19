@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/bean/hiss_card_bean.dart';
-import 'package:hiss_bbb/ui/page/play/hiss_play_controller.dart';
+import 'package:hiss_bbb/ui/page/play/bbb_hiss_play_controller.dart';
 import 'package:hiss_bbb/ui/widget/hiss_bubble_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_card_item_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_deal_card_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_diamond_pig_animator_widget.dart';
+import 'package:hiss_bbb/ui/widget/hiss_gift_puzzle_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_hint_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_move_to_foundation_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_move_to_waste_animator_widget.dart';
@@ -23,9 +24,9 @@ import 'package:hiss_root/hiss_ui/hiss_widget/hiss_text_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
-class HissPlayPage extends HissRootPage<HissPlayController>{
+class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
   @override
-  HissPlayController initGetController() => HissPlayController();
+  BBBHissPlayController initGetController() => BBBHissPlayController();
 
   @override
   Widget initContent() => Stack(
@@ -58,6 +59,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       HissHintAnimatorWidget(),
       HissPropAnimatorWidget(),
       HissDiamondPigAnimatorWidget(),
+      HissGiftPuzzleAnimatorWidget(),
       HissMoveToFoundationAnimatorWidget(),
       HissBubbleWidget(),
     ],
@@ -66,7 +68,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
   _foundationsAndStockPileWidget()=>Row(
     children: [
       SizedBox(width: 16.w,),
-      GetBuilder<HissPlayController>(
+      GetBuilder<BBBHissPlayController>(
         id: "foundations",
         builder: (_){
           if(controller.cardWidth<=0){
@@ -107,7 +109,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
         },
       ),
       SizedBox(width: 6.w,),
-      GetBuilder<HissPlayController>(
+      GetBuilder<BBBHissPlayController>(
         id: "stock_pile",
         builder: (_){
           if(controller.cardWidth<=0){
@@ -161,7 +163,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
         },
       ),
       SizedBox(width: 6.w,),
-      GetBuilder<HissPlayController>(
+      GetBuilder<BBBHissPlayController>(
         id: "card_bg",
         builder: (_){
           if(controller.cardWidth<=0){
@@ -192,7 +194,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
   _cardListWidget()=>Expanded(
     child: Container(
       margin: EdgeInsets.only(left: 16.w,right: 16.w),
-      child: GetBuilder<HissPlayController>(
+      child: GetBuilder<BBBHissPlayController>(
         id: "card_list",
         builder: (_)=>Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,7 +334,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    GetBuilder<HissPlayController>(
+                    GetBuilder<BBBHissPlayController>(
                       id: "level",
                       builder: (_)=>HissGradientTextWidget(
                         textContent: "${bLevel.getData()}",
@@ -356,7 +358,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    GetBuilder<HissPlayController>(
+                    GetBuilder<BBBHissPlayController>(
                       id: "score",
                       builder: (_)=>HissGradientTextWidget(
                         textContent: "${controller.currentScore}",
@@ -380,7 +382,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    GetBuilder<HissPlayController>(
+                    GetBuilder<BBBHissPlayController>(
                       id: "time",
                       builder: (_)=>HissGradientTextWidget(
                         textContent: formatHMS(controller.currentTime),
@@ -404,7 +406,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    GetBuilder<HissPlayController>(
+                    GetBuilder<BBBHissPlayController>(
                       id: "step",
                       builder: (_)=>HissGradientTextWidget(
                         textContent: "${controller.currentStep}",
@@ -436,6 +438,34 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        HissClickWidget(
+          onTap: (){
+            controller.clickGiftBtn();
+          },
+          child: Stack(
+            alignment: Alignment.topRight,
+            key: controller.giftPuzzleGlobalKey,
+            children: [
+              HissImagesWidget(name: "play11", width: 72.w, height: 72.w,),
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  HissImagesWidget(name: "play10", width: 16.w, height: 16.w),
+                  GetBuilder<BBBHissPlayController>(
+                    id: "wheel_num",
+                    builder: (_)=>HissTextWidget(
+                      textContent: "${wheelNum.getData()}",
+                      textSize: 10.sp,
+                      textColor: "#FFFFFF".toColor(),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: 12.h,),
         Row(
           children: [
             SizedBox(
@@ -483,7 +513,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                     key: controller.backPropGlobalKey,
                     child: HissImagesWidget(name: "play7", width: 56.w, height: 56.w),
                   ),
-                  GetBuilder<HissPlayController>(
+                  GetBuilder<BBBHissPlayController>(
                     id: "back_prop",
                     builder: (_){
                       var data = bBackPropNum.getData();
@@ -520,7 +550,7 @@ class HissPlayPage extends HissRootPage<HissPlayController>{
                       key: controller.tipsPropGlobalKey,
                       child: HissImagesWidget(name: "play9", width: 56.w, height: 56.w),
                     ),
-                    GetBuilder<HissPlayController>(
+                    GetBuilder<BBBHissPlayController>(
                       id: "tips_prop",
                       builder: (_){
                         var data = bTipsPropNum.getData();

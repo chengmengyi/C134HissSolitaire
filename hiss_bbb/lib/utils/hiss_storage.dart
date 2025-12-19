@@ -15,9 +15,11 @@ class HissStorageKey{
   static const String show700AnimatorTips="show700AnimatorTips";
   static const String show1000MoneyDialog="show1000MoneyDialog";
   static const String wheelNum="wheelNum";
+  static const String allMoneyNum="allMoneyNum";
 }
 
 StorageData<double> bMoneyNum=StorageData<double>(key: HissStorageKey.bMoney, defaultValue: 0.0);
+StorageData<double> allMoneyNum=StorageData<double>(key: HissStorageKey.allMoneyNum, defaultValue: 0.0);
 
 StorageData<int> bDiamondNum=StorageData<int>(key: HissStorageKey.bDiamondNum, defaultValue: 0);
 StorageData<int> bBackPropNum=StorageData<int>(key: HissStorageKey.bBackPropNum, defaultValue: 0);

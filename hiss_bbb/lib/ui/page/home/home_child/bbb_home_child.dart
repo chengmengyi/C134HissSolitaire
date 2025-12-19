@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hiss_bbb/ui/page/home/home_child/home_child_controller.dart';
+import 'package:hiss_bbb/ui/page/home/home_child/bbb_home_child_controller.dart';
 import 'package:hiss_bbb/ui/widget/hiss_bubble_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_level_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_pig_widget.dart';
@@ -9,9 +9,9 @@ import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 
-class HomeChild extends HissRootChild<HomeChildController>{
+class BBBHomeChild extends HissRootChild<BBBHomeChildController>{
   @override
-  HomeChildController initGetController() => HomeChildController();
+  BBBHomeChildController initGetController() => BBBHomeChildController();
 
   @override
   Widget initContent() => Stack(

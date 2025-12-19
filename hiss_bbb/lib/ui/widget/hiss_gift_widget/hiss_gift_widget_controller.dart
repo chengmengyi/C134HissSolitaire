@@ -18,7 +18,8 @@ import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
-class GiftChildController extends HissRootController{
+
+class HissGiftWidgetController extends HissRootController{
   var selectedWheelIndex=-1;
   List<HissHomeGiftProgressBean> topGiftList=[];
   List<String> centerGiftTypeList=[];

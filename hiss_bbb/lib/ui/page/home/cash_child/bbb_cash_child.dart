@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/bean/hiss_cash_list_bean.dart';
-import 'package:hiss_bbb/ui/page/home/cash_child/cash_child_controller.dart';
+import 'package:hiss_bbb/ui/page/home/cash_child/bbb_cash_child_controller.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_cash_type.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_task_queue_config_utils.dart';
@@ -13,9 +13,9 @@ import 'package:hiss_root/hiss_ui/hiss_widget/hiss_text_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
-class CashChild extends HissRootChild<CashChildController>{
+class BBBCashChild extends HissRootChild<BBBCashChildController>{
   @override
-  CashChildController initGetController() => CashChildController();
+  BBBCashChildController initGetController() => BBBCashChildController();
 
   @override
   Widget initContent() => Stack(
@@ -42,7 +42,7 @@ class CashChild extends HissRootChild<CashChildController>{
           fontWeight: FontWeight.bold,
           textColor: "#FFE075".toColor(),
         ),
-        GetBuilder<CashChildController>(
+        GetBuilder<BBBCashChildController>(
           id: "money",
           builder: (_)=>HissGradientTextWidget(
             textContent: "\$${bMoneyNum.getData()}",
@@ -113,7 +113,7 @@ class CashChild extends HissRootChild<CashChildController>{
         HissImagesWidget(name: "cash4", width: double.infinity, height: 74.h),
         Container(
           margin: EdgeInsets.only(top: 10.h),
-          child: GetBuilder<CashChildController>(
+          child: GetBuilder<BBBCashChildController>(
             id: "tab",
             builder: (_)=>Row(
               mainAxisSize: MainAxisSize.min,
@@ -157,7 +157,7 @@ class CashChild extends HissRootChild<CashChildController>{
       context: buildContext,
       removeTop: true,
       removeBottom: true,
-      child: GetBuilder<CashChildController>(
+      child: GetBuilder<BBBCashChildController>(
         id: "list",
         builder: (_){
           var myMoney = bMoneyNum.getData();

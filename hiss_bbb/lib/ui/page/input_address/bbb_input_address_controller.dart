@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
+import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
-class InputAddressController extends HissRootController{
+class BBBInputAddressController extends HissRootController{
   var inputTips="";
   TextEditingController firstNameTextEditingController=TextEditingController();
   TextEditingController lastNameTextEditingController=TextEditingController();
@@ -22,8 +24,16 @@ class InputAddressController extends HissRootController{
       return;
     }
     var address = addressTextEditingController.text.trim();
-
+    if(address.isEmpty){
+      showToast("Please enter the address");
+      return;
+    }
     var phone = phoneTextEditingController.text.trim();
+    if(phone.isEmpty){
+      showToast("Please enter the phone");
+      return;
+    }
+    HissRoutersUtils.instance.close();
   }
 
   @override

@@ -1,10 +1,10 @@
+import 'package:hiss_bbb/ui/widget/hiss_gift_widget/hiss_gift_widget_controller.dart';
+import 'package:hiss_root/hiss_ui/hiss_root_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/bean/hiss_home_gift_progress_bean.dart';
-import 'package:hiss_bbb/ui/page/home/gift_child/gift_child_controller.dart';
 import 'package:hiss_bbb/ui/widget/hiss_video_btn_widget.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/utils.dart';
-import 'package:hiss_root/hiss_ui/hiss_root_child.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_gradient_text_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
@@ -12,9 +12,17 @@ import 'package:hiss_root/hiss_ui/hiss_widget/hiss_text_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
-class GiftChild extends HissRootChild<GiftChildController>{
+class HissGiftWidget extends HissRootWidget<HissGiftWidgetController>{
+  String tagStr;
+  HissGiftWidget({
+    required this.tagStr,
+});
+
   @override
-  GiftChildController initGetController() => GiftChildController();
+  String controllerTag() => "HissGiftWidgetController_$tagStr";
+
+  @override
+  HissGiftWidgetController initGetController() => HissGiftWidgetController();
 
   @override
   Widget initContent() => Stack(
@@ -46,8 +54,9 @@ class GiftChild extends HissRootChild<GiftChildController>{
             width: double.infinity,
             height: 110.h,
             margin: EdgeInsets.only(left: 32.w,right: 32.w,bottom: 12.h),
-            child: GetBuilder<GiftChildController>(
+            child: GetBuilder<HissGiftWidgetController>(
               id: "top_list",
+              tag: controllerTag(),
               builder: (_){
                 if(controller.topGiftList.isEmpty){
                   return Container();
@@ -122,8 +131,9 @@ class GiftChild extends HissRootChild<GiftChildController>{
         Positioned(
           top: 0,
           right: 0,
-          child: GetBuilder<GiftChildController>(
+          child: GetBuilder<HissGiftWidgetController>(
             id: "top_right_view",
+            tag: controllerTag(),
             builder: (_){
               if(null==controller.hissGiftRewardTaskBean){
                 return Container();
@@ -180,7 +190,7 @@ class GiftChild extends HissRootChild<GiftChildController>{
       itemCount: controller.centerGiftTypeList.length,
     ),
   );
-  
+
   _luckyWidget()=>Expanded(
     child: Stack(
       children: [
@@ -200,8 +210,9 @@ class GiftChild extends HissRootChild<GiftChildController>{
                       child: LayoutBuilder(
                         builder: (context,bc){
                           var height = (bc.maxHeight-(8.h))/2;
-                          return GetBuilder<GiftChildController>(
+                          return GetBuilder<HissGiftWidgetController>(
                             id: "wheel",
+                            tag: controllerTag(),
                             builder: (_)=>MasonryGridView.count(
                               padding: const EdgeInsets.all(0),
                               itemCount: controller.wheelList.length,
@@ -245,8 +256,9 @@ class GiftChild extends HissRootChild<GiftChildController>{
                         },
                       ),
                     ),
-                    GetBuilder<GiftChildController>(
+                    GetBuilder<HissGiftWidgetController>(
                       id: "wheel_btn",
+                      tag: controllerTag(),
                       builder: (_)=>HissVideoBtnWidget(
                         text: "Spin(${wheelNum.getData()})",
                         bg: "home_gift8",

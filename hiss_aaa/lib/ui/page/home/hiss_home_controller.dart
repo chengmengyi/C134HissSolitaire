@@ -13,6 +13,7 @@ import 'package:hiss_aaa/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_aaa/utils/hiss_play_record_utils.dart';
 import 'package:hiss_aaa/utils/hiss_storage.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
+import 'package:hiss_root/hiss_utils/hiss_check_user_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
@@ -22,6 +23,9 @@ class HissHomeController extends HissRootController{
   void onInit() {
     super.onInit();
     HissMp3Utils.instance.playBgm();
+    HissCheckUserUtils.instance.aPackageCheckCallback=(){
+      HissRoutersUtils.instance.toNextPageCloseAllPage(routerName: "/b/home");
+    };
   }
 
   clickPlay(){
@@ -45,6 +49,7 @@ class HissHomeController extends HissRootController{
     // HissRoutersUtils.instance.showDialog(child: SetDialog());
     // HissMp3Utils.instance.playOtherMp3(HissMp3Type.chupai);
     // aDiamondNum.saveData(aDiamondNum.getData()+10);
-    aLevel.saveData(1);
+    // aLevel.saveData(1);
+    HissCheckUserUtils.instance.test();
   }
 }
