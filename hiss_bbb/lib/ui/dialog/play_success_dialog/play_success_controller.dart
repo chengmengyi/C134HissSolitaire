@@ -5,10 +5,13 @@ import 'package:hiss_bbb/bean/hiss_play_grade_bean.dart';
 import 'package:hiss_bbb/bean/hiss_play_record_bean.dart';
 import 'package:hiss_bbb/utils/hiss_play_record_utils.dart';
 import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
+import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class PlaySuccessController extends HissRootController{
@@ -28,6 +31,7 @@ class PlaySuccessController extends HissRootController{
   void onInit() {
     super.onInit();
     _initRecord();
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_victory);
   }
 
   @override
@@ -55,6 +59,7 @@ class PlaySuccessController extends HissRootController{
   }
 
   clickOnly(){
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_next_close,params: {"level":bLevel.getData()});
     HissAdUtils.instance.showBBBAd(
       adType: AdType.interstitial,
       hissAdEnum: HissAdEnum.ccqes_settlement_int,
@@ -66,6 +71,7 @@ class PlaySuccessController extends HissRootController{
   }
 
   clickClaim(Function() dismissCallback){
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_next_c,params: {"level":bLevel.getData()});
     HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_settlement_rv,

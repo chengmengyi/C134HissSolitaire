@@ -173,6 +173,7 @@ class HissAdUtils{
       adType: adType,
       iosAdCallback: IosAdCallback(
         showSuccess: (ad,info){
+          _uploadLookAdNumLevel();
           HissPointUtils.instance.adEvent(ad: ad, hissAdEnum: hissAdEnum, adInfoData: info);
         },
         showFail: (){
@@ -208,6 +209,15 @@ class HissAdUtils{
         },
       ),
     );
+  }
+
+  _uploadLookAdNumLevel(){
+    lookAdNum.saveData(lookAdNum.getData()+1);
+    var adLevel = localAdLevelLast.getData()+5;
+    if(lookAdNum.getData()>=adLevel){
+      HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.pv_dall,params: {"ad":adLevel});
+      localAdLevelLast.saveData(adLevel);
+    }
   }
 
   ConfigAdData _getConfigAdData(){

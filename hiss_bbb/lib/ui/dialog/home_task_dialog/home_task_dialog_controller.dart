@@ -3,10 +3,13 @@ import 'package:hiss_bbb/utils/hiss_daily_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_task_status.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
 import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
+import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HomeTaskDialogController extends HissRootController{
@@ -19,12 +22,14 @@ class HomeTaskDialogController extends HissRootController{
   }
 
   clickClaim(HissDailyTaskBean bean)async{
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.home_task_c);
     HissAdUtils.instance.showBBBAd(
       adType: AdType.interstitial,
       hissAdEnum: HissAdEnum.ccqes_task_int,
       showAd: HissShowAdUtils.instance.showAd(AdType.interstitial),
       closeAdCallback: (give)async{
         await HissDailyTaskUtils.instance.claimReward(bean);
+        HissUserInfoUtils.instance.updateMoney(bean.reward??0,showAnimator: true);
         _queryDailyList();
       },
     );

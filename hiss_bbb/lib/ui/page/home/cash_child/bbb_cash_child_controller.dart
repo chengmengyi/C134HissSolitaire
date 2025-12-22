@@ -21,6 +21,8 @@ import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -97,10 +99,11 @@ class BBBCashChildController extends HissRootController{
     if(null==bean.cashRankBean){
       return;
     }
-    if(kDebugMode){
-      _cashRankWatchVideoCompleted(bean);
-      return;
-    }
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.cash_skip);
+    // if(kDebugMode){
+    //   _cashRankWatchVideoCompleted(bean);
+    //   return;
+    // }
     HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_queue_rv,

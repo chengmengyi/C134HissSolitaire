@@ -11,6 +11,8 @@ import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class BBBHissPigController extends HissRootController{
@@ -21,6 +23,7 @@ class BBBHissPigController extends HissRootController{
   @override
   void onInit() {
     super.onInit();
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.pig_pop);
     currentDiamondNum=countCurrentDiamond();
     _initList();
   }
@@ -50,7 +53,8 @@ class BBBHissPigController extends HissRootController{
   _receiveReward(HissPigInfoBean? infoBean)async{
     switch(infoBean?.type){
       case HissPigType.coins:
-        HissUserInfoUtils.instance.updateMoney(infoBean?.addNum??0);
+        HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.pig_cash_c);
+        HissUserInfoUtils.instance.updateMoney(infoBean?.addNum??0,showAnimator: true);
         break;
       case HissPigType.tips:
         HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.tips, addNum: infoBean?.addNum??0);

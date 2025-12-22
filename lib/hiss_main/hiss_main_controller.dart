@@ -7,6 +7,8 @@ import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_check_user_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissMainController extends HissRootController with GetSingleTickerProviderStateMixin{
@@ -15,6 +17,7 @@ class HissMainController extends HissRootController with GetSingleTickerProvider
   @override
   void onInit() {
     super.onInit();
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.launch_page);
     animationController=AnimationController(duration: const Duration(seconds: 12),vsync: this);
     animationController.addListener(() {
       update(["progress"]);

@@ -3,10 +3,18 @@ import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class MoneyCardRewardDialogController extends HissRootController{
+
+  @override
+  void onInit() {
+    super.onInit();
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_moneycard);
+  }
 
   double getOnlyReward(double reward){
     var d = doubleMul(reward, 0.1);

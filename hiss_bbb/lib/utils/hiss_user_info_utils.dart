@@ -2,12 +2,15 @@ import 'package:hiss_bbb/ui/dialog/first_reach_cash_money_dialog/first_reach_cas
 import 'package:hiss_bbb/ui/dialog/money300_700_result_dialog/money300_700_result_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/money_300_700_animator_dialog/money_300_700_animator_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_prop_type.dart';
+import 'package:hiss_bbb/utils/hiss_money_overlay_utils.dart';
 import 'package:hiss_bbb/utils/hiss_rank_utils.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -24,11 +27,15 @@ class HissUserInfoUtils {
     }
   }
 
-  updateMoney(addNum){
+  updateMoney(addNum,{bool showAnimator=false}){
     bMoneyNum.saveData(doubleAdd(bMoneyNum.getData(), addNum));
     if(addNum>0){
+      if(showAnimator){
+        HissMoneyOverlayUtils.instance.showOverlay();
+      }
       allMoneyNum.saveData(allMoneyNum.getData()+addNum);
       var currentMoneyNum = bMoneyNum.getData();
+      _handleMoneyLevel(currentMoneyNum);
       if(currentMoneyNum>=300&&show300AnimatorTips.getData()){
         show300AnimatorTips.saveData(false);
         _show300700AnimatorDialog(300);
@@ -41,6 +48,18 @@ class HissUserInfoUtils {
       }
     }
     HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aUpdateMoneyNum));
+  }
+
+  _handleMoneyLevel(double currentMoneyNum){
+    var moneyLevel = bLastUploadMoneyLevel.getData()+100;
+    if(currentMoneyNum>=moneyLevel){
+      var max = ((currentMoneyNum-moneyLevel)~/100)+1;
+      for(var index=0; index<max; index++){
+        HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.cash_dall,params: {"money":moneyLevel});
+        bLastUploadMoneyLevel.saveData(moneyLevel);
+        moneyLevel+=100;
+      }
+    }
   }
 
   _show300700AnimatorDialog(int maxMoney){

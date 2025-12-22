@@ -15,6 +15,8 @@ import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissBubbleWidget extends HissRootStateful{
@@ -118,6 +120,7 @@ class _HissBubbleWidgetState extends HissRootStatefulState<HissBubbleWidget>{
   }
 
   _clickBubble(){
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.bubble_c);
     HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_bubble_rv,

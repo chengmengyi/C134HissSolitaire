@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		1AACF2F12EF92B6900D59140 /* ios_hhh.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AACF2F02EF92B6900D59140 /* ios_hhh.framework */; };
 		1AD778972EF5424B00C9BCB2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1AD778962EF5424B00C9BCB2 /* GoogleService-Info.plist */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
@@ -45,6 +46,7 @@
 /* Begin PBXFileReference section */
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		1AACF2F02EF92B6900D59140 /* ios_hhh.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ios_hhh.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AD778962EF5424B00C9BCB2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AACF2F12EF92B6900D59140 /* ios_hhh.framework in Frameworks */,
 				4D1BC1D34F3F19493EF05748 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -161,6 +164,7 @@
 		E11D91FDF36EAF5399AF25AC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1AACF2F02EF92B6900D59140 /* ios_hhh.framework */,
 				DE749814105B8156F9022B49 /* Pods_Runner.framework */,
 				C32711325CE0BEE9CC816218 /* Pods_RunnerTests.framework */,
 			);

@@ -17,7 +17,7 @@ class AddPropDialog extends HissRootDialog<AddPropDialogController>{
     required this.dismissCallback,
 });
   @override
-  AddPropDialogController initGetController() => AddPropDialogController();
+  AddPropDialogController initGetController() => AddPropDialogController(hissPropType);
 
   @override
   Widget initContent() => Column(

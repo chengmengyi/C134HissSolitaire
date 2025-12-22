@@ -15,6 +15,8 @@ import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -62,6 +64,7 @@ class HissGiftWidgetController extends HissRootController{
   }
 
   clickCenterGift(String type){
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.gift_bubble);
     HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_chip_rv,
@@ -127,6 +130,7 @@ class HissGiftWidgetController extends HissRootController{
     required Function() callback,
   }){
     if(wheelNum.getData()>0){
+      HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.gift_spin,params: {"type":"free"});
       callback.call();
       return;
     }
@@ -135,6 +139,7 @@ class HissGiftWidgetController extends HissRootController{
       hissAdEnum: HissAdEnum.ccqes_wheel_rv,
       showAd: HissShowAdUtils.instance.showAd(AdType.reward),
       closeAdCallback: (give){
+        HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.gift_spin,params: {"type":"ad"});
         callback.call();
       },
     );

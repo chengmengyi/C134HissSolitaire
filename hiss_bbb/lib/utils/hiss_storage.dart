@@ -19,6 +19,7 @@ class HissStorageKey{
   static const String adProbabilityConfig="adProbabilityConfig";
   static const String valueConfig="valueConfig";
   static const String taskQueueConfig="taskQueueConfig";
+  static const String bLastUploadMoneyLevel="bLastUploadMoneyLevel";
 }
 
 StorageData<double> bMoneyNum=StorageData<double>(key: HissStorageKey.bMoney, defaultValue: 0.0);
@@ -29,6 +30,7 @@ StorageData<int> bBackPropNum=StorageData<int>(key: HissStorageKey.bBackPropNum,
 StorageData<int> bTipsPropNum=StorageData<int>(key: HissStorageKey.bTipsPropNum, defaultValue: 0);
 StorageData<int> bLevel=StorageData<int>(key: HissStorageKey.bLevel, defaultValue: 1);
 StorageData<int> wheelNum=StorageData<int>(key: HissStorageKey.wheelNum, defaultValue: 0);
+StorageData<int> bLastUploadMoneyLevel=StorageData<int>(key: HissStorageKey.bLastUploadMoneyLevel, defaultValue: 0);
 
 StorageData<String> bMyName=StorageData<String>(key: HissStorageKey.bMyName, defaultValue: "");
 StorageData<String> bMyHead=StorageData<String>(key: HissStorageKey.bMyHead, defaultValue: "");

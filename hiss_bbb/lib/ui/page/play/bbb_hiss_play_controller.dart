@@ -28,6 +28,8 @@ import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class BBBHissPlayController extends HissRootController{
@@ -63,6 +65,7 @@ class BBBHissPlayController extends HissRootController{
     _startTimer();
     _startNoOperationTimer();
     playGamePageOpen=true;
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_page,params: {"level":bLevel.getData()});
   }
 
   @override
@@ -75,6 +78,7 @@ class BBBHissPlayController extends HissRootController{
     if(!canClick){
       return;
     }
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_home_c);
     HissRoutersUtils.instance.close();
   }
 
@@ -445,7 +449,7 @@ class BBBHissPlayController extends HissRootController{
             HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.card);
             HissCashTaskUtils.instance.updateCashTask(HissTaskType.card);
             await Future.delayed(Duration(milliseconds: 280));
-            HissUserInfoUtils.instance.updateMoney(cardAddRewardNum);
+            HissUserInfoUtils.instance.updateMoney(cardAddRewardNum,showAnimator: true);
             update(["card_list"]);
             card.isCoins=false;
             await Future.delayed(Duration(milliseconds: 100));
@@ -697,6 +701,7 @@ class BBBHissPlayController extends HissRootController{
     if(!canClick){
       return;
     }
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_retract);
     if(bBackPropNum.getData()<=0){
       HissRoutersUtils.instance.showDialog(
         child: AddPropDialog(
@@ -731,6 +736,7 @@ class BBBHissPlayController extends HissRootController{
     if(!canClick){
       return;
     }
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_remind);
     if(bTipsPropNum.getData()<=0){
       HissRoutersUtils.instance.showDialog(
         child: AddPropDialog(
@@ -854,6 +860,7 @@ class BBBHissPlayController extends HissRootController{
     if(!canClick){
       return;
     }
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_again);
     currentStep=0;
     currentTime=0;
     currentScore=0;
@@ -913,6 +920,7 @@ class BBBHissPlayController extends HissRootController{
     if(!canClick){
       return;
     }
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_adc);
     HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_gamead_rv,

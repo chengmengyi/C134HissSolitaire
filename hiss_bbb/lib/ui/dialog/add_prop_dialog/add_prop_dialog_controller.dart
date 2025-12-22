@@ -8,15 +8,20 @@ import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class AddPropDialogController extends HissRootController{
+  late HissPropType hissPropType;
+  AddPropDialogController(this.hissPropType);
 
   @override
   void onInit() {
     super.onInit();
     HissMp3Utils.instance.playOtherMp3(HissMp3Type.prop);
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.tool_pop,params: {"type":hissPropType==HissPropType.back?"retract":"remind"});
   }
 
   clickFree(HissPropType hissPropType, Function() dismissCallback){

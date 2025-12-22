@@ -10,6 +10,8 @@ import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -25,6 +27,7 @@ class BBBHissRankController extends HissRootController{
   @override
   void onInit() {
     super.onInit();
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.rank_pop);
     receivedRankReward=bReceivedRankRewardTime.getData()==getTodayTime();
     _initList();
   }
@@ -33,6 +36,7 @@ class BBBHissRankController extends HissRootController{
     if(bean.isMe!=true||receivedRankReward||((bean.diamond??0)<=0)&&(bean.coins??0)<=0){
       return;
     }
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.rank_pop_c);
     HissAdUtils.instance.showBBBAd(
       adType: AdType.interstitial,
       hissAdEnum: HissAdEnum.ccqes_rank_int,
@@ -41,7 +45,7 @@ class BBBHissRankController extends HissRootController{
         receivedRankReward=true;
         bReceivedRankRewardTime.saveData(getTodayTime());
         HissUserInfoUtils.instance.updateDiamondNum(bean.diamond??0);
-        HissUserInfoUtils.instance.updateMoney(bean.coins??0);
+        HissUserInfoUtils.instance.updateMoney(bean.coins??0,showAnimator: true);
         update(["list"]);
       },
     );

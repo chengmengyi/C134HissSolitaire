@@ -8,11 +8,21 @@ import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class SuperPropDialogController extends HissRootController{
 
+  @override
+  void onInit() {
+    super.onInit();
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_couriertools);
+  }
+
+
   clickClaim(Function() claimCallback){
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_couriertools_c);
     HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_couriertools_rv,

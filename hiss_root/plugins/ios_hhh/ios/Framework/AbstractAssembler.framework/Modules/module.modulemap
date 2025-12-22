@@ -1,0 +1,6 @@
+framework module AbstractAssembler {
+  umbrella header "AbstractAssembler.h"
+  export *
+
+  module * { export * }
+}

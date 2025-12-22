@@ -6,6 +6,8 @@ import 'package:flutter_check_adjust/request_adjust/request_adjust_callback.dart
 import 'package:flutter_check_adjust/request_cloak/request_cloak_callback.dart';
 import 'package:flutter_tba_info/flutter_tba_info.dart';
 import 'package:hiss_root/hiss_utils/hiss_local.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissCheckUserUtils{
@@ -25,22 +27,22 @@ class HissCheckUserUtils{
       referrerConfList: ["fb4a","gclid","not%20set","youtubeads","%7B%22","bytedance","adjust"],
       requestAdjustCallback: RequestAdjustCallback(
         startRequestAdjust: (){
-          // TreaTttIwjodwm.instance.pointEventdjwijiwo(point: TreaPointEnumDjwidjo.af_req);
+          HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.adjust_req);
         },
         requestSuccess: (bool isB){
+          HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.adjust_suc,params: {"cloak_user":isB?1:0});
           _delayCheckUser();
-          // TreaTttIwjodwm.instance.pointEventdjwijiwo(point: TreaPointEnumDjwidjo.af_suc,params: {"cloak_user":isB?1:0});
         },
         firstRequestAdjustB: (){
         },
       ),
       requestCloakCallback: RequestCloakCallback(
         startRequestCloak: (){
-          // TreaTttIwjodwm.instance.pointEventdjwijiwo(point: TreaPointEnumDjwidjo.cloak_req);
+          HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.cloak_req);
         },
         requestSuccess: (bool isWhite){
+          HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.cloak_suc,params: {"cloak_user":isWhite?1:0});
           _delayCheckUser();
-          // TreaTttIwjodwm.instance.pointEventdjwijiwo(point: TreaPointEnumDjwidjo.cloak_suc,params: {"cloak_user":isWhite?1:0});
         },
       ),
     );
@@ -62,7 +64,7 @@ class HissCheckUserUtils{
   }
 
   _delayCheckUser(){
-    if(getUser()){
+    if(getUser()&&Platform.isIOS){
       aPackageCheckCallback?.call();
       aPackageCheckCallback=null;
     }

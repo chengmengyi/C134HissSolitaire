@@ -69,6 +69,16 @@ class BBBHomeChild extends HissRootChild<BBBHomeChildController>{
         bottom: 210.h,
         child: HissPigWidget(),
       ),
+      Positioned(
+        top: 116.h,
+        left: 12.w,
+        child: HissClickWidget(
+          onTap: (){
+            controller.clickGame();
+          },
+          child: HissImagesWidget(name: "icon_game", width: 44.w, height: 44.w,),
+        ),
+      ),
       HissBubbleWidget(),
     ],
   );

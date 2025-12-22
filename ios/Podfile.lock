@@ -7,6 +7,8 @@ PODS:
     - Adjust (= 5.4.6)
     - Flutter
   - AdjustSignature (3.61.0)
+  - app_settings (5.1.1):
+    - Flutter
   - applovin_max (4.6.0):
     - AppLovinSDK (= 13.5.0)
     - Flutter
@@ -95,6 +97,8 @@ PODS:
     - Flutter
   - flutter_ios_ad_plugins (0.0.1):
     - Flutter
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - flutter_tba_info (0.0.1):
     - Flutter
   - fluttertoast (0.0.2):
@@ -121,6 +125,8 @@ PODS:
   - hiss_root (0.0.1):
     - Flutter
   - InMobiSDK (11.1.0)
+  - ios_hhh (0.0.1):
+    - Flutter
   - IronSourceSDK/Ads (9.2.0.0)
   - MintegralAdSDK (8.0.4):
     - MintegralAdSDK/BannerAd (= 8.0.4)
@@ -166,6 +172,8 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - permission_handler_apple (9.3.0):
+    - Flutter
   - PromisesObjC (2.4.0)
   - sqflite (0.0.3):
     - Flutter
@@ -179,6 +187,7 @@ PODS:
 
 DEPENDENCIES:
   - adjust_sdk (from `.symlinks/plugins/adjust_sdk/ios`)
+  - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - applovin_max (from `.symlinks/plugins/applovin_max/ios`)
   - AppLovinMediationBigoAdsAdapter
   - AppLovinMediationChartboostAdapter
@@ -199,12 +208,15 @@ DEPENDENCIES:
   - flutter_app_lifecycle (from `.symlinks/plugins/flutter_app_lifecycle/ios`)
   - flutter_check_adjust (from `.symlinks/plugins/flutter_check_adjust/ios`)
   - flutter_ios_ad_plugins (from `.symlinks/plugins/flutter_ios_ad_plugins/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_tba_info (from `.symlinks/plugins/flutter_tba_info/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - hiss_aaa (from `.symlinks/plugins/hiss_aaa/ios`)
   - hiss_bbb (from `.symlinks/plugins/hiss_bbb/ios`)
   - hiss_root (from `.symlinks/plugins/hiss_root/ios`)
+  - ios_hhh (from `.symlinks/plugins/ios_hhh/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
@@ -250,6 +262,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   adjust_sdk:
     :path: ".symlinks/plugins/adjust_sdk/ios"
+  app_settings:
+    :path: ".symlinks/plugins/app_settings/ios"
   applovin_max:
     :path: ".symlinks/plugins/applovin_max/ios"
   audioplayers_darwin:
@@ -268,6 +282,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_check_adjust/ios"
   flutter_ios_ad_plugins:
     :path: ".symlinks/plugins/flutter_ios_ad_plugins/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_tba_info:
     :path: ".symlinks/plugins/flutter_tba_info/ios"
   fluttertoast:
@@ -278,8 +294,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/hiss_bbb/ios"
   hiss_root:
     :path: ".symlinks/plugins/hiss_root/ios"
+  ios_hhh:
+    :path: ".symlinks/plugins/ios_hhh/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/darwin"
   url_launcher_ios:
@@ -291,6 +311,7 @@ SPEC CHECKSUMS:
   Adjust: 293c828a88a2c280471797edb3e895c80652a786
   adjust_sdk: c4a49624e0afc86cb438579624689e35024dcee1
   AdjustSignature: 94b6b7f7150edbbebc4320eeaddaac881f6e8e2d
+  app_settings: 5127ae0678de1dcc19f2293271c51d37c89428b2
   applovin_max: a921604ba97b0400e3cdf4768da0aa53e756978e
   AppLovinMediationBigoAdsAdapter: ccfc2387d774c9e10aa784a21cbb5f940a6bf1a6
   AppLovinMediationChartboostAdapter: 0fee21ec66fba513640d9e2f7af94e5daf58506f
@@ -323,6 +344,7 @@ SPEC CHECKSUMS:
   flutter_app_lifecycle: 96f63b433a79e643add0fd0a58eabf1a0877e176
   flutter_check_adjust: adc82fd582b560941650bac5619ace8a6ebc890a
   flutter_ios_ad_plugins: d9d01161a4689041adfabfa5285acdd5b80e53f7
+  flutter_local_notifications: a5a732f069baa862e728d839dd2ebb904737effb
   flutter_tba_info: fce89f2ce0bf3af177f0c88e99b153260bc6a7df
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
   Fyber_Marketplace_SDK: 47267f7f78339628a159ceb30392f03d62a52271
@@ -333,10 +355,12 @@ SPEC CHECKSUMS:
   hiss_bbb: 042f0e13cccbf6547180892f90ae0341cb1b30a3
   hiss_root: 64d08ac86524724921a7bb14f8e7b86ebe6ef261
   InMobiSDK: 43b1d6560bd75c8c382bb54fa8e248f5ed979860
+  ios_hhh: 2deb2055f65dbdfb6a3cc7dd72bc0ffb888fd862
   IronSourceSDK: 66e1483cd62fb63162a965651f6f41c6b91664db
   MintegralAdSDK: da460cadeab792c79998a4af24e61d20b055e755
   MolocoSDKiOS: da68d05a112853dcdeea93adf8e41a7d5847c44a
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   sqflite: c35dad70033b8862124f8337cc994a809fcd9fa3
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b

@@ -7,6 +7,8 @@ import 'package:hiss_bbb/utils/hiss_task_queue_config_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_sql/hiss_sql_name.dart';
 import 'package:hiss_root/hiss_utils/hiss_sql/hiss_sql_utils.dart';
 
@@ -71,6 +73,7 @@ class HissCashTaskUtils{
     var database = await HissSqlUtils.instance.initSql();
     var rankBean = HissCashRankBean(cashType: cashType,cashMoney: cashMoney,currentPro: Random().nextInt(100)+400,totalPro: 500);
     await database.insert(HissSqlName.bCashRankInfo, rankBean.toJson());
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.cash_queue);
   }
 
   Future<HissCashRankBean?> queryCashRankInfoByCashTypeMoney(String? cashType,int? cashMoney)async{

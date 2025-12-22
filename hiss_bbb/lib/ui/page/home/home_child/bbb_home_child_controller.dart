@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/cash_success_dialog/cash_success_dialog.dart';
@@ -18,14 +20,16 @@ import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_task_queue_config_utils.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
+import 'package:hiss_root/hiss_ui/dialog/open_notification_dialog/open_notification_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
+import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class BBBHomeChildController extends HissRootController{
   clickPlay(){
-    // Navigator.push(buildContext, MaterialPageRoute(builder: (_)=>SolitairePage()));
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.home_play);
     HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.play);
   }
 
@@ -35,6 +39,12 @@ class BBBHomeChildController extends HissRootController{
 
   clickGift(){
     HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.gift);
+  }
+
+  clickGame(){
+    if(Platform.isIOS){
+      IosHhh.instance.hiss4();
+    }
   }
 
   test()async{
@@ -57,7 +67,9 @@ class BBBHomeChildController extends HissRootController{
     // HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.inputAddress);
 
     HissRoutersUtils.instance.showDialog(
-      child: FirstReachCashMoneyDialog(),
+      child: OpenNotificationDialog(),
     );
+
+    // HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.game);
   }
 }

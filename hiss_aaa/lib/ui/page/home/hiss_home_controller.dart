@@ -14,7 +14,10 @@ import 'package:hiss_aaa/utils/hiss_play_record_utils.dart';
 import 'package:hiss_aaa/utils/hiss_storage.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_check_user_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class HissHomeController extends HissRootController{
@@ -26,10 +29,11 @@ class HissHomeController extends HissRootController{
     HissCheckUserUtils.instance.aPackageCheckCallback=(){
       HissRoutersUtils.instance.toNextPageCloseAllPage(routerName: "/b/home");
     };
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.user_source,params: {"from":"a"});
+    IosHhh.instance.hiss1();
   }
 
   clickPlay(){
-    // Navigator.push(buildContext, MaterialPageRoute(builder: (_)=>SolitairePage()));
     HissRoutersUtils.instance.toNextPageByNamed(routerName: HissAAARouters.play);
   }
 

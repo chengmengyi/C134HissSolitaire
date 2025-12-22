@@ -10,11 +10,19 @@ import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
+import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class BBBHissGiftController extends HissRootController{
   List<List<HissGiftBean>> giftList=[];
+
+  @override
+  void onInit() {
+    super.onInit();
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.super_gift);
+  }
 
   @override
   void onReady() {
@@ -27,6 +35,7 @@ class BBBHissGiftController extends HissRootController{
       return;
     }
     if(bean.showAd==1){
+      HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.super_gift_adc);
       HissAdUtils.instance.showBBBAd(
         adType: AdType.reward,
         hissAdEnum: HissAdEnum.ccqes_gift_rv,
@@ -45,7 +54,7 @@ class BBBHissGiftController extends HissRootController{
   _addGift(HissGiftBean bean)async{
     switch(bean.giftType){
       case HissGiftType.coins:
-        HissUserInfoUtils.instance.updateMoney(bean.addNum??0);
+        HissUserInfoUtils.instance.updateMoney(bean.addNum??0,showAnimator: true);
         break;
       case HissGiftType.tips:
         HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.tips, addNum: bean.addNum??0);
