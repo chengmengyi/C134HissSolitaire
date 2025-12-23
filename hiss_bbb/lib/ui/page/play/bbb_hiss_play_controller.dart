@@ -630,7 +630,7 @@ class BBBHissPlayController extends HissRootController{
         await Future.delayed(Duration(milliseconds: 280));
         foundationsList[index].add(card);
         currentScore+=10;
-        update(["foundations","score"]);
+        update(["foundations","score","card_bg"]);
         _canClickStockPile=true;
         _startNoOperationTimer();
         //校验游戏通关了
@@ -669,7 +669,7 @@ class BBBHissPlayController extends HissRootController{
         stockPileList.insert(0, firstCard);
       }
     }
-    update(["stock_pile"]);
+    update(["stock_pile","card_bg"]);
     Future.delayed(Duration(milliseconds: 200),(){
       _canClickStockPile=true;
     });

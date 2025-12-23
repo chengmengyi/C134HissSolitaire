@@ -1,5 +1,7 @@
+import 'package:hiss_bbb/ui/dialog/input_account_dialog/input_account_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_bbb/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
@@ -21,9 +23,12 @@ class Money300700ResultDialogController extends HissRootController{
   clickPlayGame(){
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.remind_pop_c);
     HissRoutersUtils.instance.close();
-    if(!playGamePageOpen){
-      HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.play);
-    }
+    HissRoutersUtils.instance.showDialog(
+      child: InputAccountDialog(cashMoney: HissValueConfigUtils.instance.cashList().first, callback: (){},),
+    );
+    // if(!playGamePageOpen){
+    //   HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.play);
+    // }
   }
 
   clickCashOut(){
@@ -31,11 +36,11 @@ class Money300700ResultDialogController extends HissRootController{
     HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.showHomeTabIndex,intEventValue: 3));
   }
 
-  String getProText(int index,int maxMoney){
+  String getProText(int index){
     switch(index){
-      case 0: return "Submit payment information";
-      case 1:
-        var d = doubleSub(maxMoney, bMoneyNum.getData());
+      case 1: return "Submit payment information";
+      case 0:
+        var d = doubleSub(HissValueConfigUtils.instance.cashList().first, bMoneyNum.getData());
         return "Just \$${d<0?0:d} away from payout!";
       case 2: return "Revenue received";
       default: return "";

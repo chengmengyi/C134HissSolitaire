@@ -84,7 +84,7 @@ class Money300700ResultDialog extends HissRootDialog<Money300700ResultDialogCont
             children: [
               HissImagesWidget(name: "money3005", width: 200.w, height: 52.h,),
               HissTextWidget(
-                textContent: "Play Game",
+                textContent: "Claim",
                 textSize: 18.sp,
                 fontWeight: FontWeight.bold,
                 textColor: "#FFFFFF".toColor(),
@@ -116,7 +116,7 @@ class Money300700ResultDialog extends HissRootDialog<Money300700ResultDialogCont
               HissImagesWidget(name: index==2?"icon_uns":"icon_sel", width: 24.w, height: 24.w),
               SizedBox(width: 8.w,),
               HissTextWidget(
-                textContent: controller.getProText(index, maxMoney),
+                textContent: controller.getProText(index),
                 textSize: 14.sp,
                 fontWeight: FontWeight.bold,
                 textColor: index==1?"#FFD21D".toColor():"#FFFFFF".toColor(),

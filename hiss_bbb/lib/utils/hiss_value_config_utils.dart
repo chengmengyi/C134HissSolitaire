@@ -65,6 +65,26 @@ class HissValueConfigUtils{
     return 0.5;
   }
 
+  double getPlaySuccessAddNum(){
+    var list = _configBean?.settlementReward??[];
+    if(list.isEmpty){
+      return 10;
+    }
+    var data = bMoneyNum.getData();
+    var last = list.last;
+    if(data>=(last.max??1000)){
+      return _getRandomDouble(last.reward??[]);
+    }
+    for(var value in list){
+      if(data>=(value.min??0)&&data<(value.max??0)){
+        return _getRandomDouble(value.reward??[]);
+      }
+    }
+    return 0.5;
+  }
+
+  int getPlaySuccessOnlyAddNum()=>10;
+
   List<int> cashList()=>[1000,1200,1500];
 
   int getGiftPuzzleNum()=>_randomMinAndMax(_configBean?.giftPuzzle??[3,5]);

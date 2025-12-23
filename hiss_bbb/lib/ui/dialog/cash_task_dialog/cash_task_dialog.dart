@@ -25,11 +25,11 @@ class CashTaskDialog extends HissRootDialog<CashTaskDialogController>{
     children: [
       Container(
         width: double.infinity,
-        height: 464.h,
+        height: 284.h,
         margin: EdgeInsets.only(left: 20.w,right: 20.w),
         child: Stack(
           children: [
-            HissImagesWidget(name: "task1", width: double.infinity, height: 464.h,),
+            HissImagesWidget(name: "task1", width: double.infinity, height: 284.h,),
             Align(
               alignment: Alignment.topCenter,
               child: Container(
@@ -74,38 +74,50 @@ class CashTaskDialog extends HissRootDialog<CashTaskDialogController>{
           textColor: "#724B2F".toColor(),
         ),
         SizedBox(height: 20.h,),
-        Expanded(
-          child: GetBuilder<CashTaskDialogController>(
-            id: "list",
-            builder: (_)=>ListView.separated(
-              itemCount: controller.taskList.length,
-              itemBuilder: (context,index){
-                var task = controller.taskList[index];
-                return Row(
-                  children: [
-                    Visibility(
-                      visible: controller.checkCompleted(index),
-                      maintainAnimation: true,
-                      maintainState: true,
-                      maintainSize: true,
-                      child: HissImagesWidget(name: "task3", width: 24.w, height: 24.w),
-                    ),
-                    SizedBox(width: 12.w,),
-                    HissImagesWidget(name: controller.getTaskIcon(task.name), width: 36.w, height: 36.w),
-                    SizedBox(width: 8.w,),
-                    HissTextWidget(
-                      textContent: getTaskTitle(task.name, task.num),
-                      textSize: 14.sp,
-                      fontWeight: FontWeight.bold,
-                      textColor: "#000000".toColor(),
-                    ),
-                  ],
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) => SizedBox(height: 8.h,),
+        Row(
+          children: [
+            HissImagesWidget(name: controller.getTaskIcon(), width: 36.w, height: 36.w),
+            SizedBox(width: 8.w,),
+            HissTextWidget(
+              textContent: controller.getTaskTitle(),
+              textSize: 14.sp,
+              fontWeight: FontWeight.bold,
+              textColor: "#000000".toColor(),
             ),
-          ),
+          ],
         ),
+        // Expanded(
+        //   child: GetBuilder<CashTaskDialogController>(
+        //     id: "list",
+        //     builder: (_)=>ListView.separated(
+        //       itemCount: controller.taskList.length,
+        //       itemBuilder: (context,index){
+        //         var task = controller.taskList[index];
+        //         return Row(
+        //           children: [
+        //             Visibility(
+        //               visible: controller.checkCompleted(index),
+        //               maintainAnimation: true,
+        //               maintainState: true,
+        //               maintainSize: true,
+        //               child: HissImagesWidget(name: "task3", width: 24.w, height: 24.w),
+        //             ),
+        //             SizedBox(width: 12.w,),
+        //             HissImagesWidget(name: controller.getTaskIcon(task.name), width: 36.w, height: 36.w),
+        //             SizedBox(width: 8.w,),
+        //             HissTextWidget(
+        //               textContent: getTaskTitle(task.name, task.num),
+        //               textSize: 14.sp,
+        //               fontWeight: FontWeight.bold,
+        //               textColor: "#000000".toColor(),
+        //             ),
+        //           ],
+        //         );
+        //       },
+        //       separatorBuilder: (BuildContext context, int index) => SizedBox(height: 8.h,),
+        //     ),
+        //   ),
+        // ),
         SizedBox(height: 20.h,),
         HissClickWidget(
           onTap: (){

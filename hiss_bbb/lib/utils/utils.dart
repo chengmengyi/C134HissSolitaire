@@ -65,6 +65,19 @@ String getGiftName(String? type){
   }
 }
 
+String getGiftShortName(String? type){
+  switch(type){
+    case HissHomeGiftType.pay: return "\$200";
+    case HissHomeGiftType.phone: return "iPhone 17";
+    case HissHomeGiftType.game: return "Switch2";
+    case HissHomeGiftType.package23: return "IDOL bag";
+    case HissHomeGiftType.card: return "\$500";
+    case HissHomeGiftType.chuifengji: return "Dyson";
+    case HissHomeGiftType.package2025: return " CHANEL bag";
+    default: return "";
+  }
+}
+
 String getTaskTitle(String? taskName,int? totalPro){
   switch(taskName){
     case HissTaskType.game: return "Complete $totalPro games";

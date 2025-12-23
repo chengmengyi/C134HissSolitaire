@@ -173,6 +173,7 @@ class HissAdUtils{
       adType: adType,
       iosAdCallback: IosAdCallback(
         showSuccess: (ad,info){
+          HissMp3Utils.instance.stopBgm();
           _uploadLookAdNumLevel();
           HissPointUtils.instance.adEvent(ad: ad, hissAdEnum: hissAdEnum, adInfoData: info);
         },
@@ -195,6 +196,7 @@ class HissAdUtils{
           }
         },
         closeAd: (ad,info,hasReward){
+          HissMp3Utils.instance.playBgm();
           HissPointUtils.instance.pointEvent(
             hissPointEnum: HissPointEnum.ccqes_ad_imp_close,
             params: {

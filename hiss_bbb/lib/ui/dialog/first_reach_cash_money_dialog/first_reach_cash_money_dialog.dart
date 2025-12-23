@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/first_reach_cash_money_dialog/first_reach_cash_money_dialog_controller.dart';
+import 'package:hiss_bbb/ui/widget/hiss_breath_widget.dart';
+import 'package:hiss_bbb/ui/widget/hiss_loop_rotate_widget.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
@@ -26,8 +28,13 @@ class FirstReachCashMoneyDialog extends HissRootDialog<FirstReachCashMoneyDialog
           Stack(
             alignment: Alignment.center,
             children: [
-              HissImagesWidget(name: "first_reach3", width: 240.w, height: 240.w),
-              HissImagesWidget(name: "icon_money3", width: 200.w, height: 200.w),
+              HissLoopRotateWidget(
+                child: HissImagesWidget(name: "first_reach3", width: 240.w, height: 240.w),
+              ),
+              HissBreathWidget(
+                start: true,
+                child: HissImagesWidget(name: "icon_money3", width: 200.w, height: 200.w),
+              ),
             ],
           ),
           Container(

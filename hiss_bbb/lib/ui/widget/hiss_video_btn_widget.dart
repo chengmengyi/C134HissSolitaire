@@ -10,6 +10,7 @@ class HissVideoBtnWidget extends StatelessWidget{
   String bg;
   double width;
   double height;
+  bool showVideoIcon;
   Function() onTap;
   HissVideoBtnWidget({
     required this.text,
@@ -17,6 +18,7 @@ class HissVideoBtnWidget extends StatelessWidget{
     required this.width,
     required this.height,
     required this.onTap,
+    this.showVideoIcon=true,
 });
 
   @override
@@ -43,7 +45,10 @@ class HissVideoBtnWidget extends StatelessWidget{
             ],
           ),
         ),
-        HissImagesWidget(name: "icon_video", width: 32.w, height: 32.w,),
+        Visibility(
+          visible: showVideoIcon,
+          child: HissImagesWidget(name: "icon_video", width: 32.w, height: 32.w,),
+        ),
       ],
     ),
   );

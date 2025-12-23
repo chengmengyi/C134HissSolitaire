@@ -45,7 +45,7 @@ class NoMoneyDialog extends HissRootDialog<NoMoneyDialogController>{
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                HissTextWidget(textContent: "Take a spin on the wheel – you might just win \$50! Top up easily and withdraw instantly!", textSize: 14.sp, textColor: "#724B2F".toColor(),fontWeight: FontWeight.bold,),
+                HissTextWidget(textContent: "Spin the lucky wheel and you might just win an iPhone 17", textSize: 14.sp, textColor: "#724B2F".toColor(),fontWeight: FontWeight.bold,),
                 SizedBox(height: 20.h,),
                 HissClickWidget(
                   onTap: (){

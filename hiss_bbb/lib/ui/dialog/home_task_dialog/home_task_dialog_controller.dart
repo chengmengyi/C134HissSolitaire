@@ -22,6 +22,9 @@ class HomeTaskDialogController extends HissRootController{
   }
 
   clickClaim(HissDailyTaskBean bean)async{
+    if(bean.status!=HissTaskStatus.canClaim){
+      return;
+    }
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.home_task_c);
     HissAdUtils.instance.showBBBAd(
       adType: AdType.interstitial,

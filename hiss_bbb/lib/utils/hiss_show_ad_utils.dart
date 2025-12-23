@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:hiss_bbb/bean/hiss_ad_probability_bean.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
@@ -34,6 +35,9 @@ class HissShowAdUtils{
   }
 
   bool showAd(AdType adType){
+    if(kDebugMode){
+      return false;
+    }
     if(adType==AdType.reward){
       return true;
     }

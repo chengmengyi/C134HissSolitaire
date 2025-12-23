@@ -49,6 +49,7 @@ class HissCheckUserUtils{
   }
 
   bool getUser(){
+    return true;
     if(kDebugMode){
       return true;
     }

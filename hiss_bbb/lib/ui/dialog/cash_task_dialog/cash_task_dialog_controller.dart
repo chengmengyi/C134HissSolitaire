@@ -12,7 +12,7 @@ import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class CashTaskDialogController extends HissRootController{
   HissCashTaskBean? cashTaskBean;
-  List<WithdrawalTask> taskList=[];
+  // List<WithdrawalTask> taskList=[];
 
   CashTaskDialogController({
     required this.cashTaskBean,
@@ -24,11 +24,7 @@ class CashTaskDialogController extends HissRootController{
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.cash_task_pop);
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-    _initList();
-  }
+
 
   clickConfirm(){
     HissRoutersUtils.instance.close();
@@ -39,16 +35,11 @@ class CashTaskDialogController extends HissRootController{
     HissRoutersUtils.instance.close();
   }
 
-  _initList(){
-    taskList.clear();
-    taskList.addAll(HissTaskQueueConfigUtils.instance.getWithdrawalTaskList());
-    update(["list"]);
-  }
-
   bool checkCompleted(int index)=>index<(cashTaskBean?.taskIndex??0);
 
-  String getTaskIcon(String? taskName){
-    switch(taskName){
+  String getTaskIcon(){
+    var withdrawalTask = HissTaskQueueConfigUtils.instance.getWithdrawalTaskByIndex(cashTaskBean?.taskIndex??0);
+    switch(withdrawalTask.name){
       case HissTaskType.game: return "icon_task_game";
       case HissTaskType.card: return "icon_task_card";
       case HissTaskType.tool: return "icon_task_tool";
@@ -56,6 +47,21 @@ class CashTaskDialogController extends HissRootController{
       case HissTaskType.puzzle: return "icon_task_puzzle";
       case HissTaskType.bubbles: return "icon_task_bubble";
       default: return "icon_task_card";
+    }
+  }
+
+
+  String getTaskTitle(){
+    var withdrawalTask = HissTaskQueueConfigUtils.instance.getWithdrawalTaskByIndex(cashTaskBean?.taskIndex??0);
+    var pro="${cashTaskBean?.currentPro??0}/${cashTaskBean?.totalPro??0}";
+    switch(withdrawalTask.name){
+      case HissTaskType.game: return "Complete $pro games";
+      case HissTaskType.card: return "$pro cash cards";
+      case HissTaskType.tool: return "Use $pro tools";
+      case HissTaskType.bubbles: return "$pro ad bubble rewards";
+      case HissTaskType.rank: return "Rank top $pro today";
+      case HissTaskType.puzzle: return "$pro puzzle pieces";
+      default: return "";
     }
   }
 }

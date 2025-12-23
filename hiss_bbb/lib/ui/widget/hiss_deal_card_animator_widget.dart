@@ -4,6 +4,7 @@ import 'package:hiss_root/hiss_ui/hiss_root_stateful.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
+import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 
 class HissDealCardAnimatorWidget extends HissRootStateful{
   Function() allAnimatorCompletedCallback;

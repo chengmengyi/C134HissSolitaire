@@ -6,6 +6,8 @@ import 'package:hiss_bbb/bean/hiss_play_record_bean.dart';
 import 'package:hiss_bbb/utils/hiss_play_record_utils.dart';
 import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
+import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
@@ -13,9 +15,11 @@ import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class PlaySuccessController extends HissRootController{
-  int score=0,time=0,step=0;
+  double addNum=0.0;
+  int score=0,time=0,step=0,onlyAddNum=0;
   List<HissPlayGradeBean> gradeList=[];
   GlobalKey scrollGlobalKey=GlobalKey();
   ScrollController scrollController=ScrollController();
@@ -30,6 +34,8 @@ class PlaySuccessController extends HissRootController{
   @override
   void onInit() {
     super.onInit();
+    onlyAddNum=HissValueConfigUtils.instance.getPlaySuccessOnlyAddNum();
+    addNum=HissValueConfigUtils.instance.getPlaySuccessAddNum();
     _initRecord();
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_victory);
   }
@@ -58,14 +64,16 @@ class PlaySuccessController extends HissRootController{
     update(["list"]);
   }
 
-  clickOnly(){
+  clickOnly(Function() dismissCallback){
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_next_close,params: {"level":bLevel.getData()});
     HissAdUtils.instance.showBBBAd(
       adType: AdType.interstitial,
       hissAdEnum: HissAdEnum.ccqes_settlement_int,
       showAd: HissShowAdUtils.instance.showAd(AdType.interstitial),
       closeAdCallback: (give){
-
+        HissUserInfoUtils.instance.updateMoney(onlyAddNum);
+        HissRoutersUtils.instance.close();
+        dismissCallback.call();
       },
     );
   }
@@ -78,7 +86,7 @@ class PlaySuccessController extends HissRootController{
       showAd: HissShowAdUtils.instance.showAd(AdType.reward),
       closeAdCallback: (give){
         if(give){
-          // HissUserInfoUtils.instance.updateMoney(HissValueUtils.instance.addMoneyNum());
+          HissUserInfoUtils.instance.updateMoney(doubleSub(onlyAddNum, addNum));
           // HissUserInfoUtils.instance.updateDiamondNum(HissValueUtils.instance.addDiamondNum());
         }
         HissRoutersUtils.instance.close();

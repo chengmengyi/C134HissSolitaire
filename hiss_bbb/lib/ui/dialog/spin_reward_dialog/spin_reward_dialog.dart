@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/spin_reward_dialog/spin_reward_dialog_controller.dart';
+import 'package:hiss_bbb/ui/widget/hiss_breath_widget.dart';
+import 'package:hiss_bbb/ui/widget/hiss_loop_rotate_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_video_btn_widget.dart';
 import 'package:hiss_bbb/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_dialog.dart';
@@ -34,8 +36,13 @@ class SpinRewardDialog extends HissRootDialog<SpinRewardDialogController>{
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  HissImagesWidget(name: "spin2", width: 240.w, height: 240.w,),
-                  HissImagesWidget(name: getGiftIcon(type), width: 200.w, height: 200.w,),
+                  HissLoopRotateWidget(
+                    child: HissImagesWidget(name: "spin2", width: 240.w, height: 240.w,),
+                  ),
+                  HissBreathWidget(
+                    start: true,
+                    child: HissImagesWidget(name: getGiftIcon(type), width: 200.w, height: 200.w,),
+                  ),
                 ],
               ),
               Row(

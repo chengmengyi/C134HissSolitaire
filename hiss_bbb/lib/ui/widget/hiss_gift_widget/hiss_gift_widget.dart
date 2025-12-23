@@ -93,7 +93,7 @@ class HissGiftWidget extends HissRootWidget<HissGiftWidgetController>{
                               ],
                             ),
                             HissGradientTextWidget(
-                              textContent: getGiftName(item.type),
+                              textContent: getGiftShortName(item.type),
                               textSize: 10.sp,
                               outlineColor: "#5D3E00".toColor(),
                               fontWeight: FontWeight.w900,
@@ -224,7 +224,7 @@ class HissGiftWidget extends HissRootWidget<HissGiftWidgetController>{
                               itemBuilder: (context,index){
                                 var type = controller.wheelList[index];
                                 String icon=type.isEmpty?"icon_money3":getGiftIcon(type);
-                                String title=type.isEmpty?"\$50":getGiftName(type);
+                                String title=type.isEmpty?"\$50":getGiftShortName(type);
                                 var selected = controller.selectedWheelIndex==index;
                                 return Stack(
                                   alignment: Alignment.center,
@@ -264,6 +264,7 @@ class HissGiftWidget extends HissRootWidget<HissGiftWidgetController>{
                         bg: "home_gift8",
                         width: double.infinity,
                         height: 52.h,
+                        showVideoIcon: wheelNum.getData()<=0,
                         onTap: (){
                           controller.clickSpin();
                         },

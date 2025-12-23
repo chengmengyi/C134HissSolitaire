@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_controller.dart';
+import 'package:hiss_bbb/ui/widget/hiss_video_btn_widget.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_gradient_text_widget.dart';
@@ -97,7 +99,7 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
               children: [
                 _infoWidget(),
                 SizedBox(height: 6.h,),
-                _diamondAndMoneyWidget(),
+                // _diamondAndMoneyWidget(),
                 SizedBox(height: 16.h,),
                 _rewardWidget(),
               ],
@@ -105,24 +107,33 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
           ),
         ),
         SizedBox(height: 6.h,),
-        HissClickWidget(
+        HissVideoBtnWidget(
+          text: "Claim",
+          bg: "success3",
+          width: 180.w,
+          height: 48.h,
           onTap: (){
             controller.clickClaim(dismissCallback);
           },
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              HissImagesWidget(name: "success3", width: 180.w, height: 48.h),
-              HissTextWidget(
-                textContent: "Claim",
-                textSize: 18.sp,
-                textColor: "#FFFFFF".toColor(),
-                outlineColor: "#133D03".toColor(),
-                fontWeight: FontWeight.w900,
-              ),
-            ],
-          ),
         ),
+        // HissClickWidget(
+        //   onTap: (){
+        //     controller.clickClaim(dismissCallback);
+        //   },
+        //   child: Stack(
+        //     alignment: Alignment.center,
+        //     children: [
+        //       HissImagesWidget(name: "success3", width: 180.w, height: 48.h),
+        //       HissTextWidget(
+        //         textContent: "Claim",
+        //         textSize: 18.sp,
+        //         textColor: "#FFFFFF".toColor(),
+        //         outlineColor: "#133D03".toColor(),
+        //         fontWeight: FontWeight.w900,
+        //       ),
+        //     ],
+        //   ),
+        // ),
         SizedBox(height: 12.h,),
       ],
     ),
@@ -174,114 +185,124 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
         ),
         GetBuilder<PlaySuccessController>(
           id: "list",
-          builder: (_)=>ListView.builder(
-            itemCount: controller.gradeList.length,
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context,index){
-              var bean = controller.gradeList[index];
-              return SizedBox(
-                width: double.infinity,
-                height: 32.h,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: HissTextWidget(
-                          textContent: bean.title,
-                          textSize: 12.sp,
-                          textColor: "#724B2F".toColor(),
-                          fontWeight: FontWeight.bold,
+          builder: (_)=>MediaQuery.removePadding(
+            context: buildContext,
+            removeTop: true,
+            child: ListView.builder(
+              itemCount: controller.gradeList.length,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context,index){
+                var bean = controller.gradeList[index];
+                return SizedBox(
+                  width: double.infinity,
+                  height: 32.h,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: HissTextWidget(
+                            textContent: bean.title,
+                            textSize: 12.sp,
+                            textColor: "#724B2F".toColor(),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 32.h,
-                        child: Stack(
-                          children: [
-                            Align(
-                              alignment: Alignment.center,
-                              child: HissTextWidget(
-                                textContent: bean.currentGrade,
-                                textSize: 14.sp,
-                                textColor:bean.currentIsBest?"#FFD21D".toColor():"#4B2912".toColor(),
-                                fontWeight: FontWeight.bold,
-                                outlineColor: bean.currentIsBest?"#6E2F15".toColor():null,
+                      Expanded(
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 32.h,
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: HissTextWidget(
+                                  textContent: bean.currentGrade,
+                                  textSize: 14.sp,
+                                  textColor:bean.currentIsBest?"#FFD21D".toColor():"#4B2912".toColor(),
+                                  fontWeight: FontWeight.bold,
+                                  outlineColor: bean.currentIsBest?"#6E2F15".toColor():null,
+                                ),
                               ),
-                            ),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Visibility(
-                                visible: bean.currentIsBest,
-                                child: HissImagesWidget(name: "success4", width: 20.w, height: 20.w),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Visibility(
+                                  visible: bean.currentIsBest,
+                                  child: HissImagesWidget(name: "success4", width: 20.w, height: 20.w),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 32.h,
-                        child: Stack(
-                          children: [
-                            Align(
-                              alignment: Alignment.center,
-                              child: HissTextWidget(
-                                textContent: bean.bestGrade,
-                                textSize: 14.sp,
-                                textColor:!bean.currentIsBest?"#FFD21D".toColor():"#4B2912".toColor(),
-                                fontWeight: FontWeight.bold,
-                                outlineColor: bean.currentIsBest?null:"#6E2F15".toColor(),
+                      Expanded(
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 32.h,
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: HissTextWidget(
+                                  textContent: bean.bestGrade,
+                                  textSize: 14.sp,
+                                  textColor:!bean.currentIsBest?"#FFD21D".toColor():"#4B2912".toColor(),
+                                  fontWeight: FontWeight.bold,
+                                  outlineColor: bean.currentIsBest?null:"#6E2F15".toColor(),
+                                ),
                               ),
-                            ),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Visibility(
-                                visible: !bean.currentIsBest,
-                                child: HissImagesWidget(name: "success4", width: 20.w, height: 20.w),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Visibility(
+                                  visible: !bean.currentIsBest,
+                                  child: HissImagesWidget(name: "success4", width: 20.w, height: 20.w),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            },
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],
     ),
   );
 
-  _diamondAndMoneyWidget()=>Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      HissImagesWidget(name: "icon_diamond", width: 28.w, height: 28.w),
-      SizedBox(width: 4.w,),
-      HissTextWidget(
-        textContent: "待定",
-        textSize: 14.sp,
-        textColor: "#FFFFFF".toColor(),
-        outlineColor: "#052B1F".toColor(),
-        fontWeight: FontWeight.w900,
-      ),
-      SizedBox(width: 16.w,),
-      HissImagesWidget(name: "icon_money4", width: 28.w, height: 28.w),
-      SizedBox(width: 4.w,),
-      HissTextWidget(
-        textContent: "待定",
-        textSize: 14.sp,
-        textColor: "#FFFFFF".toColor(),
-        outlineColor: "#052B1F".toColor(),
-        fontWeight: FontWeight.w900,
-      ),
-    ],
+  _diamondAndMoneyWidget()=>Visibility(
+    visible: false,
+    maintainAnimation: true,
+    maintainState: true,
+    maintainSize: true,
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        HissImagesWidget(name: "icon_diamond", width: 28.w, height: 28.w),
+        SizedBox(width: 4.w,),
+        HissTextWidget(
+          textContent: "待定",
+          textSize: 14.sp,
+          textColor: "#FFFFFF".toColor(),
+          outlineColor: "#052B1F".toColor(),
+          fontWeight: FontWeight.w900,
+        ),
+        SizedBox(width: 16.w,),
+        HissImagesWidget(name: "icon_money4", width: 28.w, height: 28.w),
+        SizedBox(width: 4.w,),
+        HissTextWidget(
+          textContent: "待定",
+          textSize: 14.sp,
+          textColor: "#FFFFFF".toColor(),
+          outlineColor: "#052B1F".toColor(),
+          fontWeight: FontWeight.w900,
+        ),
+      ],
+    ),
   );
 
   _rewardWidget()=>Container(
@@ -300,7 +321,7 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             HissTextWidget(
-              textContent: "\$50",
+              textContent: "\$${controller.onlyAddNum}",
               textSize: 28.sp,
               fontWeight: FontWeight.bold,
               textColor: "#FFD21D".toColor(),
@@ -313,7 +334,7 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
                 Container(
                   margin: EdgeInsets.only(top: 14.h,right: 14.w),
                   child: HissTextWidget(
-                    textContent: "+\$50",
+                    textContent: "+\$${controller.addNum}",
                     textSize: 28.sp,
                     fontWeight: FontWeight.bold,
                     textColor: "#55E53B".toColor(),
@@ -327,8 +348,11 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
         ),
         SizedBox(height: 30.h,),
         HissClickWidget(
+          onTap: (){
+            controller.clickOnly(dismissCallback);
+          },
           child: HissTextWidget(
-            textContent: "Only \$50",
+            textContent: "Only \$${controller.onlyAddNum}",
             textSize: 16.sp,
             fontWeight: FontWeight.bold,
             textColor: "#FFFFFF".toColor(),

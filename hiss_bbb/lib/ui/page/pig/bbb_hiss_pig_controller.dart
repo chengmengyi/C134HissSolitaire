@@ -14,6 +14,7 @@ import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class BBBHissPigController extends HissRootController{
   var currentDiamondNum=0;
@@ -33,6 +34,8 @@ class BBBHissPigController extends HissRootController{
     if(indexWhere<0){
       if(lastPigBean?.status==HissPigStatus.unReceive){
         _lookAd(lastPigBean);
+      }else{
+        showToast("Continue & Earn Gems");
       }
       return;
     }

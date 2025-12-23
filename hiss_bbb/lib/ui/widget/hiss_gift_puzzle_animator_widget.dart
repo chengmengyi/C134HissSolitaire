@@ -69,6 +69,7 @@ class _HissDiamondPigAnimatorWidgetState extends HissRootStatefulState<HissGiftP
       curve: Curves.easeOut,
     ));
     setState(() {});
+    await Future.delayed(Duration(milliseconds: 1000));
     await animationController?.forward();
     animationController=null;
     setState(() {});

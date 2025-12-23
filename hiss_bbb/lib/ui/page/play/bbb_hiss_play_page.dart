@@ -169,19 +169,25 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
           if(controller.cardWidth<=0){
             return Container();
           }
-          return HissClickWidget(
-            onTap: (){
-              controller.clickFlipCardFromStock();
-            },
-            child: SizedBox(
-              key: controller.stockPileGlobalKey,
-              child: ShakeAnimationWidget(
-                shakeAnimationController: controller.shakeAnimationController,
-                shakeAnimationType: ShakeAnimationType.LeftRightShake,
-                isForward: false,
-                shakeCount: 4,
-                shakeRange: 0.2,
-                child: HissImagesWidget(name: "card_bg", width: controller.cardWidth, height: controller.cardHeight,),
+          return Visibility(
+            maintainAnimation: true,
+            maintainState: true,
+            maintainSize: true,
+            visible: controller.stockPileList.isNotEmpty,
+            child: HissClickWidget(
+              onTap: (){
+                controller.clickFlipCardFromStock();
+              },
+              child: SizedBox(
+                key: controller.stockPileGlobalKey,
+                child: ShakeAnimationWidget(
+                  shakeAnimationController: controller.shakeAnimationController,
+                  shakeAnimationType: ShakeAnimationType.LeftRightShake,
+                  isForward: false,
+                  shakeCount: 4,
+                  shakeRange: 0.2,
+                  child: HissImagesWidget(name: "card_bg", width: controller.cardWidth, height: controller.cardHeight,),
+                ),
               ),
             ),
           );

@@ -9,6 +9,7 @@ import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
@@ -31,6 +32,7 @@ class HissUserInfoUtils {
     bMoneyNum.saveData(doubleAdd(bMoneyNum.getData(), addNum));
     if(addNum>0){
       if(showAnimator){
+        HissMp3Utils.instance.playOtherMp3(HissMp3Type.money);
         HissMoneyOverlayUtils.instance.showOverlay();
       }
       allMoneyNum.saveData(allMoneyNum.getData()+addNum);

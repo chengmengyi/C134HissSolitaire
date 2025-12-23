@@ -41,8 +41,8 @@ class HissMainController extends HissRootController with GetSingleTickerProvider
       HissAdUtils.instance.showBBBAd(
         adType: AdType.interstitial,
         hissAdEnum: HissAdEnum.ccqes_launch,
-        showAd: true,
-        isOpen: !kDebugMode,
+        showAd: !kDebugMode,
+        isOpen: true,
         closeAdCallback: (give){
           _toHomePage(HissBBBRouters.home);
         },

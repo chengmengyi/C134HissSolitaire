@@ -12,11 +12,7 @@ abstract class HissRootPage<T extends HissRootController> extends StatelessWidge
     _initGetController(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: SafeArea(
-        top: false,
-        bottom: true,
-        child: initContent(),
-      ),
+      body: initContent(),
       resizeToAvoidBottomInset: false,
     );
   }

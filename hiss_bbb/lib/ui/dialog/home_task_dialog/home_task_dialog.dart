@@ -29,7 +29,7 @@ class HomeTaskDialog extends HissRootDialog<HomeTaskDialogController>{
         Align(
           child: Container(
             width: double.infinity,
-            height: 552.h,
+            height: 480.h,
             margin: EdgeInsets.only(left: 16.w,right: 16.w),
             child: Stack(
               children: [

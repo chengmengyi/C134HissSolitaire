@@ -62,6 +62,7 @@ class BBBHissHomeController extends HissRootController{
     }
     if(index==2){
       HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.gift_page);
+      HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.autoPlayWheel));
     }
     if(index==3){
       HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.cash_page);

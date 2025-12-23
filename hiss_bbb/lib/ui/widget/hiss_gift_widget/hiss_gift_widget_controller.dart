@@ -268,6 +268,15 @@ class HissGiftWidgetController extends HissRootController{
       case HissEventCode.updateWheelNum:
         update(["wheel_btn"]);
         break;
+      case HissEventCode.autoPlayWheel:
+        _autoPlayWheel();
+        break;
+    }
+  }
+
+  _autoPlayWheel(){
+    if(wheelNum.getData()>0){
+      clickSpin();
     }
   }
 
