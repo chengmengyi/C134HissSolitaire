@@ -65,7 +65,7 @@ class BBBHomeChildController extends HissRootController{
     //   child: NoMoneyDialog(),
     // );
     // HissValueConfigUtils.instance.initBean();
-    HissUserInfoUtils.instance.updateMoney(100);
+    // HissUserInfoUtils.instance.updateMoney(100);
 
     // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
 
@@ -84,5 +84,7 @@ class BBBHomeChildController extends HissRootController{
     // HissUserInfoUtils.instance.updateUserLevel();
     // bLevel.saveData(1);
     // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
+
+    HissUserInfoUtils.instance.updateWheelNum(1);
   }
 }

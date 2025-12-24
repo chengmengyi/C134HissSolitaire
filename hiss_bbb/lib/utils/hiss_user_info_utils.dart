@@ -122,6 +122,7 @@ class HissUserInfoUtils {
           callback: callback,
         ),
       );
+      showGoodComment.saveData(false);
     }else{
       callback.call();
     }

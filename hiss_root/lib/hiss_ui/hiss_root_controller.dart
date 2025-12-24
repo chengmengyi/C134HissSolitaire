@@ -25,11 +25,11 @@ abstract class HissRootController extends GetxController{
   handleEventBusData(HissEventData data){}
 
   @override
-  void dispose() {
+  void onClose() {
     if(canReceivedEventData()){
       _subscription?.cancel();
       _subscription=null;
     }
-    super.dispose();
+    super.onClose();
   }
 }
