@@ -1,5 +1,6 @@
 import 'package:hiss_bbb/ui/dialog/input_account_dialog/input_account_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
+import 'package:hiss_bbb/utils/hiss_cash_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_bbb/utils/utils.dart';
@@ -20,12 +21,19 @@ class Money300700ResultDialogController extends HissRootController{
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.remind_pop);
   }
 
-  clickPlayGame(){
+  clickPlayGame()async{
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.remind_pop_c);
-    HissRoutersUtils.instance.close();
-    HissRoutersUtils.instance.showDialog(
-      child: InputAccountDialog(cashMoney: HissValueConfigUtils.instance.cashList().first, callback: (){},),
-    );
+    var first = HissValueConfigUtils.instance.cashList().first;
+    var account = await HissCashTaskUtils.instance.queryAccount(cashTypeStorage.getData());
+    if(account.isEmpty){
+      HissRoutersUtils.instance.close();
+      HissRoutersUtils.instance.showDialog(
+        child: InputAccountDialog(cashMoney: first, callback: (){},),
+      );
+    }else{
+      HissRoutersUtils.instance.close();
+    }
+
     // if(!playGamePageOpen){
     //   HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.play);
     // }

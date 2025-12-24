@@ -24,8 +24,6 @@ class CashTaskDialogController extends HissRootController{
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.cash_task_pop);
   }
 
-
-
   clickConfirm(){
     HissRoutersUtils.instance.close();
     HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.showHomeTabIndex,intEventValue: 1));

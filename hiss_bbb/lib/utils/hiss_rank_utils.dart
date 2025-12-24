@@ -24,12 +24,21 @@ class HissRankUtils{
 
   final _headList=["head1","head2","head3","head4","head5","head6","head7","head8","head9",];
 
-  insertTodayRank()async{
+  Future<List<HissRankBean>> insertTodayRank()async{
     var todayTime = getTodayTime();
     var database = await HissSqlUtils.instance.initSql();
     var list = await database.query(HissSqlName.bRankInfo,where: '"timer" = ?',whereArgs: [todayTime]);
     if(list.isNotEmpty){
-      return;
+      try{
+        List<HissRankBean> resultList=[];
+        var json = jsonDecode(list.first["contentList"] as String);
+        for(var value in json){
+          resultList.add(HissRankBean.fromJson(value));
+        }
+        return resultList;
+      }catch(e){
+        return [];
+      }
     }
     List<HissRankBean> contentList=[];
     var random = Random();
@@ -52,6 +61,7 @@ class HissRankUtils{
       }
     }
     await database.insert(HissSqlName.bRankInfo, {"timer":todayTime,"contentList":jsonEncode(contentList)});
+    return contentList;
   }
 
   Future<List<HissRankBean>> queryTodayRankList()async{
@@ -59,7 +69,8 @@ class HissRankUtils{
     var database = await HissSqlUtils.instance.initSql();
     var list = await database.query(HissSqlName.bRankInfo,where: '"timer" = ?',whereArgs: [todayTime]);
     if(list.isEmpty){
-      return [];
+      var list2 = await insertTodayRank();
+      return list2;
     }
     try{
       List<HissRankBean> resultList=[];

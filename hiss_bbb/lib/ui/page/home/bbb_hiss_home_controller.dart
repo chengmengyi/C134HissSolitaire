@@ -4,6 +4,8 @@ import 'package:hiss_bbb/ui/page/home/cash_child/bbb_cash_child.dart';
 import 'package:hiss_bbb/ui/page/home/gift_child/bbb_gift_child.dart';
 import 'package:hiss_bbb/ui/page/home/home_child/bbb_home_child.dart';
 import 'package:hiss_bbb/utils/hiss_money_overlay_utils.dart';
+import 'package:hiss_bbb/utils/hiss_storage.dart';
+import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
@@ -33,6 +35,12 @@ class BBBHissHomeController extends HissRootController{
     HissIosNotificationUtils.instance.init();
     IosHhh.instance.hiss2();
     IosHhh.instance.hiss3();
+    HissIosNotificationUtils.instance.notificationCallback=(){
+      if(notificationGiveReward.getData()){
+        HissUserInfoUtils.instance.updateMoney(5,showAnimator: true);
+        notificationGiveReward.saveData(false);
+      }
+    };
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hiss_root/hiss_ui/dialog/open_notification_dialog/open_notification_dialog.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_root_staorage.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -12,6 +13,8 @@ import 'package:permission_handler/permission_handler.dart';
 class HissIosNotificationUtils{
   static final HissIosNotificationUtils _hissIosNotificationUtils=HissIosNotificationUtils();
   static HissIosNotificationUtils get instance => _hissIosNotificationUtils;
+
+  Function()? notificationCallback;
 
   var plugin=FlutterLocalNotificationsPlugin();
 
@@ -97,6 +100,7 @@ class HissIosNotificationUtils{
     await Future.delayed(Duration(milliseconds: 800));
     var status = await Permission.notification.request();
     if(status.isGranted){
+      notificationCallback?.call();
       HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.noti_confirm_pop_suc);
       init();
     }else{

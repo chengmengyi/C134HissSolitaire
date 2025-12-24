@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:hiss_bbb/bean/hiss_gift_reward_task_bean.dart';
 import 'package:hiss_bbb/bean/hiss_home_gift_progress_bean.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
@@ -18,6 +19,21 @@ class HissHomeGiftUtils{
     var database = await HissSqlUtils.instance.initSql();
     var list = await database.query(HissSqlName.bGiftProgress,);
     if(list.isNotEmpty){
+      return;
+    }
+    if(kDebugMode){
+      List<HissHomeGiftProgressBean> result=[
+        HissHomeGiftProgressBean(currentPro: 0,totalPro: 2,type: HissHomeGiftType.pay,status: HissHomeGiftStatus.notClaim,),
+        HissHomeGiftProgressBean(currentPro: 0,totalPro: 5,type: HissHomeGiftType.phone,status: HissHomeGiftStatus.notClaim,),
+        HissHomeGiftProgressBean(currentPro: 0,totalPro: 3,type: HissHomeGiftType.game,status: HissHomeGiftStatus.notClaim,),
+        HissHomeGiftProgressBean(currentPro: 0,totalPro: 3,type: HissHomeGiftType.package23,status: HissHomeGiftStatus.notClaim,),
+        HissHomeGiftProgressBean(currentPro: 0,totalPro: 2,type: HissHomeGiftType.card,status: HissHomeGiftStatus.notClaim,),
+        HissHomeGiftProgressBean(currentPro: 0,totalPro: 4,type: HissHomeGiftType.chuifengji,status: HissHomeGiftStatus.notClaim,),
+        HissHomeGiftProgressBean(currentPro: 0,totalPro: 5,type: HissHomeGiftType.package2025,status: HissHomeGiftStatus.notClaim,),
+      ];
+      for (var value in result) {
+        await database.insert(HissSqlName.bGiftProgress, value.toJson());
+      }
       return;
     }
     List<HissHomeGiftProgressBean> result=[

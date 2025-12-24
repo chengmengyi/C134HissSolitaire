@@ -37,7 +37,7 @@ class PlaySuccessController extends HissRootController{
     onlyAddNum=HissValueConfigUtils.instance.getPlaySuccessOnlyAddNum();
     addNum=HissValueConfigUtils.instance.getPlaySuccessAddNum();
     _initRecord();
-    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_victory);
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_victory,params: {"level":bLevel.getData()});
   }
 
   @override

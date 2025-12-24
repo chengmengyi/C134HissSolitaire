@@ -8,3 +8,4 @@ export 'package:flutter_ios_ad_plugins/hep/ad_type.dart';
 export 'package:webview_flutter/webview_flutter.dart';
 export 'package:horizontal_scroller/HorizontalScroller.dart';
 export 'package:ios_hhh/ios_hhh.dart';
+export 'package:in_app_review/in_app_review.dart';

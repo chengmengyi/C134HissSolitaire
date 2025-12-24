@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_ios_ad_plugins/data/ad_info_data.dart';
 import 'package:flutter_ios_ad_plugins/data/ad_money_info_bean.dart';
 import 'package:flutter_ios_ad_plugins/data/config_ad_data.dart';
@@ -203,6 +204,7 @@ class HissAdUtils{
               "ad_code_id":info?.adId,
               "ad_format":info?.adType.name,
               "ad_platform":info?.adPlat,
+              "ad_pos_id":hissAdEnum.name,
             },
           );
           closeAdCallback.call(true);

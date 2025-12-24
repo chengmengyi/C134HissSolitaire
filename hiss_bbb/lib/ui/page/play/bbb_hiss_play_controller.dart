@@ -9,12 +9,14 @@ import 'package:hiss_bbb/ui/dialog/money_card_reward_dialog/money_card_reward_di
 import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/random_prop_dialog/random_prop_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/set_dialog/set_dialog.dart';
+import 'package:hiss_bbb/ui/widget/hiss_puzzle_overlay.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_bbb/utils/hiss_cash_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_daily_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_card_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
+import 'package:hiss_bbb/utils/hiss_overlay_utils.dart';
 import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
@@ -429,33 +431,37 @@ class BBBHissPlayController extends HissRootController{
     canClick=false;
     final card = cardList[colIndex][rowIndex];
     if(card.isCoins==true){
-      var cardAddRewardNum = HissValueConfigUtils.instance.coinsCardAddRewardNum();
-      HissRoutersUtils.instance.showDialog(
-        child: MoneyCardRewardDialog(
-          reward: cardAddRewardNum,
-          callback: (double reward)async{
-            HissSendEventUtils.instance.sendEvent(
-              data: HissEventData(
-                eventCode: HissEventCode.aMoveCardToFoundation,
-                anyEventValue: {
-                  "startGlobalKey":card.globalKey,
-                  "endGlobalKey":topMoneyGlobalKey,
-                  "card":card,
-                  "cardWidth":cardWidth,
-                  "cardHeight":cardHeight,
-                },
-              ),
-            );
-            HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.card);
-            HissCashTaskUtils.instance.updateCashTask(HissTaskType.card);
-            await Future.delayed(Duration(milliseconds: 280));
-            HissUserInfoUtils.instance.updateMoney(cardAddRewardNum,showAnimator: true);
-            update(["card_list"]);
-            card.isCoins=false;
-            await Future.delayed(Duration(milliseconds: 100));
-            canClick=true;
-          },
-        ),
+      HissUserInfoUtils.instance.showGoodCommentDialog(
+        callback: (){
+          var cardAddRewardNum = HissValueConfigUtils.instance.coinsCardAddRewardNum();
+          HissRoutersUtils.instance.showDialog(
+            child: MoneyCardRewardDialog(
+              reward: cardAddRewardNum,
+              callback: (double reward)async{
+                HissSendEventUtils.instance.sendEvent(
+                  data: HissEventData(
+                    eventCode: HissEventCode.aMoveCardToFoundation,
+                    anyEventValue: {
+                      "startGlobalKey":card.globalKey,
+                      "endGlobalKey":topMoneyGlobalKey,
+                      "card":card,
+                      "cardWidth":cardWidth,
+                      "cardHeight":cardHeight,
+                    },
+                  ),
+                );
+                HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.card);
+                HissCashTaskUtils.instance.updateCashTask(HissTaskType.card);
+                await Future.delayed(Duration(milliseconds: 280));
+                HissUserInfoUtils.instance.updateMoney(cardAddRewardNum,showAnimator: true);
+                update(["card_list"]);
+                card.isCoins=false;
+                await Future.delayed(Duration(milliseconds: 100));
+                canClick=true;
+              },
+            ),
+          );
+        },
       );
       return;
     }
@@ -549,6 +555,7 @@ class BBBHissPlayController extends HissRootController{
       );
       await Future.delayed(Duration(milliseconds: 500));
       HissUserInfoUtils.instance.updateWheelNum(1);
+      _checkShowPuzzleGuide();
     }
   }
 
@@ -971,6 +978,24 @@ class BBBHissPlayController extends HissRootController{
     // }
     //校验游戏通关了
     _checkPlayEnd();
+  }
+
+  _checkShowPuzzleGuide(){
+    if(!showPuzzleGuide.getData()){
+      return;
+    }
+    showPuzzleGuide.saveData(false);
+    var renderBox = giftPuzzleGlobalKey.currentContext?.findRenderObject() as RenderBox;
+    var offset = renderBox.localToGlobal(Offset.zero);
+    HissOverlayUtils.instance.showOverlay(
+        context: buildContext,
+        widget: HissPuzzleOverlay(
+          offset: offset,
+          callback: (){
+            HissOverlayUtils.instance.hideOverlay();
+          },
+        ),
+    );
   }
 
   @override

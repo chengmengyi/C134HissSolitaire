@@ -57,7 +57,14 @@ class BBBCashChildController extends HissRootController{
   clickNormalItemCash(HissCashListBean bean)async{
     if(bMoneyNum.getData()<bean.totalMoney){
       HissRoutersUtils.instance.showDialog(
-        child: NoMoneyDialog(),
+        child: InputAccountDialog(
+          cashMoney: bean.totalMoney,
+          callback: (){
+            HissRoutersUtils.instance.showDialog(
+              child: NoMoneyDialog(),
+            );
+          },
+        ),
       );
       return;
     }
@@ -107,7 +114,7 @@ class BBBCashChildController extends HissRootController{
     HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_queue_rv,
-      showAd: true,
+      showAd: kDebugMode?false:true,
       closeAdCallback: (give)async{
         if(give){
           _cashRankWatchVideoCompleted(bean);

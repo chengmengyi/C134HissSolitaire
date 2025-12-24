@@ -9,6 +9,7 @@ import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
 import 'package:hiss_bbb/utils/hiss_home_gift_utils.dart';
 import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
+import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
@@ -162,6 +163,7 @@ class HissGiftWidgetController extends HissRootController{
   _showWheelRewardDialog(int randWheelIndex)async{
     await Future.delayed(Duration(milliseconds: 500));
     var type = wheelList[randWheelIndex];
+    HissUserInfoUtils.instance.updateWheelNum(-1);
     HissRoutersUtils.instance.showDialog(
       child: SpinRewardDialog(
         type: type,

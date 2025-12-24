@@ -20,6 +20,9 @@ class HissStorageKey{
   static const String valueConfig="valueConfig";
   static const String taskQueueConfig="taskQueueConfig";
   static const String bLastUploadMoneyLevel="bLastUploadMoneyLevel";
+  static const String notificationGiveReward="notificationGiveReward";
+  static const String showGoodComment="showGoodComment";
+  static const String showPuzzleGuide="showPuzzleGuide";
 }
 
 StorageData<double> bMoneyNum=StorageData<double>(key: HissStorageKey.bMoney, defaultValue: 0.0);
@@ -43,3 +46,6 @@ StorageData<String> taskQueueConfig=StorageData<String>(key: HissStorageKey.task
 StorageData<bool> show300AnimatorTips=StorageData<bool>(key: HissStorageKey.show300AnimatorTips, defaultValue: true);
 StorageData<bool> show700AnimatorTips=StorageData<bool>(key: HissStorageKey.show700AnimatorTips, defaultValue: true);
 StorageData<bool> show1000MoneyDialog=StorageData<bool>(key: HissStorageKey.show1000MoneyDialog, defaultValue: true);
+StorageData<bool> notificationGiveReward=StorageData<bool>(key: HissStorageKey.notificationGiveReward, defaultValue: true);
+StorageData<bool> showGoodComment=StorageData<bool>(key: HissStorageKey.showGoodComment, defaultValue: true);
+StorageData<bool> showPuzzleGuide=StorageData<bool>(key: HissStorageKey.showPuzzleGuide, defaultValue: true);

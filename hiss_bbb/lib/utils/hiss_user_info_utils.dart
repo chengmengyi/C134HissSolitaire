@@ -1,4 +1,5 @@
 import 'package:hiss_bbb/ui/dialog/first_reach_cash_money_dialog/first_reach_cash_money_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/good_comment/good_comment_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/money300_700_result_dialog/money300_700_result_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/money_300_700_animator_dialog/money_300_700_animator_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_prop_type.dart';
@@ -110,5 +111,19 @@ class HissUserInfoUtils {
   updateWheelNum(int addNum){
     wheelNum.saveData(wheelNum.getData()+addNum);
     HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.updateWheelNum));
+  }
+
+  showGoodCommentDialog({
+    required Function() callback,
+}){
+    if(showGoodComment.getData()){
+      HissRoutersUtils.instance.showDialog(
+        child: GoodCommentDialog(
+          callback: callback,
+        ),
+      );
+    }else{
+      callback.call();
+    }
   }
 }

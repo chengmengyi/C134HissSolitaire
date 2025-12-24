@@ -7,6 +7,7 @@ import 'package:hiss_bbb/ui/widget/hiss_top_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_child.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
+import 'package:hiss_root/hiss_ui/hiss_widget/hiss_lottie_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 
 class BBBHomeChild extends HissRootChild<BBBHomeChildController>{
@@ -17,6 +18,19 @@ class BBBHomeChild extends HissRootChild<BBBHomeChildController>{
   Widget initContent() => Stack(
     children: [
       HissImagesWidget(name: "home2", width: double.infinity, height: double.infinity),
+      Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          margin: EdgeInsets.only(top: 300.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              HissLottieWidget(name: "fire",width: 200.w,),
+              HissImagesWidget(name: "home8", width: 100.w, height: 40.h),
+            ],
+          ),
+        ),
+      ),
       HissTopWidget(),
       Align(
         alignment: Alignment.topCenter,

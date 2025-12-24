@@ -124,6 +124,8 @@ PODS:
     - Flutter
   - hiss_root (0.0.1):
     - Flutter
+  - in_app_review (2.0.0):
+    - Flutter
   - InMobiSDK (11.1.0)
   - ios_hhh (0.0.1):
     - Flutter
@@ -214,6 +216,7 @@ DEPENDENCIES:
   - hiss_aaa (from `.symlinks/plugins/hiss_aaa/ios`)
   - hiss_bbb (from `.symlinks/plugins/hiss_bbb/ios`)
   - hiss_root (from `.symlinks/plugins/hiss_root/ios`)
+  - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - ios_hhh (from `.symlinks/plugins/ios_hhh/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -294,6 +297,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/hiss_bbb/ios"
   hiss_root:
     :path: ".symlinks/plugins/hiss_root/ios"
+  in_app_review:
+    :path: ".symlinks/plugins/in_app_review/ios"
   ios_hhh:
     :path: ".symlinks/plugins/ios_hhh/ios"
   path_provider_foundation:
@@ -354,6 +359,7 @@ SPEC CHECKSUMS:
   hiss_aaa: 58854e72e620fbbe4804e7dac2d2a3356a22e924
   hiss_bbb: 042f0e13cccbf6547180892f90ae0341cb1b30a3
   hiss_root: 64d08ac86524724921a7bb14f8e7b86ebe6ef261
+  in_app_review: 7dd1ea365263f834b8464673f9df72c80c17c937
   InMobiSDK: 43b1d6560bd75c8c382bb54fa8e248f5ed979860
   ios_hhh: 2deb2055f65dbdfb6a3cc7dd72bc0ffb888fd862
   IronSourceSDK: 66e1483cd62fb63162a965651f6f41c6b91664db

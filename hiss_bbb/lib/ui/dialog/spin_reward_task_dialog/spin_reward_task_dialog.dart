@@ -69,41 +69,44 @@ class SpinRewardTaskDialog extends HissRootDialog<SpinRewardTaskDialogController
 
   _progressWidget()=>GetBuilder<SpinRewardTaskDialogController>(
     id: "pro",
-    builder: (_)=>Stack(
-      alignment: Alignment.centerLeft,
-      children: [
-        Container(
-          width: 240.w,
-          height: 8.h,
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4.w),
-            color: "#FFFFFF".toColor().withOpacity(0.4),
-          ),
-          child: Container(
-            width: (240.w)*controller.getPro(),
+    builder: (_)=>SizedBox(
+      width: 240.w,
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          Container(
+            width: 240.w,
             height: 8.h,
+            alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4.w),
-              gradient: LinearGradient(
-                  colors: ["#FFE047".toColor(),"#FFB829".toColor(),]
+              color: "#FFFFFF".toColor().withOpacity(0.4),
+            ),
+            child: Container(
+              width: (240.w)*controller.getPro(),
+              height: 8.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4.w),
+                gradient: LinearGradient(
+                    colors: ["#FFE047".toColor(),"#FFB829".toColor(),]
+                ),
               ),
             ),
           ),
-        ),
-        Container(
-          margin: EdgeInsets.only(left: 88.w),
-          child: _proCenterWidget(),
-        ),
-        Container(
-          margin: EdgeInsets.only(left: 220.w),
-          child: HissImagesWidget(name: "gift_reward1", width: 24.w, height: 24.w,),
-        ),
-        Container(
-          margin: EdgeInsets.only(left: (200.w)*controller.kuaidiMargeLeft()),
-          child: _kuaidiWidget(),
-        ),
-      ],
+          Container(
+            margin: EdgeInsets.only(left: 88.w),
+            child: _proCenterWidget(),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: 220.w),
+            child: HissImagesWidget(name: "gift_reward1", width: 24.w, height: 24.w,),
+          ),
+          Container(
+            margin: EdgeInsets.only(left: (200.w)*controller.kuaidiMargeLeft()),
+            child: _kuaidiWidget(),
+          ),
+        ],
+      ),
     ),
   );
 
