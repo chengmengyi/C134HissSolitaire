@@ -18,4 +18,8 @@ class SetDialogController extends HissRootController{
   clickPrivacy(){
     HissRoutersUtils.instance.toWeb(title: "Privacy Policy", url: HissLocal.privacyUrl,);
   }
+
+  clickUserAgreement(){
+    HissRoutersUtils.instance.toWeb(title: "User Agreement", url: HissLocal.userAgreementUrl,);
+  }
 }

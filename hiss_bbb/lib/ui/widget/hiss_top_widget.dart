@@ -10,9 +10,13 @@ import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 class HissTopWidget extends StatelessWidget{
   GlobalKey? moneyGlobalKey;
   Function()? clickSetCallback;
+  Function()? clickMoneyCallback;
+  Function()? clickDiamondCallback;
   HissTopWidget({
     this.moneyGlobalKey,
     this.clickSetCallback,
+    this.clickMoneyCallback,
+    this.clickDiamondCallback,
 });
 
   @override
@@ -28,9 +32,19 @@ class HissTopWidget extends StatelessWidget{
           margin: EdgeInsets.only(left: 12.w,right: 12.w,bottom: 12.h),
           child: Row(
             children: [
-              HissMoneyWidget(moneyGlobalKey: moneyGlobalKey,),
+              HissClickWidget(
+                onTap: (){
+                  clickMoneyCallback?.call();
+                },
+                child: HissMoneyWidget(moneyGlobalKey: moneyGlobalKey,),
+              ),
               SizedBox(width: 10.w,),
-              HissDiamondWidget(),
+              HissClickWidget(
+                onTap: (){
+                  clickDiamondCallback?.call();
+                },
+                child: HissDiamondWidget(),
+              ),
               Spacer(),
               HissClickWidget(
                 onTap: (){

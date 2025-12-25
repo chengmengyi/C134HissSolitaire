@@ -29,6 +29,9 @@ import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_ui/dialog/open_notification_dialog/open_notification_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
@@ -47,6 +50,14 @@ class BBBHomeChildController extends HissRootController{
 
   clickGift(){
     HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.gift);
+  }
+
+  clickTopMoney(){
+    HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.showHomeTabIndex,intEventValue: 3));
+  }
+
+  clickPig(){
+    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.pig);
   }
 
   clickGame(){
@@ -84,7 +95,10 @@ class BBBHomeChildController extends HissRootController{
     // HissUserInfoUtils.instance.updateUserLevel();
     // bLevel.saveData(1);
     // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
+    // HissUserInfoUtils.instance.updateWheelNum(1);
 
-    HissUserInfoUtils.instance.updateWheelNum(1);
+    // HissMp3Utils.instance.playOtherMp3(HissMp3Type.zhuan);
+
+    HissRoutersUtils.instance.showDialog(child: FirstReachCashMoneyDialog());
   }
 }

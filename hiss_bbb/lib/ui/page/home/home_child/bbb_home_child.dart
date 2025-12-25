@@ -31,7 +31,14 @@ class BBBHomeChild extends HissRootChild<BBBHomeChildController>{
           ),
         ),
       ),
-      HissTopWidget(),
+      HissTopWidget(
+        clickMoneyCallback: (){
+          controller.clickTopMoney();
+        },
+        clickDiamondCallback: (){
+          controller.clickPig();
+        },
+      ),
       Align(
         alignment: Alignment.topCenter,
         child: Container(

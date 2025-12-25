@@ -29,8 +29,8 @@ class SuperPropDialogController extends HissRootController{
       showAd: HissShowAdUtils.instance.showAd(AdType.reward),
       closeAdCallback: (give){
         if(give){
-          var hissPropType = Random().nextBool()?HissPropType.back:HissPropType.tips;
-          HissUserInfoUtils.instance.updatePropNum(hissPropType: hissPropType, addNum: HissValueConfigUtils.instance.propAddNum());
+          HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.back, addNum: HissValueConfigUtils.instance.propAddNum());
+          HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.tips, addNum: HissValueConfigUtils.instance.propAddNum());
         }
         HissRoutersUtils.instance.close();
         claimCallback.call();

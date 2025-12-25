@@ -311,7 +311,7 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
       mainAxisSize: MainAxisSize.min,
       children: [
         HissTextWidget(
-          textContent: "Wow, you’re so lucky! This reward gives you an extra \$50!",
+          textContent: "Wow, you’re so lucky! This reward gives you an extra \$${controller.addNum}!",
           textSize: 14.sp,
            textColor: "#724B2F".toColor(),
         ),

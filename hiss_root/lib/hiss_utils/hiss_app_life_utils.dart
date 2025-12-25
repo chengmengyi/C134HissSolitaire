@@ -28,7 +28,9 @@ class HissAppLifeUtils{
               _back=true;
             });
           }else{
-            HissMp3Utils.instance.playBgm();
+            if(!FlutterIosAdPlugins.instance.adShowing()){
+              HissMp3Utils.instance.playBgm();
+            }
             _timer?.cancel();
             _timer=null;
             if(toOpen){

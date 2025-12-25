@@ -103,27 +103,27 @@ class SetDialog extends HissRootDialog<SetDialogController>{
                         ),
                       ),
                     ),
-                    // SizedBox(height: 8.h,),
-                    // HissClickWidget(
-                    //   onTap: (){
-                    //
-                    //   },
-                    //   child: Container(
-                    //     width: double.infinity,
-                    //     height: 52.h,
-                    //     alignment: Alignment.center,
-                    //     decoration: BoxDecoration(
-                    //       color: "#E6C4A7".toColor(),
-                    //       borderRadius: BorderRadius.circular(12.w),
-                    //     ),
-                    //     child: HissTextWidget(
-                    //       textContent: "Contact Us",
-                    //       textSize: 16.sp,
-                    //       textColor: "#724B2F".toColor(),
-                    //       fontWeight: FontWeight.bold,
-                    //     ),
-                    //   ),
-                    // ),
+                    SizedBox(height: 8.h,),
+                    HissClickWidget(
+                      onTap: (){
+                        controller.clickUserAgreement();
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: 52.h,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: "#E6C4A7".toColor(),
+                          borderRadius: BorderRadius.circular(12.w),
+                        ),
+                        child: HissTextWidget(
+                          textContent: "User Agreement",
+                          textSize: 16.sp,
+                          textColor: "#724B2F".toColor(),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                     SizedBox(height: 24.h,),
                   ],
                 ),

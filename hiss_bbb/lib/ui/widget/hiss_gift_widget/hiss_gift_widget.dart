@@ -160,35 +160,75 @@ class HissGiftWidget extends HissRootWidget<HissGiftWidgetController>{
   _rewardListWidget()=>SizedBox(
     width: double.infinity,
     height: 52.w,
-    child: ListView.separated(
-      scrollDirection: Axis.horizontal,
-      itemBuilder: (context,index){
-        var type = controller.centerGiftTypeList[index];
-        return HissClickWidget(
-          onTap: (){
-            controller.clickCenterGift(type);
-          },
-          child: SizedBox(
-            width: 52.w,
-            height: 52.w,
-            child: Stack(
-              children: [
-                HissImagesWidget(name: "home_gift4", width: 52.w, height: 52.w),
-                Align(
-                  child: HissImagesWidget(name: getGiftIcon(type), width: 40.w, height: 40.w,),
-                ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: HissImagesWidget(name: "icon_video", width: 20.w, height: 20.w,),
-                ),
-              ],
+    child: Directionality(
+      textDirection: TextDirection.rtl,
+      child: HorizontalScroller<String>(
+        items: controller.centerGiftTypeList,
+        height: 52.h,
+        enableAutoScroll: true,
+        scrollSpeed: 60,
+        enableInfiniteScroll: true,
+        backgroundColor: Colors.transparent,
+        itemPadding: EdgeInsets.zero,
+        margin: EdgeInsets.zero,
+        onItemClick: (item, index) {
+        },
+        itemBuilder: (item, index) {
+          var type = controller.centerGiftTypeList[index];
+          return HissClickWidget(
+            onTap: (){
+              controller.clickCenterGift(type);
+            },
+            child: Container(
+              width: 52.w,
+              height: 52.w,
+              margin: EdgeInsets.only(left: 10.w,right: 10.w),
+              child: Stack(
+                children: [
+                  HissImagesWidget(name: "home_gift4", width: 52.w, height: 52.w),
+                  Align(
+                    child: HissImagesWidget(name: getGiftIcon(type), width: 40.w, height: 40.w,),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: HissImagesWidget(name: "icon_video", width: 20.w, height: 20.w,),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
-      separatorBuilder: (context,index)=>SizedBox(width: 20.w,),
-      itemCount: controller.centerGiftTypeList.length,
-    ),
+          );
+        },
+      ),
+    )
+    // ListView.separated(
+    //   scrollDirection: Axis.horizontal,
+    //   itemBuilder: (context,index){
+    //     var type = controller.centerGiftTypeList[index];
+    //     return HissClickWidget(
+    //       onTap: (){
+    //         controller.clickCenterGift(type);
+    //       },
+    //       child: SizedBox(
+    //         width: 52.w,
+    //         height: 52.w,
+    //         child: Stack(
+    //           children: [
+    //             HissImagesWidget(name: "home_gift4", width: 52.w, height: 52.w),
+    //             Align(
+    //               child: HissImagesWidget(name: getGiftIcon(type), width: 40.w, height: 40.w,),
+    //             ),
+    //             Align(
+    //               alignment: Alignment.topRight,
+    //               child: HissImagesWidget(name: "icon_video", width: 20.w, height: 20.w,),
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //   },
+    //   separatorBuilder: (context,index)=>SizedBox(width: 20.w,),
+    //   itemCount: controller.centerGiftTypeList.length,
+    // ),
   );
 
   _luckyWidget()=>Expanded(

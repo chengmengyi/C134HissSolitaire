@@ -39,11 +39,39 @@ class FirstReachCashMoneyDialog extends HissRootDialog<FirstReachCashMoneyDialog
           ),
           Container(
             margin: EdgeInsets.only(left: 38.w,right: 38.w),
-            child: HissTextWidget(
-              textContent: "Your effort has paid off! You've earned \$${HissValueConfigUtils.instance.cashList().first} and are ready to withdraw.",
-              textSize: 16.sp,
-              textColor: "#FFFFFF".toColor(),
-              textAlign: TextAlign.center,
+            // child: HissTextWidget(
+            //   textContent: "Your effort has paid off! You've earned \$${HissValueConfigUtils.instance.cashList().first} and are ready to withdraw.",
+            //   textSize: 16.sp,
+            //   textColor: "#FFFFFF".toColor(),
+            //   textAlign: TextAlign.center,
+            // ),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "Your effort has paid off! You've earned ",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: "#FFFFFF".toColor(),
+                    ),
+                  ),
+                  TextSpan(
+                    text: "\$${HissValueConfigUtils.instance.cashList().first}",
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: "#FFFFFF".toColor(),
+                    ),
+                  ),
+                  TextSpan(
+                    text: " and are ready to withdraw.",
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: "#FFFFFF".toColor(),
+                    ),
+                  ),
+                ]
+              ),
             ),
           ),
           SizedBox(height: 30.h,),
@@ -56,7 +84,7 @@ class FirstReachCashMoneyDialog extends HissRootDialog<FirstReachCashMoneyDialog
               children: [
                 HissImagesWidget(name: "first_reach4", width: 200.w, height: 50.h,),
                 HissTextWidget(
-                  textContent: "Go to",
+                  textContent: "Claim My Reward",
                   textSize: 18.sp,
                   fontWeight: FontWeight.bold,
                   textColor: "#FFFFFF".toColor(),

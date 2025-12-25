@@ -15,6 +15,7 @@ import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
@@ -113,6 +114,7 @@ class HissGiftWidgetController extends HissRootController{
         var count=0;
         var randWheelIndex = _getRandWheelIndex();
         var pre3wheelIndex = _getPre3WheelIndex(randWheelIndex);
+        HissMp3Utils.instance.playOtherMp3(HissMp3Type.zhuan);
         _wheelTimer=Timer.periodic(Duration(milliseconds: 80), (t){
           if(count>=20&&pre3wheelIndex==selectedWheelIndex){
             _stopWheelTimer();
@@ -140,6 +142,7 @@ class HissGiftWidgetController extends HissRootController{
       hissAdEnum: HissAdEnum.ccqes_wheel_rv,
       showAd: HissShowAdUtils.instance.showAd(AdType.reward),
       closeAdCallback: (give){
+        HissUserInfoUtils.instance.updateWheelNum(1);
         HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.gift_spin,params: {"type":"ad"});
         callback.call();
       },
@@ -222,14 +225,17 @@ class HissGiftWidgetController extends HissRootController{
 
   _initCenterGiftTypeList(){
     centerGiftTypeList.clear();
-    centerGiftTypeList.add(HissHomeGiftType.phone);
-    centerGiftTypeList.add(HissHomeGiftType.package23);
-    centerGiftTypeList.add(HissHomeGiftType.card);
-    centerGiftTypeList.add(HissHomeGiftType.chuifengji);
-    centerGiftTypeList.add(HissHomeGiftType.package2025);
-    centerGiftTypeList.add(HissHomeGiftType.game);
-    centerGiftTypeList.add(HissHomeGiftType.pay);
-    centerGiftTypeList.shuffle();
+    var list=[HissHomeGiftType.phone,HissHomeGiftType.package23,HissHomeGiftType.card,HissHomeGiftType.chuifengji,HissHomeGiftType.package2025,HissHomeGiftType.game,HissHomeGiftType.pay];
+    centerGiftTypeList.addAll(list);
+    centerGiftTypeList.addAll(list);
+    centerGiftTypeList.addAll(list);
+    centerGiftTypeList.addAll(list);
+    centerGiftTypeList.addAll(list);
+    centerGiftTypeList.addAll(list);
+    centerGiftTypeList.addAll(list);
+    centerGiftTypeList.addAll(list);
+    centerGiftTypeList.addAll(list);
+    centerGiftTypeList.addAll(list);
   }
 
   _initWheelList(){

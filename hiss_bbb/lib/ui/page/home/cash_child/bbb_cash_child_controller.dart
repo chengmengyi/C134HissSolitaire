@@ -114,7 +114,7 @@ class BBBCashChildController extends HissRootController{
     HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_queue_rv,
-      showAd: kDebugMode?false:true,
+      showAd: true,
       closeAdCallback: (give)async{
         if(give){
           _cashRankWatchVideoCompleted(bean);

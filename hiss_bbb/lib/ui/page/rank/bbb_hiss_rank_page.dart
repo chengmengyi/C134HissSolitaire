@@ -194,7 +194,7 @@ class BBBHissRankPage extends HissRootPage<BBBHissRankController>{
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      HissImagesWidget(name: "icon_money2", width: 28.w, height: 28.w,),
+                      HissImagesWidget(name: "icon_money3", width: 28.w, height: 28.w,),
                       SizedBox(width: 4.w,),
                       HissTextWidget(
                         textContent: "${bean.coins??0}",
