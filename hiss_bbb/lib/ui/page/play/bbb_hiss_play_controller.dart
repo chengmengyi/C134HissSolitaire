@@ -231,7 +231,6 @@ class BBBHissPlayController extends HissRootController{
     }
   }
 
-
   bool onAcceptWithDetails(data,int columnIndex){
     List<HissCardBean> movingCards = data!['cards'];
     if (movingCards.isEmpty){
@@ -477,6 +476,33 @@ class BBBHissPlayController extends HissRootController{
       }
     }
     if(index<0){
+      var canMoveToCardList = _checkCanMoveToCardList(card);
+      if(canMoveToCardList>=0){
+        cardList[colIndex].removeLast();
+        update(["card_list"]);
+        HissSendEventUtils.instance.sendEvent(
+          data: HissEventData(
+            eventCode: HissEventCode.moveToCardList,
+            anyEventValue: {
+              "startGlobalKey":card.globalKey,
+              "endGlobalKey":cardList[canMoveToCardList].last.globalKey,
+              "card":card,
+              "cardWidth":cardWidth,
+              "cardHeight":cardHeight,
+            },
+          ),
+        );
+        await Future.delayed(Duration(milliseconds: 280));
+        _setCardLastShow(colIndex);
+        cardList[canMoveToCardList].add(card);
+        currentScore+=10;
+        canClick=true;
+        update(["card_list","score"]);
+        _startNoOperationTimer();
+        //校验游戏通关了
+        _checkPlayEnd();
+        return;
+      }
       canClick=true;
       return;
     }
@@ -500,6 +526,16 @@ class BBBHissPlayController extends HissRootController{
     _saveSnapshot();
     foundationsList[index].add(card);
     cardList[colIndex].removeLast();
+    _setCardLastShow(colIndex);
+    currentScore+=10;
+    update(["card_list","foundations","score"]);
+    await Future.delayed(Duration(milliseconds: 100));
+    canClick=true;
+    //校验游戏通关了
+    _checkPlayEnd();
+  }
+
+  _setCardLastShow(int colIndex){
     if (cardList[colIndex].isNotEmpty){
       cardList[colIndex].last.front = true;
       HissUserInfoUtils.instance.updateMoney(HissValueConfigUtils.instance.getFlipCardAddNum());
@@ -515,12 +551,6 @@ class BBBHissPlayController extends HissRootController{
       }
       _checkIsDiamondOrGiftPuzzle(showDiamondCard,showGiftPuzzleCard);
     }
-    currentScore+=10;
-    update(["card_list","foundations","score"]);
-    await Future.delayed(Duration(milliseconds: 100));
-    canClick=true;
-    //校验游戏通关了
-    _checkPlayEnd();
   }
 
   _checkIsDiamondOrGiftPuzzle(HissCardBean? diamondCardBean,HissCardBean? giftPuzzleCardBean)async{
@@ -614,20 +644,20 @@ class BBBHissPlayController extends HissRootController{
     } else {
       final card = stockPileList.removeLast();
       card.front = true;
-      var index=-1;
+      var toToFoundationIndex=-1;
       for (int f = 0; f < 4; f++) {
         if (_canMoveToFoundation(card, foundationsList[f])) {
-          index=f;
+          toToFoundationIndex=f;
           break;
         }
       }
-      if(index>=0){
+      if(toToFoundationIndex>=0){
         HissSendEventUtils.instance.sendEvent(
           data: HissEventData(
             eventCode: HissEventCode.aMoveCardToFoundation,
             anyEventValue: {
               "startGlobalKey":stockPileGlobalKey,
-              "endGlobalKey":foundationsGlobalKeyList[index],
+              "endGlobalKey":foundationsGlobalKeyList[toToFoundationIndex],
               "card":card,
               "cardWidth":cardWidth,
               "cardHeight":cardHeight,
@@ -635,9 +665,34 @@ class BBBHissPlayController extends HissRootController{
           ),
         );
         await Future.delayed(Duration(milliseconds: 280));
-        foundationsList[index].add(card);
+        foundationsList[toToFoundationIndex].add(card);
         currentScore+=10;
         update(["foundations","score","card_bg"]);
+        _canClickStockPile=true;
+        _startNoOperationTimer();
+        //校验游戏通关了
+        _checkPlayEnd();
+        return;
+      }
+      var foundationMoveToCardListIndex = _checkCanMoveToCardList(card);
+      if(foundationMoveToCardListIndex>=0){
+        card.showCard=true;
+        HissSendEventUtils.instance.sendEvent(
+          data: HissEventData(
+            eventCode: HissEventCode.moveToCardList,
+            anyEventValue: {
+              "startGlobalKey":stockPileGlobalKey,
+              "endGlobalKey":cardList[foundationMoveToCardListIndex].last.globalKey,
+              "card":card,
+              "cardWidth":cardWidth,
+              "cardHeight":cardHeight,
+            },
+          ),
+        );
+        await Future.delayed(Duration(milliseconds: 280));
+        cardList[foundationMoveToCardListIndex].add(card);
+        currentScore+=10;
+        update(["card_list","score","card_bg"]);
         _canClickStockPile=true;
         _startNoOperationTimer();
         //校验游戏通关了
@@ -681,6 +736,18 @@ class BBBHissPlayController extends HissRootController{
       _canClickStockPile=true;
     });
     _startNoOperationTimer();
+  }
+
+  int _checkCanMoveToCardList(HissCardBean bean){
+    for(var index=0;index<cardList.length;index++){
+      if(cardList[index].isNotEmpty){
+        var last = cardList[index].last;
+        if(last.isCoins!=true&&last.value == bean.value+1&&isRedCard(last.cardType) != isRedCard(bean.cardType)){
+          return index;
+        }
+      }
+    }
+    return -1;
   }
 
   onDragStockPileStarted(){
@@ -996,6 +1063,10 @@ class BBBHissPlayController extends HissRootController{
           },
         ),
     );
+  }
+
+  toCashPage(){
+    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.cash);
   }
 
   @override

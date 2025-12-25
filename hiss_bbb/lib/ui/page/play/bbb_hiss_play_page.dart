@@ -7,6 +7,7 @@ import 'package:hiss_bbb/ui/widget/hiss_deal_card_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_diamond_pig_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_gift_puzzle_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_hint_animator_widget.dart';
+import 'package:hiss_bbb/ui/widget/hiss_move_to_card_list_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_move_to_foundation_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_move_to_waste_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_pig_widget.dart';
@@ -39,6 +40,12 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
             clickSetCallback: (){
               controller.clickSet();
             },
+            clickDiamondCallback: (){
+              controller.clickPig();
+            },
+            clickMoneyCallback: (){
+              controller.toCashPage();
+            },
           ),
           _playInfoWidget(),
           SizedBox(height: 20.h,),
@@ -61,6 +68,7 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
       HissDiamondPigAnimatorWidget(),
       HissGiftPuzzleAnimatorWidget(),
       HissMoveToFoundationAnimatorWidget(),
+      HissMoveToCardListAnimatorWidget(),
       HissBubbleWidget(),
     ],
   );
@@ -487,7 +495,7 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
               onTap: (){
                 controller.clickAdBtn();
               },
-              child: HissImagesWidget(name: "play4", width: 72.w, height: 72.w),
+              child: HissImagesWidget(name: "play12", width: 72.w, height: 72.w),
             ),
           ],
         ),

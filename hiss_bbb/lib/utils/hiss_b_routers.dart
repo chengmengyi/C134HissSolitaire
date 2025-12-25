@@ -1,3 +1,4 @@
+import 'package:hiss_bbb/ui/page/cash_page/cash_page.dart';
 import 'package:hiss_bbb/ui/page/gift/bbb_hiss_gift_page.dart';
 import 'package:hiss_bbb/ui/page/home/bbb_hiss_home_page.dart';
 import 'package:hiss_bbb/ui/page/input_address/bbb_input_address_page.dart';
@@ -15,6 +16,7 @@ class HissBBBRouters{
   static const String pig="/b/pig";
   static const String inputAddress="/b/inputAddress";
   static const String wheel="/b/wheel";
+  static const String cash="/b/cash";
 }
 
 var hissBBBPageList=[
@@ -51,6 +53,11 @@ var hissBBBPageList=[
   GetPage(
       name: HissBBBRouters.wheel,
       page: ()=> BBBWheelPage(),
+      transition: Transition.fadeIn
+  ),
+  GetPage(
+      name: HissBBBRouters.cash,
+      page: ()=> CashPage(),
       transition: Transition.fadeIn
   ),
 ];

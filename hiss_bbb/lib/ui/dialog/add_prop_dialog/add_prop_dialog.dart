@@ -47,32 +47,32 @@ class AddPropDialog extends HissRootDialog<AddPropDialogController>{
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    HissClickWidget(
-                      onTap: (){
-                        controller.clickMoney(hissPropType,dismissCallback);
-                      },
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          HissImagesWidget(name: "btn1", width: 120.w, height: 48.h),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              HissImagesWidget(name: "icon_money", width: 24.w, height: 24.w,),
-                              SizedBox(width: 4.w,),
-                              HissTextWidget(
-                                textContent: "100",
-                                textSize: 20.sp,
-                                textColor: "#FFFFFF".toColor(),
-                                fontWeight: FontWeight.w900,
-                                outlineColor: "#133D03".toColor(),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 6.w,),
+                    // HissClickWidget(
+                    //   onTap: (){
+                    //     controller.clickMoney(hissPropType,dismissCallback);
+                    //   },
+                    //   child: Stack(
+                    //     alignment: Alignment.center,
+                    //     children: [
+                    //       HissImagesWidget(name: "btn1", width: 120.w, height: 48.h),
+                    //       Row(
+                    //         mainAxisSize: MainAxisSize.min,
+                    //         children: [
+                    //           HissImagesWidget(name: "icon_money", width: 24.w, height: 24.w,),
+                    //           SizedBox(width: 4.w,),
+                    //           HissTextWidget(
+                    //             textContent: "100",
+                    //             textSize: 20.sp,
+                    //             textColor: "#FFFFFF".toColor(),
+                    //             fontWeight: FontWeight.w900,
+                    //             outlineColor: "#133D03".toColor(),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // SizedBox(width: 6.w,),
                     HissClickWidget(
                       onTap: (){
                         controller.clickFree(hissPropType,dismissCallback);

@@ -35,6 +35,10 @@ class HissValueConfigUtils{
     }
   }
 
+  test(){
+    _startInitBean();
+  }
+
   //道具增加数量
   int propAddNum()=>1;
 

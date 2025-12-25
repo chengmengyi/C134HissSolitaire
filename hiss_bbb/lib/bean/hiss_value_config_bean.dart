@@ -42,7 +42,7 @@ class HissValueConfigBean {
       });
     }
     diamondPig = json['diamond_pig'] != null ? json['diamond_pig'].cast<int>() : [];
-    diamondPig = json['bubble'] != null ? json['bubble'].cast<int>() : [];
+    bubble = json['bubble'] != null ? json['bubble'].cast<int>() : [];
   }
   List<int>? giftPuzzle;
   CashCard? cashCard;

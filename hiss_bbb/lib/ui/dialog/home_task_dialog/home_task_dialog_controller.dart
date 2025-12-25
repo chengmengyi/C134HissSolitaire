@@ -11,6 +11,7 @@ import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HomeTaskDialogController extends HissRootController{
   List<HissDailyTaskBean> dailyList=[];
@@ -22,7 +23,11 @@ class HomeTaskDialogController extends HissRootController{
   }
 
   clickClaim(HissDailyTaskBean bean)async{
-    if(bean.status!=HissTaskStatus.canClaim){
+    if(bean.status==HissTaskStatus.claimed){
+      return;
+    }
+    if(bean.status==HissTaskStatus.notClaim){
+      showToast("Continue playing to earn rewards");
       return;
     }
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.home_task_c);

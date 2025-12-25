@@ -67,15 +67,33 @@ class SpinRewardDialog extends HissRootDialog<SpinRewardDialogController>{
             ],
           ),
           SizedBox(height: 92.h,),
-          HissVideoBtnWidget(
-            text: "Receive",
-            bg: "spin3",
-            width: 200.w,
-            height: 52.h,
+          HissClickWidget(
             onTap: (){
               controller.clickReceive(type,receiveCallback);
             },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                HissImagesWidget(name: "spin3", width: 200.w, height: 52.h),
+                HissTextWidget(
+                  textContent: "Receive",
+                  textSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  textColor: "#FFFFFF".toColor(),
+                  outlineColor: "#133D03".toColor(),
+                ),
+              ],
+            ),
           ),
+          // HissVideoBtnWidget(
+          //   text: "Receive",
+          //   bg: "spin3",
+          //   width: 200.w,
+          //   height: 52.h,
+          //   onTap: (){
+          //     controller.clickReceive(type,receiveCallback);
+          //   },
+          // ),
         ],
       ),
       Positioned(

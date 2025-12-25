@@ -49,16 +49,19 @@ class BBBHissPigPage extends HissRootPage<BBBHissPigController>{
             alignment: Alignment.topCenter,
             child: Container(
               margin: EdgeInsets.only(top: 22.h),
-              child: HissGradientTextWidget(
-                textContent: "Reach XX to unlock the Diamond Bank.",
-                textSize: 16.sp,
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: ["#FFFFFF".toColor(),"#FFF174".toColor(),],
+              child: GetBuilder<BBBHissPigController>(
+                id: "tips",
+                builder: (_)=>HissGradientTextWidget(
+                  textContent: "Reach ${controller.reachNum} to unlock the Diamond Bank.",
+                  textSize: 16.sp,
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: ["#FFFFFF".toColor(),"#FFF174".toColor(),],
+                  ),
+                  outlineColor: "#821600".toColor(),
+                  fontWeight: FontWeight.bold,
                 ),
-                outlineColor: "#821600".toColor(),
-                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -118,6 +121,23 @@ class BBBHissPigPage extends HissRootPage<BBBHissPigController>{
                           child: HissImagesWidget(name: "pig10", width: 24.w, height: 24.w),
                         ),
                       ),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          margin: EdgeInsets.only(top: 2.h),
+                          child: HissGradientTextWidget(
+                            textContent: "+${infoBean.addNum??0}",
+                            textSize: 16.sp,
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: ["#FFFFFF".toColor(),"#FFF174".toColor(),],
+                            ),
+                            outlineColor: "#821600".toColor(),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 );
@@ -148,6 +168,23 @@ class BBBHissPigPage extends HissRootPage<BBBHissPigController>{
                   child: HissImagesWidget(name: "pig10", width: 24.w, height: 24.w),
                 ),
               ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  margin: EdgeInsets.only(top: 2.h),
+                  child: HissGradientTextWidget(
+                    textContent: "+${controller.lastPigBean?.addNum??0}",
+                    textSize: 16.sp,
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: ["#FFFFFF".toColor(),"#FFF174".toColor(),],
+                    ),
+                    outlineColor: "#821600".toColor(),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
             ],
           ),
         ),

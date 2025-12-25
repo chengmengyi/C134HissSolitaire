@@ -17,7 +17,7 @@ import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class BBBHissPigController extends HissRootController{
-  var currentDiamondNum=0;
+  var currentDiamondNum=0,reachNum=0;
   HissPigInfoBean? lastPigBean;
   List<HissPigInfoBean> pigList=[];
 
@@ -74,7 +74,15 @@ class BBBHissPigController extends HissRootController{
   _initList()async{
     var list = await HissPigUtils.instance.queryPigInfo();
     if(list.isNotEmpty){
+      var indexWhere = list.indexWhere((value)=>value.status==HissPigStatus.lock);
       var diamondPigRewardList = HissValueConfigUtils.instance.getDiamondPigRewardList();
+      if(indexWhere>=0){
+        reachNum=(indexWhere+1)*10-currentDiamondNum;
+        if(reachNum<0){
+          reachNum=0;
+        }
+        update(["tips"]);
+      }
       var diamondRewardIndex=0;
       for(var index=0;index<list.length;index++){
         var infoBean = list[index];
@@ -83,10 +91,14 @@ class BBBHissPigController extends HissRootController{
         }
         if(infoBean.type==HissPigType.coins&&diamondRewardIndex<diamondPigRewardList.length){
           infoBean.addNum=diamondPigRewardList[diamondRewardIndex];
+          diamondRewardIndex++;
         }
       }
       HissPigUtils.instance.updateAllPigInfo(list);
       lastPigBean=list.removeLast();
+      if(diamondPigRewardList.isNotEmpty){
+        lastPigBean?.addNum=diamondPigRewardList.last;
+      }
       if(list.isNotEmpty){
         pigList.addAll(list);
       }

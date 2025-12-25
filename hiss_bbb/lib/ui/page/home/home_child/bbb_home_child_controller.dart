@@ -99,6 +99,8 @@ class BBBHomeChildController extends HissRootController{
 
     // HissMp3Utils.instance.playOtherMp3(HissMp3Type.zhuan);
 
-    HissRoutersUtils.instance.showDialog(child: FirstReachCashMoneyDialog());
+    // HissRoutersUtils.instance.showDialog(child: FirstReachCashMoneyDialog());
+    // HissValueConfigUtils.instance.test();
+    bLevel.saveData(1);
   }
 }
