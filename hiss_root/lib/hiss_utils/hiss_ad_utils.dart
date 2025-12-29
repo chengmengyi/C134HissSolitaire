@@ -2,14 +2,17 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_ios_ad_plugins/data/ad_info_data.dart';
-import 'package:flutter_ios_ad_plugins/data/ad_money_info_bean.dart';
-import 'package:flutter_ios_ad_plugins/data/config_ad_data.dart';
-import 'package:flutter_ios_ad_plugins/flutter_ios_ad_plugins.dart';
-import 'package:flutter_ios_ad_plugins/hep/ad_type.dart';
-import 'package:flutter_ios_ad_plugins/hep/ios_ad_callback.dart';
-import 'package:flutter_ios_ad_plugins/hep/ios_load_ad_result_callback.dart';
+import 'package:flutter_android_ad_plugins/data/ad_info_data.dart';
+import 'package:flutter_android_ad_plugins/data/ad_money_info_bean.dart';
+import 'package:flutter_android_ad_plugins/data/config_ad_data.dart';
+import 'package:flutter_android_ad_plugins/flutter_android_ad_plugins.dart';
+import 'package:flutter_android_ad_plugins/hep/ad_type.dart';
+import 'package:flutter_android_ad_plugins/hep/ios_ad_callback.dart';
+import 'package:flutter_android_ad_plugins/hep/ios_load_ad_result_callback.dart';
 import 'package:hiss_root/hiss_ui/dialog/load_ad_fail_dialog/load_ad_fail_dialog.dart';
+import 'package:hiss_root/hiss_utils/hiss_check_user_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_facebook_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_fk/hiss_fk_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_local.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
@@ -25,11 +28,13 @@ class HissAdUtils{
 
 
   initAd(){
-    FlutterIosAdPlugins.instance.initMax(
+    FlutterAndroidAdPlugins.instance.initMax(
       maxKey: HissLocal.maxAdKeyBase64.base64(),
       data: _getConfigAdData(),
       topOnAppId: "",
       topOnAppKey: "",
+      userConsent: true,
+      doNotSell: false,
       iosLoadAdResultCallback: IosLoadAdResultCallback(
         startLoadAdCallback: (info){
           HissPointUtils.instance.pointEvent(
@@ -72,6 +77,9 @@ class HissAdUtils{
           );
         },
       ),
+      fengKongLogic: () {
+        return HissFkUtils.instance.hasFk();
+      },
     );
   }
 
@@ -83,7 +91,7 @@ class HissAdUtils{
       closeAdCallback.call();
       return;
     }
-    var resultData = FlutterIosAdPlugins.instance.getCacheResultData(adType);
+    var resultData = FlutterAndroidAdPlugins.instance.getCacheResultData(adType);
     if(null==resultData){
       if(adType==AdType.reward){
         showToast("Failed to fetch ads. Please try again later");
@@ -92,7 +100,7 @@ class HissAdUtils{
       }
       return;
     }
-    FlutterIosAdPlugins.instance.showAd(
+    FlutterAndroidAdPlugins.instance.showAd(
       adType: adType,
       iosAdCallback: IosAdCallback(
         showSuccess: (ad,info){
@@ -129,7 +137,7 @@ class HissAdUtils{
       return;
     }
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.ccqes_ad_chance,params: {"ad_pos_id":hissAdEnum.name});
-    var resultData = FlutterIosAdPlugins.instance.getCacheResultData(adType);
+    var resultData = FlutterAndroidAdPlugins.instance.getCacheResultData(adType);
     if(null==resultData){
       HissPointUtils.instance.pointEvent(
         hissPointEnum: HissPointEnum.ccqes_ad_impression_fail,
@@ -138,7 +146,7 @@ class HissAdUtils{
           "reason":"no cache",
         },
       );
-      FlutterIosAdPlugins.instance.loadAdWhenNoCache(adType);
+      FlutterAndroidAdPlugins.instance.loadAdWhenNoCache(adType);
       if(isOpen||adType==AdType.interstitial){
         closeAdCallback.call(true);
         return;
@@ -146,7 +154,7 @@ class HissAdUtils{
       HissRoutersUtils.instance.showDialog(
         child: LoadAdFailDialog(
           tryAgainCallback: (){
-            var data = FlutterIosAdPlugins.instance.getCacheResultData(adType);
+            var data = FlutterAndroidAdPlugins.instance.getCacheResultData(adType);
             if(null==data){
               closeAdCallback.call(adType==AdType.interstitial);
               return;
@@ -170,12 +178,12 @@ class HissAdUtils{
     required Function(bool giveReward) closeAdCallback,
     bool isOpen=false,
 }){
-    FlutterIosAdPlugins.instance.showAd(
+    FlutterAndroidAdPlugins.instance.showAd(
       adType: adType,
       iosAdCallback: IosAdCallback(
         showSuccess: (ad,info){
           HissMp3Utils.instance.stopBgm();
-          _uploadLookAdNumLevel();
+          _uploadLookAdNumLevel(adType,ad,info,hissAdEnum);
           HissPointUtils.instance.adEvent(ad: ad, hissAdEnum: hissAdEnum, adInfoData: info);
         },
         showFail: (){
@@ -207,20 +215,45 @@ class HissAdUtils{
               "ad_pos_id":hissAdEnum.name,
             },
           );
+          if(adType==AdType.reward) {
+            var nowTime = DateTime.now().millisecondsSinceEpoch;
+            var startTime = hissStartShowRvAdTimer.getData();
+            var i = nowTime-startTime;
+            var j = (HissFkUtils.instance.getAdfwfwShortCloseHIss()?.duration??20)*1000;
+            if(i<j){
+              hissFromPlayToCloseRvTimeSoSmallNumCount.saveData(hissFromPlayToCloseRvTimeSoSmallNumCount.getData()+1);
+            }
+          }
           closeAdCallback.call(true);
         },
         revenuePaid: (ad,info){
+          if(adType==AdType.reward) {
+            hissGetTwoRvAdRewardNumCount.saveData(hissGetTwoRvAdRewardNumCount.getData()+1);
+          }
         },
       ),
     );
   }
 
-  _uploadLookAdNumLevel(){
+  _uploadLookAdNumLevel(AdType adType, AdMoneyInfoBean? ad, AdInfoData? info, HissAdEnum hissAdEnum){
     lookAdNum.saveData(lookAdNum.getData()+1);
     var adLevel = localAdLevelLast.getData()+5;
     if(lookAdNum.getData()>=adLevel){
       HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.pv_dall,params: {"ad":adLevel});
       localAdLevelLast.saveData(adLevel);
+    }
+    HissFacebookUtils.instance.uploadRevenueToFacebook(ad);
+    HissCheckUserUtils.instance.uploadAdRevenueToAdjust(ad);
+    
+    if(adType==AdType.reward) {
+      var nowTime = DateTime.now().millisecondsSinceEpoch;
+      hissStartShowRvAdTimer.saveData(nowTime);
+      var i = nowTime-hissLastTimeShowRvTime.getData();
+      var adShortShow = (HissFkUtils.instance.getdwjidwAdShortShowHiss()?.duration??30)*1000;
+      if(i<adShortShow){
+        hissTwoRvAdTimeSoSmallNumCount.saveData(hissTwoRvAdTimeSoSmallNumCount.getData()+1);
+      }
+      hissLastTimeShowRvTime.saveData(DateTime.now().millisecondsSinceEpoch);
     }
   }
 
@@ -259,6 +292,6 @@ class HissAdUtils{
 
 
   updateConfigData(){
-    FlutterIosAdPlugins.instance.updateAdData(_getConfigAdData());
+    FlutterAndroidAdPlugins.instance.updateAdData(_getConfigAdData());
   }
 }

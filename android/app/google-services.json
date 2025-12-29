@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "720423993066",
+    "project_id": "gp134-a212e",
+    "storage_bucket": "gp134-a212e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720423993066:android:2bd536964adebe4e692193",
+        "android_client_info": {
+          "package_name": "com.hisssolitaire.xmas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5n6hkG9iI4cu3gwJr8HaapHMkG24SlCE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

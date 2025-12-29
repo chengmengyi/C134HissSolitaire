@@ -310,6 +310,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_android_ad_plugins:
+    dependency: transitive
+    description:
+      name: flutter_android_ad_plugins
+      sha256: "10b9830e23ed14274d01c689db58171cbe5c3fa2973eea16662e9671bf3831da"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.8"
   flutter_app_lifecycle:
     dependency: transitive
     description:
@@ -326,14 +334,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.1"
-  flutter_ios_ad_plugins:
+  flutter_custom_facebook:
     dependency: transitive
     description:
-      name: flutter_ios_ad_plugins
-      sha256: b429a8e4cb3abe878aca147bc852abfe2e13e8ca975678dc03ebd6daf17eea37
+      name: flutter_custom_facebook
+      sha256: aeb860bb550cd3926a6258efd9c08700accd89aec942bf3b95e31f66cbe028ba
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.5"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -345,11 +353,10 @@ packages:
   flutter_local_notifications:
     dependency: transitive
     description:
-      name: flutter_local_notifications
-      sha256: "19ffb0a8bb7407875555e5e98d7343a633bb73707bae6c6a5f37c90014077875"
-      url: "https://pub.dev"
-    source: hosted
-    version: "19.5.0"
+      path: "hiss_root/plugins/common_notifications-master"
+      relative: true
+    source: path
+    version: "19.3.1"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -450,6 +457,13 @@ packages:
     dependency: "direct main"
     description:
       path: hiss_root
+      relative: true
+    source: path
+    version: "0.0.1"
+  hissfk:
+    dependency: transitive
+    description:
+      path: "hiss_root/plugins/hissfk"
       relative: true
     source: path
     version: "0.0.1"
@@ -817,6 +831,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.6"
+  thinkup_sdk:
+    dependency: transitive
+    description:
+      name: thinkup_sdk
+      sha256: ccc967d22330ffc401b4c9c9c1163768671310774c801f83506ee336ffa7eabb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.8"
   timezone:
     dependency: transitive
     description:

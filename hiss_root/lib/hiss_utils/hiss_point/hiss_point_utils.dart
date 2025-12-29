@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter_check_adjust/dio/dio_hep.dart';
 import 'package:flutter_check_adjust/flutter_check_adjust.dart';
-import 'package:flutter_ios_ad_plugins/data/ad_info_data.dart';
-import 'package:flutter_ios_ad_plugins/data/ad_money_info_bean.dart';
+import 'package:flutter_android_ad_plugins/data/ad_info_data.dart';
+import 'package:flutter_android_ad_plugins/data/ad_money_info_bean.dart';
 import 'package:flutter_tba_info/flutter_tba_info.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';

@@ -10,9 +10,11 @@ import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_fk/hiss_fk_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_root_staorage.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
@@ -36,6 +38,7 @@ class HissUserInfoUtils {
         HissMp3Utils.instance.playOtherMp3(HissMp3Type.money);
         HissMoneyOverlayUtils.instance.showOverlay();
       }
+      var firstCashMoney = HissValueConfigUtils.instance.cashList().first;
       allMoneyNum.saveData(allMoneyNum.getData()+addNum);
       var currentMoneyNum = bMoneyNum.getData();
       _handleMoneyLevel(currentMoneyNum);
@@ -45,9 +48,19 @@ class HissUserInfoUtils {
       }else if(currentMoneyNum>=700&&show700AnimatorTips.getData()){
         show700AnimatorTips.saveData(false);
         _show300700AnimatorDialog(700);
-      }else if(currentMoneyNum>=HissValueConfigUtils.instance.cashList().first&&show1000MoneyDialog.getData()){
+      }else if(currentMoneyNum>=firstCashMoney&&show1000MoneyDialog.getData()){
         show1000MoneyDialog.saveData(false);
         _show1000MoneyDialog();
+      }
+
+      var getRewardNum = hissGetTwoRvAdRewardNumCount.getData();
+      var adLess = HissFkUtils.instance.getAdsfsdfsLessHiss();
+      if(currentMoneyNum>=firstCashMoney&&getRewardNum<adLess){
+        hissHasMoneyToCashRvAdNumLess3.saveData(true);
+      }
+      var adMore = HissFkUtils.instance.getAdMffwfworeHIss();
+      if(currentMoneyNum<firstCashMoney&&getRewardNum>=adMore){
+        hissNoMoneyToCashRvAdNumMore90.saveData(true);
       }
     }
     HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aUpdateMoneyNum));

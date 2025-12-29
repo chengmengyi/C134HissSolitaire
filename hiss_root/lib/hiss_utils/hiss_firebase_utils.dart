@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_facebook_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_fk/hiss_fk_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_local.dart';
 import 'package:hiss_root/hiss_utils/hiss_root_staorage.dart';
 
 class HissFirebaseUtils{
@@ -24,6 +27,7 @@ class HissFirebaseUtils{
     }catch(e){
       await Future.delayed(const Duration(milliseconds: 1000));
       initFirebase();
+      HissFacebookUtils.instance.initFacebook(HissLocal.androidFacebookLocalBase64);
     }
   }
 
@@ -44,6 +48,15 @@ class HissFirebaseUtils{
     if(ccqes_ad_config.isNotEmpty){
       hissAdJsonConfig.saveData(ccqes_ad_config);
       HissAdUtils.instance.updateConfigData();
+    }
+    var hiss_fb = remoteConfig.getString("134hiss_fb");
+    if(hiss_fb.isNotEmpty){
+      HissFacebookUtils.instance.initFacebook(hiss_fb);
+    }
+    var risk_control = remoteConfig.getString("risk_control");
+    if(risk_control.isNotEmpty){
+      hissFkConfigStr.saveData(risk_control);
+      HissFkUtils.instance.initFk();
     }
   }
 }

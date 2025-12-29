@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_app_lifecycle/app_state_observer.dart';
 import 'package:flutter_app_lifecycle/flutter_app_lifecycle.dart';
-import 'package:flutter_ios_ad_plugins/flutter_ios_ad_plugins.dart';
-import 'package:flutter_ios_ad_plugins/hep/ad_type.dart';
+import 'package:flutter_android_ad_plugins/flutter_android_ad_plugins.dart';
+import 'package:flutter_android_ad_plugins/hep/ad_type.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
@@ -28,7 +28,7 @@ class HissAppLifeUtils{
               _back=true;
             });
           }else{
-            if(!FlutterIosAdPlugins.instance.adShowing()){
+            if(!FlutterAndroidAdPlugins.instance.adShowing()){
               HissMp3Utils.instance.playBgm();
             }
             _timer?.cancel();
@@ -37,7 +37,8 @@ class HissAppLifeUtils{
               HissIosNotificationUtils.instance.checkOpenNotification();
               toOpen=false;
             }else{
-              if(_back&&!FlutterIosAdPlugins.instance.adShowing()){
+              if(_back&&!FlutterAndroidAdPlugins.instance.adShowing()){
+                HissIosNotificationUtils.instance.uploadShowNum();
                 HissAdUtils.instance.showBBBAd(
                   adType: AdType.interstitial,
                   hissAdEnum: HissAdEnum.ccqes_launch,
