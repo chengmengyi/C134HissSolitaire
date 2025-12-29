@@ -300,7 +300,7 @@ class BBBHissPlayController extends HissRootController{
       }
     }
 
-    if(stockPileList.isEmpty&&wastePileList.isEmpty&&allFront){
+    if(allFront){
       var foundationIndex=-1,colIndex=-1;
       HissCardBean? card;
       for (int  i = 0; i < cardList.length; i++) {
@@ -319,40 +319,96 @@ class BBBHissPlayController extends HissRootController{
       }
 
       if(null!=card){
-        canClick=false;
-        card.showCard=false;
-        update(["card_list"]);
-        HissSendEventUtils.instance.sendEvent(
-          data: HissEventData(
-            eventCode: HissEventCode.aMoveCardToFoundation,
-            anyEventValue: {
-              "startGlobalKey":card.globalKey,
-              "endGlobalKey":foundationsGlobalKeyList[foundationIndex],
-              "card":card,
-              "cardWidth":cardWidth,
-              "cardHeight":cardHeight,
-            },
-          ),
+        await _moveCardToFoundation(
+          card: card,
+          foundationIndex: foundationIndex,
+          startGlobalKey: card.globalKey,
+          moveCompleted: (){
+            cardList[colIndex].removeLast();
+            if (cardList[colIndex].isNotEmpty){
+              cardList[colIndex].last.front = true;
+            }
+          },
         );
-        await Future.delayed(Duration(milliseconds: 280));
-        card.showCard=true;
-        _saveSnapshot();
-        foundationsList[foundationIndex].add(card);
-        cardList[colIndex].removeLast();
-        if (cardList[colIndex].isNotEmpty){
-          cardList[colIndex].last.front = true;
-        }
-        currentScore+=10;
-        update(["card_list","foundations","score"]);
-        canClick=true;
-        await Future.delayed(Duration(milliseconds: 50));
-        _checkPlayEnd();
       }else{
-        canClick=true;
+        for (var value in stockPileList) {
+          for (int f = 0; f < 4; f++) {
+            if (_canMoveToFoundation(value, foundationsList[f])) {
+              foundationIndex=f;
+              card=value;
+              break;
+            }
+          }
+        }
+        if(null!=card){
+          await _moveCardToFoundation(
+            card: card,
+            startGlobalKey: stockPileGlobalKey,
+            foundationIndex: foundationIndex,
+            moveCompleted: (){
+              stockPileList.remove(card);
+            },
+          );
+        }else{
+          for (var value in wastePileList) {
+            for (int f = 0; f < 4; f++) {
+              if (_canMoveToFoundation(value, foundationsList[f])) {
+                foundationIndex=f;
+                card=value;
+                break;
+              }
+            }
+          }
+          if(null!=card){
+            await _moveCardToFoundation(
+              card: card,
+              startGlobalKey: card.globalKey,
+              foundationIndex: foundationIndex,
+              moveCompleted: (){
+                wastePileList.remove(card);
+              },
+            );
+          }else{
+            canClick=true;
+          }
+        }
       }
     }else{
       canClick=true;
     }
+  }
+
+  _moveCardToFoundation({
+    required HissCardBean card,
+    required int foundationIndex,
+    required GlobalKey? startGlobalKey,
+    required Function() moveCompleted,
+})async{
+    canClick=false;
+    card.showCard=false;
+    update(["card_list"]);
+    HissSendEventUtils.instance.sendEvent(
+      data: HissEventData(
+        eventCode: HissEventCode.aMoveCardToFoundation,
+        anyEventValue: {
+          "startGlobalKey":startGlobalKey,
+          "endGlobalKey":foundationsGlobalKeyList[foundationIndex],
+          "card":card,
+          "cardWidth":cardWidth,
+          "cardHeight":cardHeight,
+        },
+      ),
+    );
+    await Future.delayed(Duration(milliseconds: 280));
+    card.showCard=true;
+    _saveSnapshot();
+    foundationsList[foundationIndex].add(card);
+    moveCompleted.call();
+    currentScore+=10;
+    update(["card_list","foundations","score","stock_pile"]);
+    canClick=true;
+    await Future.delayed(Duration(milliseconds: 50));
+    _checkPlayEnd();
   }
 
   onDragStarted(int colIndex, int rowIndex){
