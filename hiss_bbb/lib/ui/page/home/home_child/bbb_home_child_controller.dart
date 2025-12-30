@@ -33,12 +33,24 @@ import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_local.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_utils.dart';
+import 'package:hiss_root/hiss_utils/hudong/hiss_hudong_utils.dart';
+import 'package:hiss_root/hiss_utils/hudong/hu_dong_url_bean.dart';
 
 class BBBHomeChildController extends HissRootController{
+  HuDongUrlBean? huDongUrlBean;
+
+  @override
+  void onReady() {
+    super.onReady();
+    _getHuDongUrl();
+  }
+
   clickPlay(){
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.home_play);
     HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.play);
@@ -61,9 +73,26 @@ class BBBHomeChildController extends HissRootController{
   }
 
   clickGame(){
-    if(Platform.isIOS){
-      IosHhh.instance.hiss4();
+    // if(Platform.isIOS){
+    //   IosHhh.instance.hiss4();
+    // }
+    var s = huDongUrlBean?.junior??"";
+    if(s.isNotEmpty){
+      var junior = huDongUrlBean?.point?.junior??"";
+      if(junior.isNotEmpty){
+        HissHudongUtils.instance.uploadClickData(junior);
+      }
+      HissRoutersUtils.instance.toWeb(title: "", url: s,);
     }
+  }
+
+  _getHuDongUrl()async{
+    huDongUrlBean = await HissHudongUtils.instance.getHuDongUrl();
+    var ideal = huDongUrlBean?.point?.ideal??"";
+    if(ideal.isNotEmpty){
+      HissHudongUtils.instance.uploadShowData(ideal);
+    }
+    update(["hudong"]);
   }
 
   test()async{
@@ -101,6 +130,9 @@ class BBBHomeChildController extends HissRootController{
 
     // HissRoutersUtils.instance.showDialog(child: FirstReachCashMoneyDialog());
     // HissValueConfigUtils.instance.test();
-    bLevel.saveData(1);
+    // bLevel.saveData(1);
+
+    // print(decrypt(HissLocal.shumengEncryptKey, 134));
+    _getHuDongUrl();
   }
 }

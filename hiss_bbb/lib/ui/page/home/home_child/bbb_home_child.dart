@@ -93,11 +93,20 @@ class BBBHomeChild extends HissRootChild<BBBHomeChildController>{
       Positioned(
         top: 116.h,
         left: 12.w,
-        child: HissClickWidget(
-          onTap: (){
-            controller.clickGame();
+        child: GetBuilder<BBBHomeChildController>(
+          id: "hudong",
+          builder: (_){
+            var s = controller.huDongUrlBean?.agent?.land??"";
+            if(s.isEmpty){
+              return Container();
+            }
+            return HissClickWidget(
+              onTap: (){
+                controller.clickGame();
+              },
+              child: CachedNetworkImage(imageUrl: s,width: 60.w,height: 60.w,),
+            );
           },
-          child: HissImagesWidget(name: "icon_game", width: 44.w, height: 44.w,),
         ),
       ),
       HissBubbleWidget(),

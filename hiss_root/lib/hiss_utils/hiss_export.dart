@@ -9,3 +9,4 @@ export 'package:webview_flutter/webview_flutter.dart';
 export 'package:horizontal_scroller/HorizontalScroller.dart';
 export 'package:ios_hhh/ios_hhh.dart';
 export 'package:in_app_review/in_app_review.dart';
+export 'package:cached_network_image/cached_network_image.dart';

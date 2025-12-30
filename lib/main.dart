@@ -15,6 +15,7 @@ import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_app_life_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_connectivity_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_fk/hiss_fk_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_bbb/utils/hiss_gift_utils.dart' as bHissGiftUtils;
@@ -46,6 +47,7 @@ void main() async{
   HissPigUtils.instance.initPigInfo();
 
   //b
+  HissFkUtils.instance.initShumeng();
   HissConnectivityUtils.instance.initConnectivity();
   HissShowAdUtils.instance.initData();
   bHissGiftUtils.HissGiftUtils.instance.insertTodayGiftInfo();

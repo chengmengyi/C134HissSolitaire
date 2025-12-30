@@ -176,4 +176,8 @@ class HissFkUtils{
   int getAdsfsdfsLessHiss()=>_hissFkConfigBean?.behavior?.wrongDeemAdLess??3;
 
   int getAdMffwfworeHIss()=>_hissFkConfigBean?.behavior?.wrongDeemAdMore??90;
+
+  initShumeng(){
+    Hissfk.instance.initNumberUnitHisswdjowjdo(apiKey: decrypt(HissLocal.shumengEncryptKey, 134));
+  }
 }
