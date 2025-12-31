@@ -21,9 +21,6 @@ class HissFkUtils{
   HissFkConfigBean? _hissFkConfigBean;
 
   bool hasFk(){
-    if(kDebugMode){
-      return false;
-    }
     var data = hissAlreadyFkLocalTag.getData();
     if(data.isNotEmpty){
       var type = HissFkType.values.byName(data);

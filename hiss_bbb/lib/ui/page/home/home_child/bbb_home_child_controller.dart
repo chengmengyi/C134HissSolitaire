@@ -106,7 +106,7 @@ class BBBHomeChildController extends HissRootController{
     //   child: NoMoneyDialog(),
     // );
     // HissValueConfigUtils.instance.initBean();
-    HissUserInfoUtils.instance.updateMoney(-2300);
+    // HissUserInfoUtils.instance.updateMoney(-2300);
 
     // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
 
@@ -136,5 +136,8 @@ class BBBHomeChildController extends HissRootController{
     // print(decrypt(HissLocal.shumengEncryptKey, 134));
     // _getHuDongUrl();
     // HissFkUtils.instance.test();
+
+
+    // print("kkk===${HissFkUtils.instance.hasFk()}");
   }
 }
