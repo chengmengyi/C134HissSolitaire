@@ -56,6 +56,13 @@ class HissCashWidgetController extends HissRootController{
   //点击普通item的提现按钮
   clickNormalItemCash(HissCashListBean bean)async{
     if(bMoneyNum.getData()<bean.totalMoney){
+      var account = await HissCashTaskUtils.instance.queryAccount(cashType);
+      if(account.isNotEmpty){
+        HissRoutersUtils.instance.showDialog(
+          child: NoMoneyDialog(),
+        );
+        return;
+      }
       HissRoutersUtils.instance.showDialog(
         child: InputAccountDialog(
           cashMoney: bean.totalMoney,

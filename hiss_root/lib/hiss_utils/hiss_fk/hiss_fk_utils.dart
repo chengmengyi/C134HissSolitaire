@@ -145,17 +145,28 @@ class HissFkUtils{
     }
   }
 
+  test()async{
+    //simulator
+    var fefmoefkoeulator = await Hissfk.instance.simulatorHisswdjowjdo();
+    print("kk===${fefmoefkoeulator}===${_hissFkConfigBean?.ui?.device!=0}====${_checkDedwdwdvice(HissFkType.simulatorHissfjffejo)}");
+    // _uploadFfwqdwdwkCustomData({HissFkType.simulatorHissfjffejo.name:fefmoefkoeulator?1:0});
+    // if(fefmoefkoeulator&&_hissFkConfigBean?.ui?.device!=0&&_checkDedwdwdvice(HissFkType.simulatorHissfjffejo)){
+    //   _saveFkTypedjiwjdowj(HissFkType.simulatorHissfjffejo);
+    // }
+  }
 
   _saveFkTypedjiwjdowj(HissFkType tag){
     hissAlreadyFkLocalTag.saveData(tag.name);
-    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.risk_chance,params: {"risk_from":tag.name.replaceAll("Hissfjffejo", "")});
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.risk_chance,params: {"risk_from":_moveTag(tag)});
   }
 
   _uploadFfwqdwdwkCustomData(Map<String,dynamic> map){
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.session_custom,params: map);
   }
 
-  bool _checkDedwdwdvice(HissFkType tag)=>_hissFkConfigBean?.device?.contains(tag.name)==true;
+  bool _checkDedwdwdvice(HissFkType tag)=>_hissFkConfigBean?.device?.contains(_moveTag(tag))==true;
+
+  String _moveTag(HissFkType tag)=>tag.name.replaceAll("Hissfjffejo", "");
 
   bool _twoRvAdTimeSoSmall(){
     var data = hissTwoRvAdTimeSoSmallNumCount.getData();

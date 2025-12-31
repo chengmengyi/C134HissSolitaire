@@ -33,6 +33,7 @@ import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_fk/hiss_fk_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_local.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
@@ -105,7 +106,7 @@ class BBBHomeChildController extends HissRootController{
     //   child: NoMoneyDialog(),
     // );
     // HissValueConfigUtils.instance.initBean();
-    // HissUserInfoUtils.instance.updateMoney(100);
+    HissUserInfoUtils.instance.updateMoney(-2300);
 
     // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
 
@@ -133,6 +134,7 @@ class BBBHomeChildController extends HissRootController{
     // bLevel.saveData(1);
 
     // print(decrypt(HissLocal.shumengEncryptKey, 134));
-    _getHuDongUrl();
+    // _getHuDongUrl();
+    // HissFkUtils.instance.test();
   }
 }
