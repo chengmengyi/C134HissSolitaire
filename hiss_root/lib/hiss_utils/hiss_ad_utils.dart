@@ -9,6 +9,7 @@ import 'package:flutter_android_ad_plugins/flutter_android_ad_plugins.dart';
 import 'package:flutter_android_ad_plugins/hep/ad_type.dart';
 import 'package:flutter_android_ad_plugins/hep/ios_ad_callback.dart';
 import 'package:flutter_android_ad_plugins/hep/ios_load_ad_result_callback.dart';
+import 'package:hiss_root/hiss_ui/dialog/ad_limit_dialog/ad_limit_dialog.dart';
 import 'package:hiss_root/hiss_ui/dialog/load_ad_fail_dialog/load_ad_fail_dialog.dart';
 import 'package:hiss_root/hiss_utils/hiss_check_user_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_facebook_utils.dart';
@@ -134,6 +135,10 @@ class HissAdUtils{
   }){
     if(!showAd){
       closeAdCallback.call(adType==AdType.interstitial);
+      return;
+    }
+    if(HissFkUtils.instance.hasFk()){
+      HissRoutersUtils.instance.showDialog(child: AdLimitDialog());
       return;
     }
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.ccqes_ad_chance,params: {"ad_pos_id":hissAdEnum.name});
