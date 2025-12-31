@@ -1052,10 +1052,12 @@ public class FlutterLocalNotificationsPlugin
       } else {
         try {
           int resId = getDrawableResourceId(context, beautifulStyleInformation.image);
+            Log.e("qwer", beautifulStyleInformation.image+"kkkkk"+resId);
           small.setImageViewResource(R.id.fln_beauty_notify_image, resId);
           big.setImageViewResource(R.id.fln_beauty_notify_image, resId);
         } catch (Throwable e) {
           //
+            Log.e("qwer", e.getMessage());
         }
       }
     }

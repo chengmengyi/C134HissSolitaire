@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <item
+        name="asd"
+        type="drawable"
+        tools:keep="@drawable/asd" />
+    <item
+        name="logo"
+        type="drawable"
+        tools:keep="@drawable/logo" />
+</resources>

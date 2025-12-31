@@ -191,7 +191,7 @@ class HissIosNotificationUtils{
       styleInformation: BeautyStyleInformation(
         title,
         body,
-        'big',
+        'asd',
         'Go Earn',
         'logo',
       ),
@@ -209,6 +209,7 @@ class HissIosNotificationUtils{
         payload: "local"
     );
   }
+
 
   _initFcm(String fcmStr)async{
     var result = await plugin.subscribeToTopic(
@@ -229,6 +230,30 @@ class HissIosNotificationUtils{
     );
   }
 
+  test(){
+    AndroidNotificationDetails details = AndroidNotificationDetails(
+      'hiss_channel',
+      'hiss_channel_name',
+      styleInformation: BeautyStyleInformation(
+        "title",
+        "bodybodybodybodybodybodybodybodybodybodybodybodybodybodybody",
+        'asd',
+        'Go Earn',
+        'logo',
+      ),
+      priority: Priority.high,
+      importance: Importance.high,
+      groupKey: "11",
+    );
+    plugin.show(
+        11,
+        "title",
+        "bodybodybodybodybodybodybodybodybodybodybodybodybodybodybody",
+        notificationDetails: details,
+        payload: "local"
+    );
+  }
+
   _showLock()async{
     var title = lockTitle.random();
     var desc = lockDesc.random();
@@ -246,7 +271,7 @@ class HissIosNotificationUtils{
         styleInformation: BeautyStyleInformation(
           title,
           desc,
-          'big',
+          'asd',
           'Go Earn',
           'logo',
         ),

@@ -34,6 +34,7 @@ import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_fk/hiss_fk_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_ios_notification_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_local.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
@@ -139,5 +140,7 @@ class BBBHomeChildController extends HissRootController{
 
 
     // print("kkk===${HissFkUtils.instance.hasFk()}");
+
+    HissIosNotificationUtils.instance.test();
   }
 }
