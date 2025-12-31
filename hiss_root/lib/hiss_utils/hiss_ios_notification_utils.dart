@@ -121,6 +121,10 @@ class HissIosNotificationUtils{
   }
 
   init()async{
+    var status = await Permission.notification.request();
+    if(!status.isGranted){
+      return;
+    }
     uploadShowNum();
     var success = await plugin.initialize(
       AndroidInitializationSettings("logo"),
