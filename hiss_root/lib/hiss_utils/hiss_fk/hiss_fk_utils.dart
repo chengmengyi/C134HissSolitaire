@@ -21,6 +21,9 @@ class HissFkUtils{
   HissFkConfigBean? _hissFkConfigBean;
 
   bool hasFk(){
+    if(kDebugMode){
+      return false;
+    }
     var data = hissAlreadyFkLocalTag.getData();
     if(data.isNotEmpty){
       var type = HissFkType.values.byName(data);
@@ -62,7 +65,9 @@ class HissFkUtils{
     }catch(e){
       _hissFkConfigBean=HissFkConfigBean.fromJson(jsonDecode(HissLocal.androidFkConfigBase64.base64()));
     }
-    FlutterAndroidAdPlugins.instance.setEverydayWatchAdNum(_hissFkConfigBean?.behavior?.adDailyShow??60);
+    if(_hissFkConfigBean?.ui?.behavior==1){
+      FlutterAndroidAdPlugins.instance.setEverydayWatchAdNum(_hissFkConfigBean?.behavior?.adDailyShow??60);
+    }
 
     //root
     var rofefefeoot = await Hissfk.instance.rootHisswdjowjdo();

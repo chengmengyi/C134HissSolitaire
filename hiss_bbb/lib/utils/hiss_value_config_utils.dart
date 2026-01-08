@@ -50,6 +50,8 @@ class HissValueConfigUtils{
   //悬浮气泡
   double getBubbleAddNum()=> _getRandomDouble(_configBean?.bubble??[10,15]);
 
+  int getSuperToolTime()=>_configBean?.superTool??15;
+
   //翻开一张牌
   double getFlipCardAddNum(){
     var list = _configBean?.openCollectCard??[];

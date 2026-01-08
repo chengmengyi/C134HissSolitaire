@@ -33,7 +33,6 @@ class BBBHissHomeController extends HissRootController{
     HissMp3Utils.instance.playBgm();
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.user_source,params: {"from":"b"});
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.home_page);
-    HissIosNotificationUtils.instance.init();
     IosHhh.instance.hiss2();
     IosHhh.instance.hiss3();
     HissFkUtils.instance.initFk();

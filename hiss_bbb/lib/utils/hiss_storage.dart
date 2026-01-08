@@ -23,6 +23,9 @@ class HissStorageKey{
   static const String notificationGiveReward="notificationGiveReward";
   static const String showGoodComment="showGoodComment";
   static const String showPuzzleGuide="showPuzzleGuide";
+  static const String newUser="newUser";
+  static const String firstMoveCardToFoundations="firstMoveCardToFoundations";
+  static const String firstGetPuzzle="firstGetPuzzle";
 }
 
 StorageData<double> bMoneyNum=StorageData<double>(key: HissStorageKey.bMoney, defaultValue: 0.0);
@@ -49,3 +52,6 @@ StorageData<bool> show1000MoneyDialog=StorageData<bool>(key: HissStorageKey.show
 StorageData<bool> notificationGiveReward=StorageData<bool>(key: HissStorageKey.notificationGiveReward, defaultValue: true);
 StorageData<bool> showGoodComment=StorageData<bool>(key: HissStorageKey.showGoodComment, defaultValue: true);
 StorageData<bool> showPuzzleGuide=StorageData<bool>(key: HissStorageKey.showPuzzleGuide, defaultValue: true);
+StorageData<bool> newUser=StorageData<bool>(key: HissStorageKey.newUser, defaultValue: true);
+StorageData<bool> firstMoveCardToFoundations=StorageData<bool>(key: HissStorageKey.firstMoveCardToFoundations, defaultValue: true);
+StorageData<bool> firstGetPuzzle=StorageData<bool>(key: HissStorageKey.firstGetPuzzle, defaultValue: true);

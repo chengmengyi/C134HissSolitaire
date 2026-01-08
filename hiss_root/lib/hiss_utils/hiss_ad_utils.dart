@@ -58,13 +58,14 @@ class HissAdUtils{
             },
           );
         },
-        loadAdFailCallback: (info){
+        loadAdFailCallback: (info,failReason){
           HissPointUtils.instance.pointEvent(
             hissPointEnum: HissPointEnum.ccqes_ad_return_fail,
             params: {
               "ad_code_id":info?.adId,
               "ad_format":info?.adType.name,
               "ad_platform":info?.adPlat,
+              "reason":failReason,
             },
           );
         },
@@ -138,6 +139,10 @@ class HissAdUtils{
       return;
     }
     if(HissFkUtils.instance.hasFk()){
+      if(isOpen||adType==AdType.interstitial){
+        closeAdCallback.call(true);
+        return;
+      }
       HissRoutersUtils.instance.showDialog(child: AdLimitDialog());
       return;
     }

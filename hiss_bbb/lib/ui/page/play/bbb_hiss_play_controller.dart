@@ -3,8 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/bean/game_state_snapshot_bean.dart';
 import 'package:hiss_bbb/bean/hiss_card_bean.dart';
+import 'package:hiss_bbb/bean/hiss_empty_place_bean.dart';
 import 'package:hiss_bbb/bean/hiss_hint_bean.dart';
 import 'package:hiss_bbb/ui/dialog/add_prop_dialog/add_prop_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/first_get_puzzle_dialog/first_get_puzzle_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/first_move_card_to_foundations_dialog/first_move_card_to_foundations_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/money_card_reward_dialog/money_card_reward_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/random_prop_dialog/random_prop_dialog.dart';
@@ -38,7 +41,7 @@ class BBBHissPlayController extends HissRootController{
   var cardWidth=0.0,cardHeight=0.0,_canClickStockPile=true,_canClickResetPlay=true,
       currentScore=0,currentStep=0,currentTime=0,appBackground=false,_showRandomPropDialog=true,
       canClick=true;
-  bool _isDragging = false;
+  bool _isDragging = false,showEmptyTips=false,_firstGetRewardShowing=false,_canShowFirstGetPuzzle=false;
   int? _draggingFromCol;
   int? _draggingStartIndex;
   List<List<HissCardBean>> foundationsList=[[],[],[],[]];
@@ -60,6 +63,13 @@ class BBBHissPlayController extends HissRootController{
 
   Timer? _playGameTimer;
   Timer? _noOperationTimer;
+  Timer? _emptyTipsTimer;
+
+  List<HissEmptyPlaceBean> emptyPlaceList=[
+    HissEmptyPlaceBean(lock: false,globalKey: GlobalKey()),
+    HissEmptyPlaceBean(lock: true,globalKey: GlobalKey()),
+    HissEmptyPlaceBean(lock: true,globalKey: GlobalKey()),
+  ];
 
   @override
   void onInit() {
@@ -93,7 +103,7 @@ class BBBHissPlayController extends HissRootController{
     double screenWidth = MediaQuery.of(buildContext).size.width;
     cardWidth = (screenWidth-68.w)/7;
     cardHeight = cardWidth/0.68;
-    update(["foundations","stock_pile","card_bg"]);
+    update(["foundations","stock_pile","card_bg","empty_place"]);
 
     List<HissCardBean> fullDeck = [];
     for (var type in HissCardType.values) {
@@ -471,11 +481,22 @@ class BBBHissPlayController extends HissRootController{
           child: RandomPropDialog(
             dismissCallback: (HissPropType hissPropType){
               _showPropMoveAnimator(hissPropType);
+              _showEmptyPlaceTips();
             },
           ),
         );
       }
       _showRandomPropDialog=false;
+    });
+  }
+
+  _showEmptyPlaceTips(){
+    showEmptyTips=true;
+    update(["empty_tip"]);
+    _emptyTipsTimer=Timer(Duration(milliseconds: 3000), (){
+      _emptyTipsTimer?.cancel();
+      showEmptyTips=false;
+      update(["empty_tip"]);
     });
   }
 
@@ -582,6 +603,7 @@ class BBBHissPlayController extends HissRootController{
     _saveSnapshot();
     foundationsList[index].add(card);
     cardList[colIndex].removeLast();
+    _checkFirstMoveCardToFoundations();
     _setCardLastShow(colIndex);
     currentScore+=10;
     update(["card_list","foundations","score"]);
@@ -642,6 +664,7 @@ class BBBHissPlayController extends HissRootController{
       await Future.delayed(Duration(milliseconds: 500));
       HissUserInfoUtils.instance.updateWheelNum(1);
       _checkShowPuzzleGuide();
+      _checkFirstGetPuzzle();
     }
   }
 
@@ -723,6 +746,7 @@ class BBBHissPlayController extends HissRootController{
         await Future.delayed(Duration(milliseconds: 280));
         foundationsList[toToFoundationIndex].add(card);
         currentScore+=10;
+        _checkFirstMoveCardToFoundations();
         update(["foundations","score","card_bg"]);
         _canClickStockPile=true;
         _startNoOperationTimer();
@@ -794,6 +818,43 @@ class BBBHissPlayController extends HissRootController{
     _startNoOperationTimer();
   }
 
+  _checkFirstMoveCardToFoundations(){
+    if(!firstMoveCardToFoundations.getData()){
+      return;
+    }
+    _firstGetRewardShowing=true;
+    firstMoveCardToFoundations.saveData(false);
+    HissRoutersUtils.instance.showDialog(
+      child: FirstMoveCardToFoundationsDialog(
+        callback: (){
+          _firstGetRewardShowing=false;
+          if(_canShowFirstGetPuzzle){
+            _checkFirstGetPuzzle();
+          }
+        },
+      ),
+    );
+  }
+
+  _checkFirstGetPuzzle(){
+    if(!firstGetPuzzle.getData()){
+      return;
+    }
+    _canShowFirstGetPuzzle=true;
+    if(_firstGetRewardShowing){
+      return;
+    }
+    firstGetPuzzle.saveData(false);
+    HissRoutersUtils.instance.showDialog(
+      child: FirstGetPuzzleDialog(
+        toPuzzlePageCallback: (){
+          clickGiftBtn();
+        },
+      ),
+    );
+    _canShowFirstGetPuzzle=false;
+  }
+
   int _checkCanMoveToCardList(HissCardBean bean){
     for(var index=0;index<cardList.length;index++){
       if(cardList[index].isNotEmpty){
@@ -852,11 +913,12 @@ class BBBHissPlayController extends HissRootController{
     foundationsList = GameStateSnapshotBean.cloneColumns(last.foundations);
     stockPileList = GameStateSnapshotBean.cloneList(last.stockPile);
     wastePileList = GameStateSnapshotBean.cloneList(last.wastePile);
+    emptyPlaceList = GameStateSnapshotBean.cloneEmptyPlaceList(last.emptyPlace);
 
     _isDragging = false;
     _draggingFromCol = null;
     _draggingStartIndex = null;
-    update(["stock_pile","foundations","card_list"]);
+    update(["stock_pile","foundations","card_list","empty_place"]);
     HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.back, addNum: -1);
     HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.tool);
     HissCashTaskUtils.instance.updateCashTask(HissTaskType.tool);
@@ -1012,7 +1074,7 @@ class BBBHissPlayController extends HissRootController{
   }
 
   _saveSnapshot() {
-    _historyList.add(GameStateSnapshotBean.from(cardList, foundationsList, stockPileList, wastePileList));
+    _historyList.add(GameStateSnapshotBean.from(cardList, foundationsList, stockPileList, wastePileList,emptyPlaceList));
   }
 
   _startTimer(){
@@ -1103,6 +1165,129 @@ class BBBHissPlayController extends HissRootController{
     _checkPlayEnd();
   }
 
+  bool emptyPlaceOnWillAccept(Map<String, dynamic>? data, HissEmptyPlaceBean bean){
+    if(null==data||data['fromWaste'] == true){
+      return false;
+    }
+    List<HissCardBean> moving = data["cards"];
+    if (moving.length != 1){
+      return false;
+    }
+    if(null==bean.hissCardBean&&bean.lock){
+      _unlockEmptyPlace(bean);
+      return false;
+    }
+    return null==bean.hissCardBean&&!bean.lock;
+  }
+
+  emptyPlaceOnAccept(Map<String, dynamic> data, int index){
+    _saveSnapshot();
+    HissCardBean card = data['cards'][0];
+    emptyPlaceList[index].hissCardBean=card;
+    int fromCol = data['fromCol'];
+    int startIndex = data['startIndex'];
+    cardList[fromCol].removeAt(startIndex);
+    HissCardBean? showDiamondCard;
+    HissCardBean? showGiftPuzzleCard;
+    if (cardList[fromCol].isNotEmpty){
+      var fromLast = cardList[fromCol].last;
+      fromLast.front = true;
+      if(fromLast.isCoins!=true){
+        if(fromLast.isGift==true){
+          showGiftPuzzleCard=fromLast;
+        }else if(HissValueConfigUtils.instance.showDiamondIcon()){
+          showDiamondCard=fromLast;
+        }
+      }
+    }
+    _checkIsDiamondOrGiftPuzzle(showDiamondCard,showGiftPuzzleCard);
+    update(["empty_place","card_list"]);
+  }
+
+  clickEmptyPlaceItem(int index)async{
+    if(!canClick){
+      return;
+    }
+    var bean = emptyPlaceList[index];
+    if(null==bean.hissCardBean&&bean.lock){
+      _unlockEmptyPlace(bean);
+      return;
+    }
+    var card = bean.hissCardBean;
+    if(null==card){
+      return;
+    }
+
+    var foundationIndex=-1;
+    for (int f = 0; f < 4; f++) {
+      if (_canMoveToFoundation(card, foundationsList[f])) {
+        foundationIndex=f;
+        break;
+      }
+    }
+    canClick=false;
+    if(foundationIndex<0){
+      var canMoveToCardList = _checkCanMoveToCardList(card);
+      if(canMoveToCardList>=0){
+        bean.hissCardBean=null;
+        update(["empty_place"]);
+        HissSendEventUtils.instance.sendEvent(
+          data: HissEventData(
+            eventCode: HissEventCode.moveToCardList,
+            anyEventValue: {
+              "startGlobalKey":bean.globalKey,
+              "endGlobalKey":cardList[canMoveToCardList].last.globalKey,
+              "card":card,
+              "cardWidth":cardWidth,
+              "cardHeight":cardHeight,
+            },
+          ),
+        );
+        await Future.delayed(Duration(milliseconds: 280));
+        cardList[canMoveToCardList].add(card);
+        canClick=true;
+        update(["card_list"]);
+        return;
+      }
+      canClick=true;
+      return;
+    }
+    _cancelNoOperationTimer();
+    HissSendEventUtils.instance.sendEvent(
+      data: HissEventData(
+        eventCode: HissEventCode.aMoveCardToFoundation,
+        anyEventValue: {
+          "startGlobalKey":bean.globalKey,
+          "endGlobalKey":foundationsGlobalKeyList[foundationIndex],
+          "card":card,
+          "cardWidth":cardWidth,
+          "cardHeight":cardHeight,
+        },
+      ),
+    );
+    await Future.delayed(Duration(milliseconds: 280));
+    _saveSnapshot();
+    foundationsList[foundationIndex].add(card);
+    currentScore+=10;
+    bean.hissCardBean=null;
+    update(["foundations","score","empty_place"]);
+    canClick=true;
+  }
+
+  _unlockEmptyPlace(HissEmptyPlaceBean bean){
+    HissAdUtils.instance.showBBBAd(
+      adType: AdType.reward,
+      hissAdEnum: HissAdEnum.ccqes_placeholder_rv,
+      showAd: HissShowAdUtils.instance.showAd(AdType.reward),
+      closeAdCallback: (give){
+        if(give){
+          bean.lock=false;
+          update(["empty_place"]);
+        }
+      },
+    );
+  }
+
   _checkShowPuzzleGuide(){
     if(!showPuzzleGuide.getData()){
       return;
@@ -1150,6 +1335,7 @@ class BBBHissPlayController extends HissRootController{
   void onClose() {
     _playGameTimer?.cancel();
     _noOperationTimer?.cancel();
+    _emptyTipsTimer?.cancel();
     playGamePageOpen=false;
     super.onClose();
   }

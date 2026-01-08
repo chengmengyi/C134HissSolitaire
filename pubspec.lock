@@ -338,10 +338,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_android_ad_plugins
-      sha256: "10b9830e23ed14274d01c689db58171cbe5c3fa2973eea16662e9671bf3831da"
+      sha256: "8e5ac8ca6fe71f1fd0b9e4e6b84845fb525b8c2ee3153b1d2995d63dc731876e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.8"
+    version: "0.0.9"
   flutter_app_lifecycle:
     dependency: transitive
     description:

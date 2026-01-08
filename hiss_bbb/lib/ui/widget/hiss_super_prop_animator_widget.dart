@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/super_prop_dialog/super_prop_dialog.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_stateful.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_breath_animator_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
@@ -30,7 +31,7 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
   @override
   void initState() {
     super.initState();
-    _timer=Timer.periodic(Duration(seconds: 40), (t){
+    _timer=Timer.periodic(Duration(seconds: HissValueConfigUtils.instance.getSuperToolTime()), (t){
       if(_appIsBack){
         return;
       }

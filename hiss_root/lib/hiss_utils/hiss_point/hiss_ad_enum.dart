@@ -18,4 +18,5 @@ enum HissAdEnum{
   ccqes_card_rv,
   ccqes_card_int,
   ccqes_task_int,
+  ccqes_placeholder_rv,
 }

@@ -55,6 +55,7 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
           _bottomWidget(),
         ],
       ),
+      _emptyPlaceWidget(),
       HissSuperPropAnimatorWidget(),
       HissDealCardAnimatorWidget(
         allAnimatorCompletedCallback: (){
@@ -587,6 +588,106 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
           ],
         ),
       ],
+    ),
+  );
+
+  _emptyPlaceWidget()=>Align(
+    alignment: Alignment.bottomCenter,
+    child: Container(
+      margin: EdgeInsets.only(bottom: 148.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _emptyPlaceTipsWidget(),
+          GetBuilder<BBBHissPlayController>(
+            id: "empty_place",
+            builder: (_){
+              if(controller.cardWidth<=0){
+                return Container();
+              }
+              return SizedBox(
+                height: controller.cardHeight+14.w,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.emptyPlaceList.length,
+                  itemBuilder: (context,index){
+                    var list = controller.emptyPlaceList[index];
+                    Widget widget;
+                    if(null==list.hissCardBean){
+                      widget = HissImagesWidget(name: "icon_empty_place", width: controller.cardWidth, height: controller.cardHeight);
+                    }else{
+                      widget = HissImagesWidget(name: getCardImages(list.hissCardBean), width: controller.cardWidth, height: controller.cardHeight,);
+                    }
+                    return DragTarget<Map<String, dynamic>>(
+                      onWillAccept: (data) {
+                        return controller.emptyPlaceOnWillAccept(data,list);
+                      },
+                      onAccept: (data) {
+                        controller.emptyPlaceOnAccept(data,index);
+                      },
+                      builder: (context, candidateData, rejectedData) {
+                        return Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            HissClickWidget(
+                              onTap: (){
+                                controller.clickEmptyPlaceItem(index);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(top: 14.w),
+                                child: SizedBox(
+                                  key: list.globalKey,
+                                  child: widget,
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: list.lock,
+                              child: HissImagesWidget(name: "icon_video", width: 28.w, height: 28.w),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  separatorBuilder: (context, index) => SizedBox(width: 6.w,),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    ),
+  );
+
+  _emptyPlaceTipsWidget()=>GetBuilder<BBBHissPlayController>(
+    id: "empty_tip",
+    builder: (_)=>Visibility(
+      visible: controller.showEmptyTips,
+      child: Container(
+        margin: EdgeInsets.only(bottom: 8.h),
+        child: SizedBox(
+          width: 220.w,
+          height: 68.h,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              HissImagesWidget(name: "empty_tip_bg", width: double.infinity, height: double.infinity),
+              Container(
+                margin: EdgeInsets.only(left: 10.w,right: 10.w,top: 10.h),
+                child: HissTextWidget(
+                  textContent: "Temporary Spaces To Help\nYou Progress.",
+                  textSize: 14.sp,
+                  textAlign: TextAlign.center,
+                  textColor: "#FFFFFF".toColor(),
+                  outlineColor: "#3D2603".toColor(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     ),
   );
 }

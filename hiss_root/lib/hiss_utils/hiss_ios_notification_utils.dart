@@ -125,7 +125,6 @@ class HissIosNotificationUtils{
     if(!status.isGranted){
       return;
     }
-    uploadShowNum();
     var success = await plugin.initialize(
       AndroidInitializationSettings("logo"),
       onDidReceiveNotificationResponse: (
@@ -181,7 +180,6 @@ class HissIosNotificationUtils{
     }else{
       HissRoutersUtils.instance.showDialog(child: OpenNotificationDialog());
     }
-    checkClickByLaunchApp();
   }
 
   _show(id,title,body,repeatDurationInterval,)async{

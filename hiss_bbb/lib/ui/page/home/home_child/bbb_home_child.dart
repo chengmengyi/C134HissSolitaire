@@ -92,7 +92,7 @@ class BBBHomeChild extends HissRootChild<BBBHomeChildController>{
       ),
       Positioned(
         top: 116.h,
-        left: 12.w,
+        left: 0,
         child: GetBuilder<BBBHomeChildController>(
           id: "hudong",
           builder: (_){
@@ -104,7 +104,7 @@ class BBBHomeChild extends HissRootChild<BBBHomeChildController>{
               onTap: (){
                 controller.clickGame();
               },
-              child: CachedNetworkImage(imageUrl: s,width: 60.w,height: 60.w,),
+              child: CachedNetworkImage(imageUrl: s,width: 100.w,height: 100.w,),
             );
           },
         ),
