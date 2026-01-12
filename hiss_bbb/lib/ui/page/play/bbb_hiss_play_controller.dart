@@ -566,6 +566,7 @@ class BBBHissPlayController extends HissRootController{
       );
       card.isWheel=false;
       update(["card_list"]);
+      canClick=true;
       return;
     }
     var index=-1;

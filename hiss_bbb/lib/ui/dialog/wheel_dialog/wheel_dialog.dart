@@ -37,7 +37,7 @@ class WheelDialog extends HissRootDialog<WheelDialogController>{
           LayoutBuilder(
             builder: (context,bc){
               var size = bc.maxWidth;
-              var radius = (size / 2 - 30)*0.8;
+              var radius = (size / 2 - 30)*0.7;
               return AnimatedBuilder(
                 animation: controller.wheelAnimation!,
                 builder: (context,child)=>Transform.rotate(
@@ -45,7 +45,7 @@ class WheelDialog extends HissRootDialog<WheelDialogController>{
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      HissImagesWidget(name: "whee2", width: double.infinity, height: double.infinity),
+                      HissImagesWidget(name: "wheel2", width: double.infinity, height: double.infinity),
                       ...List.generate(
                         controller.wheelList.length, (i) =>
                           _wheelItemWidget(
