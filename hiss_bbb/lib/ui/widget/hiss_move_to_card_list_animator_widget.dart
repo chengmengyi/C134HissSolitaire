@@ -18,11 +18,11 @@ class _HissMoveToFoundationAnimatorWidgetState extends HissRootStatefulState<His
   var cardWidth=0.0,cardHeight=0.0;
   AnimationController? animationController;
   Animation<Offset>? animation;
-  HissCardBean? cardBean;
+  List<HissCardBean>? cardBeanList;
 
   @override
   initContent() {
-    if(null==animationController||null==animation){
+    if(null==animationController||null==animation||null==cardBeanList){
       return Container();
     }
     return AnimatedBuilder(
@@ -31,7 +31,14 @@ class _HissMoveToFoundationAnimatorWidgetState extends HissRootStatefulState<His
         return Positioned(
           left: animation!.value.dx,
           top: animation!.value.dy,
-          child: HissImagesWidget(name: getCardImages(cardBean), width: cardWidth, height: cardHeight,),
+          child: Stack(
+            children: List.generate(cardBeanList?.length??0, (index){
+              return Container(
+                margin: EdgeInsets.only(top: index * (8.h)),
+                child: HissImagesWidget(name: getCardImages(cardBeanList?[index]), width: cardWidth, height: cardHeight,),
+              );
+            }),
+          ),
         );
       },
     );
@@ -54,7 +61,7 @@ class _HissMoveToFoundationAnimatorWidgetState extends HissRootStatefulState<His
     cardHeight = anyEventValue["cardHeight"];
     GlobalKey startGlobalKey=anyEventValue["startGlobalKey"];
     GlobalKey endGlobalKey=anyEventValue["endGlobalKey"];
-    cardBean=anyEventValue["card"];
+    cardBeanList=anyEventValue["cardList"];
     var startRenderBox = startGlobalKey.currentContext?.findRenderObject() as RenderBox;
     var startOffset = startRenderBox.localToGlobal(Offset.zero);
     var endRenderBox = endGlobalKey.currentContext?.findRenderObject() as RenderBox;

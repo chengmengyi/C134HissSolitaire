@@ -5,6 +5,7 @@ import 'package:hiss_bbb/bean/game_state_snapshot_bean.dart';
 import 'package:hiss_bbb/bean/hiss_card_bean.dart';
 import 'package:hiss_bbb/bean/hiss_empty_place_bean.dart';
 import 'package:hiss_bbb/bean/hiss_hint_bean.dart';
+import 'package:hiss_bbb/bean/super_prop_card_bean.dart';
 import 'package:hiss_bbb/ui/dialog/add_prop_dialog/add_prop_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/first_get_puzzle_dialog/first_get_puzzle_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/first_move_card_to_foundations_dialog/first_move_card_to_foundations_dialog.dart';
@@ -12,6 +13,7 @@ import 'package:hiss_bbb/ui/dialog/money_card_reward_dialog/money_card_reward_di
 import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/random_prop_dialog/random_prop_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/set_dialog/set_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/wheel_dialog/wheel_dialog.dart';
 import 'package:hiss_bbb/ui/widget/hiss_puzzle_overlay.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_bbb/utils/hiss_cash_task_utils.dart';
@@ -39,7 +41,7 @@ import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class BBBHissPlayController extends HissRootController{
   var cardWidth=0.0,cardHeight=0.0,_canClickStockPile=true,_canClickResetPlay=true,
-      currentScore=0,currentStep=0,currentTime=0,appBackground=false,_showRandomPropDialog=true,
+      currentScore=0,currentStep=0,currentTime=0,appBackground=false,
       canClick=true;
   bool _isDragging = false,showEmptyTips=false,_firstGetRewardShowing=false,_canShowFirstGetPuzzle=false;
   int? _draggingFromCol;
@@ -64,6 +66,9 @@ class BBBHissPlayController extends HissRootController{
   Timer? _playGameTimer;
   Timer? _noOperationTimer;
   Timer? _emptyTipsTimer;
+
+  Offset? giftGuideOffset;
+  Timer? _giftGuideTimer;
 
   List<HissEmptyPlaceBean> emptyPlaceList=[
     HissEmptyPlaceBean(lock: false,globalKey: GlobalKey()),
@@ -200,7 +205,9 @@ class BBBHissPlayController extends HissRootController{
   }
 
   _randomSetCoinsAndGifts(List<List<HissCardBean>> list2D, int coinsNum, int puzzleNum,) {
+    final spinNum = HissValueConfigUtils.instance.getSpinNum();
     final random = Random();
+
     final allPos = <_Pos>[];
 
     for (int i = 0; i < list2D.length; i++) {
@@ -211,33 +218,47 @@ class BBBHissPlayController extends HissRootController{
         final item = row[j];
         item.isCoins = false;
         item.isGift = false;
-
+        item.isWheel = false;
         if (j == row.length - 1) continue;
 
         allPos.add(_Pos(i, j));
       }
     }
+
     if (allPos.isEmpty) return;
+
     allPos.shuffle(random);
-    final coinsCount = coinsNum.clamp(0, allPos.length);
 
     final usedPos = <_Pos>{};
 
-    for (int i = 0; i < coinsCount; i++) {
+    final coinCount = coinsNum.clamp(0, allPos.length);
+    for (int i = 0; i < coinCount; i++) {
       final p = allPos[i];
       list2D[p.i][p.j].isCoins = true;
       usedPos.add(p);
     }
+
     final giftCandidates =
     allPos.where((p) => !usedPos.contains(p)).toList();
 
-    if (giftCandidates.isEmpty) return;
     giftCandidates.shuffle(random);
-    final giftCount = puzzleNum.clamp(0, giftCandidates.length);
 
+    final giftCount = puzzleNum.clamp(0, giftCandidates.length);
     for (int i = 0; i < giftCount; i++) {
       final p = giftCandidates[i];
       list2D[p.i][p.j].isGift = true;
+      usedPos.add(p);
+    }
+
+    final wheelCandidates =
+    allPos.where((p) => !usedPos.contains(p)).toList();
+
+    wheelCandidates.shuffle(random);
+
+    final wheelCount = spinNum.clamp(0, wheelCandidates.length);
+    for (int i = 0; i < wheelCount; i++) {
+      final p = wheelCandidates[i];
+      list2D[p.i][p.j].isWheel = true;
     }
   }
 
@@ -278,6 +299,9 @@ class BBBHissPlayController extends HissRootController{
       if (cardList[fromCol].isNotEmpty){
         var fromLast = cardList[fromCol].last;
         fromLast.front = true;
+        if(fromLast.isWheel==true){
+          HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_spin_card);
+        }
         if(fromLast.isCoins!=true){
           if(fromLast.isGift==true){
             showGiftPuzzleCard=fromLast;
@@ -406,10 +430,11 @@ class BBBHissPlayController extends HissRootController{
           "card":card,
           "cardWidth":cardWidth,
           "cardHeight":cardHeight,
+          "fromAuto":true,
         },
       ),
     );
-    await Future.delayed(Duration(milliseconds: 280));
+    await Future.delayed(Duration(milliseconds: 80));
     card.showCard=true;
     _saveSnapshot();
     foundationsList[foundationIndex].add(card);
@@ -476,17 +501,7 @@ class BBBHissPlayController extends HissRootController{
       }
       update(["card_list"]);
       _canClickResetPlay=true;
-      if(_showRandomPropDialog){
-        HissRoutersUtils.instance.showDialog(
-          child: RandomPropDialog(
-            dismissCallback: (HissPropType hissPropType){
-              _showPropMoveAnimator(hissPropType);
-              _showEmptyPlaceTips();
-            },
-          ),
-        );
-      }
-      _showRandomPropDialog=false;
+      _showEmptyPlaceTips();
     });
   }
 
@@ -501,11 +516,15 @@ class BBBHissPlayController extends HissRootController{
   }
 
   tryAutoMoveToFoundation(int colIndex, int rowIndex, List<HissCardBean> list,) async{
-    if (!canClick||rowIndex != list.length - 1){
+    if (!canClick){
+      return;
+    }
+    final card = cardList[colIndex][rowIndex];
+    if (!card.front){
+      canClick=true;
       return;
     }
     canClick=false;
-    final card = cardList[colIndex][rowIndex];
     if(card.isCoins==true){
       HissUserInfoUtils.instance.showGoodCommentDialog(
         callback: (){
@@ -541,8 +560,12 @@ class BBBHissPlayController extends HissRootController{
       );
       return;
     }
-    if (rowIndex != cardList[colIndex].length - 1 || !card.front){
-      canClick=true;
+    if(card.isWheel==true){
+      HissRoutersUtils.instance.showDialog(
+        child: WheelDialog(),
+      );
+      card.isWheel=false;
+      update(["card_list"]);
       return;
     }
     var index=-1;
@@ -555,7 +578,9 @@ class BBBHissPlayController extends HissRootController{
     if(index<0){
       var canMoveToCardList = _checkCanMoveToCardList(card);
       if(canMoveToCardList>=0){
-        cardList[colIndex].removeLast();
+        var sublist = cardList[colIndex].sublist(rowIndex,cardList[colIndex].length);
+        cardList[colIndex].removeRange(rowIndex, cardList[colIndex].length);
+        // cardList[colIndex].removeLast();
         update(["card_list"]);
         HissSendEventUtils.instance.sendEvent(
           data: HissEventData(
@@ -563,7 +588,7 @@ class BBBHissPlayController extends HissRootController{
             anyEventValue: {
               "startGlobalKey":card.globalKey,
               "endGlobalKey":cardList[canMoveToCardList].last.globalKey,
-              "card":card,
+              "cardList":sublist,
               "cardWidth":cardWidth,
               "cardHeight":cardHeight,
             },
@@ -571,7 +596,7 @@ class BBBHissPlayController extends HissRootController{
         );
         await Future.delayed(Duration(milliseconds: 280));
         _setCardLastShow(colIndex);
-        cardList[canMoveToCardList].add(card);
+        cardList[canMoveToCardList].addAll(sublist);
         currentScore+=10;
         canClick=true;
         update(["card_list","score"]);
@@ -663,7 +688,6 @@ class BBBHissPlayController extends HissRootController{
       );
       await Future.delayed(Duration(milliseconds: 500));
       HissUserInfoUtils.instance.updateWheelNum(1);
-      _checkShowPuzzleGuide();
       _checkFirstGetPuzzle();
     }
   }
@@ -686,7 +710,6 @@ class BBBHissPlayController extends HissRootController{
           step: currentStep,
           dismissCallback: (){
             HissUserInfoUtils.instance.updateUserLevel();
-            _showRandomPropDialog=true;
             clickResetPlay();
           },
         ),
@@ -763,7 +786,7 @@ class BBBHissPlayController extends HissRootController{
             anyEventValue: {
               "startGlobalKey":stockPileGlobalKey,
               "endGlobalKey":cardList[foundationMoveToCardListIndex].last.globalKey,
-              "card":card,
+              "cardList":[card],
               "cardWidth":cardWidth,
               "cardHeight":cardHeight,
             },
@@ -838,6 +861,7 @@ class BBBHissPlayController extends HissRootController{
 
   _checkFirstGetPuzzle(){
     if(!firstGetPuzzle.getData()){
+      _checkShowPuzzleGuide();
       return;
     }
     _canShowFirstGetPuzzle=true;
@@ -894,6 +918,17 @@ class BBBHissPlayController extends HissRootController{
     }
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_retract);
     if(bBackPropNum.getData()<=0){
+      if(showNewUserGivePropDialog.getData()){
+        showNewUserGivePropDialog.saveData(false);
+        HissRoutersUtils.instance.showDialog(
+          child: RandomPropDialog(
+            dismissCallback: (HissPropType hissPropType){
+              _showPropMoveAnimator(hissPropType);
+            },
+          ),
+        );
+        return;
+      }
       HissRoutersUtils.instance.showDialog(
         child: AddPropDialog(
           hissPropType: HissPropType.back,
@@ -930,6 +965,17 @@ class BBBHissPlayController extends HissRootController{
     }
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_remind);
     if(bTipsPropNum.getData()<=0){
+      if(showNewUserGivePropDialog.getData()){
+        showNewUserGivePropDialog.saveData(false);
+        HissRoutersUtils.instance.showDialog(
+          child: RandomPropDialog(
+            dismissCallback: (HissPropType hissPropType){
+              _showPropMoveAnimator(hissPropType);
+            },
+          ),
+        );
+        return;
+      }
       HissRoutersUtils.instance.showDialog(
         child: AddPropDialog(
           hissPropType: HissPropType.tips,
@@ -1237,7 +1283,7 @@ class BBBHissPlayController extends HissRootController{
             anyEventValue: {
               "startGlobalKey":bean.globalKey,
               "endGlobalKey":cardList[canMoveToCardList].last.globalKey,
-              "card":card,
+              "cardList":[card],
               "cardWidth":cardWidth,
               "cardHeight":cardHeight,
             },
@@ -1275,6 +1321,7 @@ class BBBHissPlayController extends HissRootController{
   }
 
   _unlockEmptyPlace(HissEmptyPlaceBean bean){
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.placeholder_card);
     HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_placeholder_rv,
@@ -1289,21 +1336,29 @@ class BBBHissPlayController extends HissRootController{
   }
 
   _checkShowPuzzleGuide(){
-    if(!showPuzzleGuide.getData()){
-      return;
-    }
+
+    // if(!showPuzzleGuide.getData()){
+    //   return;
+    // }
+    //实物对话框显示
     showPuzzleGuide.saveData(false);
     var renderBox = giftPuzzleGlobalKey.currentContext?.findRenderObject() as RenderBox;
-    var offset = renderBox.localToGlobal(Offset.zero);
-    HissOverlayUtils.instance.showOverlay(
-        context: buildContext,
-        widget: HissPuzzleOverlay(
-          offset: offset,
-          callback: (){
-            HissOverlayUtils.instance.hideOverlay();
-          },
-        ),
-    );
+    giftGuideOffset = renderBox.localToGlobal(Offset.zero);
+    update(["gift_guide"]);
+    _giftGuideTimer?.cancel();
+    _giftGuideTimer=Timer(Duration(milliseconds: 3000), (){
+      giftGuideOffset=null;
+      update(["gift_guide"]);
+    });
+    // HissOverlayUtils.instance.showOverlay(
+    //     context: buildContext,
+    //     widget: HissPuzzleOverlay(
+    //       offset: offset,
+    //       callback: (){
+    //         HissOverlayUtils.instance.hideOverlay();
+    //       },
+    //     ),
+    // );
   }
 
   toCashPage(){
@@ -1328,7 +1383,134 @@ class BBBHissPlayController extends HissRootController{
       case HissEventCode.updateWheelNum:
         update(["wheel_num"]);
         break;
+      case HissEventCode.useSuperProp:
+        useSuperProp();
+        break;
     }
+  }
+
+  //使用超级道具，就是把牌区或者待牌区抽4张牌移动到收纳区
+  useSuperProp()async{
+    List<SuperPropCardBean> resultListFromCardList=[];
+    for(var foundationIndex=0;foundationIndex<foundationsList.length;foundationIndex++){
+      var foundationsValue = foundationsList[foundationIndex];
+      HissCardBean? targetBean;
+      if(foundationsValue.isNotEmpty){
+        targetBean=foundationsValue.last;
+      }
+      var hissCardBean = _getCanToFoundationsInAllCard(targetBean,resultListFromCardList);
+      if(null!=hissCardBean){
+        resultListFromCardList.add(SuperPropCardBean(cardBean: hissCardBean,foundationIndex: foundationIndex,fromCardList: true));
+      }else{
+        var hissCardBean2 = _getCanToFoundationsFromWaste(targetBean,resultListFromCardList);
+        if(null!=hissCardBean2){
+          resultListFromCardList.add(SuperPropCardBean(cardBean: hissCardBean2,foundationIndex: foundationIndex,fromWaste: true));
+        }else{
+          var hissCardBean3 = _getCanToFoundationsFromStock(targetBean,resultListFromCardList);
+          if(null!=hissCardBean3){
+            resultListFromCardList.add(SuperPropCardBean(cardBean: hissCardBean3,foundationIndex: foundationIndex,fromStock: true));
+          }
+        }
+      }
+    }
+    if(resultListFromCardList.isNotEmpty){
+      canClick=false;
+      for (var value in resultListFromCardList) {
+        HissSendEventUtils.instance.sendEvent(
+          data: HissEventData(
+            eventCode: HissEventCode.aMoveCardToFoundation,
+            anyEventValue: {
+              "startGlobalKey":value.fromStock==true?stockPileGlobalKey:value.cardBean.globalKey,
+              "endGlobalKey":foundationsGlobalKeyList[value.foundationIndex??0],
+              "card":value.cardBean,
+              "cardWidth":cardWidth,
+              "cardHeight":cardHeight,
+            },
+          ),
+        );
+        await Future.delayed(Duration(milliseconds: 300));
+        _saveSnapshot();
+        foundationsList[value.foundationIndex??0].add(value.cardBean);
+        currentScore+=10;
+        for (var value1 in cardList) {
+          value1.removeWhere((v)=>v.value==value.cardBean.value&&v.cardType==value.cardBean.cardType);
+          if(value1.isNotEmpty&&!value1.last.front){
+            value1.last.front=true;
+          }
+        }
+        update(["card_list","foundations","score","stock_pile"]);
+        await Future.delayed(Duration(milliseconds: 100));
+      }
+      canClick=true;
+      await Future.delayed(Duration(milliseconds: 50));
+      _checkPlayEnd();
+      return;
+    }
+  }
+
+  //从全部牌区选出4个能移动到收纳区的牌
+  HissCardBean? _getCanToFoundationsInAllCard(HissCardBean? targetBean,List<SuperPropCardBean> resourceList){
+    for (var value in cardList) {
+      for (var value1 in value) {
+        var indexWhere = resourceList.indexWhere((v)=>v.cardBean.value==value1.value&&v.cardBean.cardType==value1.cardType);
+        if(value1.isCoins==true||indexWhere>=0){
+          continue;
+        }
+        //直接找A
+        if(null==targetBean){
+          if(value1.value==1){
+            return value1;
+          }
+        }else{
+          if(targetBean.value+1==value1.value&&isRedCard(targetBean.cardType) == isRedCard(value1.cardType)){
+            return value1;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  //从waste选出能移动到收纳区的牌
+  HissCardBean? _getCanToFoundationsFromWaste(HissCardBean? targetBean,List<SuperPropCardBean> resourceList){
+    for (var value1 in wastePileList) {
+      var indexWhere = resourceList.indexWhere((v)=>v.cardBean.value==value1.value&&v.cardBean.cardType==value1.cardType);
+      if(indexWhere>=0){
+        continue;
+      }
+      //直接找A
+      if(null==targetBean){
+        if(value1.value==1){
+          return value1;
+        }
+      }else{
+        if(targetBean.value+1==value1.value&&isRedCard(targetBean.cardType) == isRedCard(value1.cardType)){
+          return value1;
+        }
+      }
+    }
+    return null;
+  }
+
+  //从stock选出能移动到收纳区的牌
+  HissCardBean? _getCanToFoundationsFromStock(HissCardBean? targetBean,List<SuperPropCardBean> resourceList){
+    for (var value1 in stockPileList) {
+      var indexWhere = resourceList.indexWhere((v)=>v.cardBean.value==value1.value&&v.cardBean.cardType==value1.cardType);
+      if(indexWhere>=0){
+        continue;
+      }
+      //直接找A
+      if(null==targetBean){
+        if(value1.value==1){
+          return value1;
+        }
+      }else{
+        if(targetBean.value+1==value1.value&&isRedCard(targetBean.cardType) == isRedCard(value1.cardType)){
+          return value1;
+        }
+      }
+    }
+    return null;
   }
 
   @override
@@ -1336,6 +1518,7 @@ class BBBHissPlayController extends HissRootController{
     _playGameTimer?.cancel();
     _noOperationTimer?.cancel();
     _emptyTipsTimer?.cancel();
+    _giftGuideTimer?.cancel();
     playGamePageOpen=false;
     super.onClose();
   }

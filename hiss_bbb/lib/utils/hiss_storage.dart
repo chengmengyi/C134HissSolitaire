@@ -26,6 +26,7 @@ class HissStorageKey{
   static const String newUser="newUser";
   static const String firstMoveCardToFoundations="firstMoveCardToFoundations";
   static const String firstGetPuzzle="firstGetPuzzle";
+  static const String showNewUserGivePropDialog="showNewUserGivePropDialog";
 }
 
 StorageData<double> bMoneyNum=StorageData<double>(key: HissStorageKey.bMoney, defaultValue: 0.0);
@@ -55,3 +56,4 @@ StorageData<bool> showPuzzleGuide=StorageData<bool>(key: HissStorageKey.showPuzz
 StorageData<bool> newUser=StorageData<bool>(key: HissStorageKey.newUser, defaultValue: true);
 StorageData<bool> firstMoveCardToFoundations=StorageData<bool>(key: HissStorageKey.firstMoveCardToFoundations, defaultValue: true);
 StorageData<bool> firstGetPuzzle=StorageData<bool>(key: HissStorageKey.firstGetPuzzle, defaultValue: true);
+StorageData<bool> showNewUserGivePropDialog=StorageData<bool>(key: HissStorageKey.showNewUserGivePropDialog, defaultValue: true);

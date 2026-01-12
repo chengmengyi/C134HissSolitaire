@@ -11,6 +11,9 @@ String getCardImages(HissCardBean? bean){
   if(bean?.isCoins==true){
     return "icon_card_money";
   }
+  if(bean?.isWheel==true){
+    return "icon_card_wheel";
+  }
   return "${bean?.cardType.name}${bean?.value}";
 }
 

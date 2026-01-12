@@ -29,10 +29,21 @@ class BBBHissPigPage extends HissRootPage<BBBHissPigController>{
           child: HissImagesWidget(name: "icon_close", width: 28.w, height: 28.w),
         ),
       ),
-      Positioned(
-        left: 116.w,
-        bottom: 456.h,
-        child: HissImagesWidget(name: controller.getDiamondIcon(), width: 64.w, height: 64.w),
+      Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          margin: EdgeInsets.only(top: 240.h),
+          child: Stack(
+            children: [
+              HissImagesWidget(name: "pig16",width: 248.w,height: 200.h,),
+              Positioned(
+                left: 50.w,
+                top: 50.h,
+                child: HissImagesWidget(name: controller.getDiamondIcon(), width: 64.w, height: 64.w),
+              ),
+            ],
+          ),
+        ),
       ),
     ],
   );

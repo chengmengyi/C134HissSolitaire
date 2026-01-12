@@ -6,6 +6,9 @@ import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
@@ -29,8 +32,9 @@ class SuperPropDialogController extends HissRootController{
       showAd: HissShowAdUtils.instance.showAd(AdType.reward),
       closeAdCallback: (give){
         if(give){
-          HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.back, addNum: HissValueConfigUtils.instance.propAddNum());
-          HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.tips, addNum: HissValueConfigUtils.instance.propAddNum());
+          HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.useSuperProp));
+          // HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.back, addNum: HissValueConfigUtils.instance.propAddNum());
+          // HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.tips, addNum: HissValueConfigUtils.instance.propAddNum());
         }
         HissRoutersUtils.instance.close();
         claimCallback.call();

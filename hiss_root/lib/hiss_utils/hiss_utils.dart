@@ -118,6 +118,15 @@ double doubleMul(num1,num2){
   }
 }
 
+
+double doubleDiv(num1,num2){
+  try{
+    return (Decimal.parse("$num1")/Decimal.parse("$num2")).toDouble();
+  }catch(e){
+    return 0.0;
+  }
+}
+
 //加密：“data”：原始字符串；“code”：需求文档标题前的项目编号
 String encrypt(String data, int code) {
   final dataBytes = utf8.encode(data);

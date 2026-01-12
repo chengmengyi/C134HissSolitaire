@@ -135,7 +135,7 @@ class HissAdUtils{
     bool isOpen=false,
   }){
     if(!showAd){
-      closeAdCallback.call(adType==AdType.interstitial);
+      closeAdCallback.call(kDebugMode||adType==AdType.interstitial);
       return;
     }
     if(HissFkUtils.instance.hasFk()){

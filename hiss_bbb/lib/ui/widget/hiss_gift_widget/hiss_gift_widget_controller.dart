@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:hiss_bbb/bean/hiss_gift_reward_task_bean.dart';
 import 'package:hiss_bbb/bean/hiss_home_gift_progress_bean.dart';
 import 'package:hiss_bbb/ui/dialog/spin_reward_dialog/spin_reward_dialog.dart';
@@ -210,7 +211,9 @@ class HissGiftWidgetController extends HissRootController{
 
   int _getRandWheelIndex(){
     while(true){
-      String random = wheelList.random();
+      // String random = wheelList.random();
+      String random = Random().nextInt(80)<100?HissHomeGiftType.phone:HissHomeGiftType.pay;
+
       var indexWhere = wheelList.indexWhere((value)=>value==random);
       if(wheelList[indexWhere].isNotEmpty){
         return indexWhere;

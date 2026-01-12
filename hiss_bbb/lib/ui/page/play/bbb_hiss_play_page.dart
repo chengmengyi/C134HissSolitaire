@@ -55,6 +55,7 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
           _bottomWidget(),
         ],
       ),
+      _giftGuideWidget(),
       _emptyPlaceWidget(),
       HissSuperPropAnimatorWidget(),
       HissDealCardAnimatorWidget(
@@ -232,10 +233,14 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
         controller.onAccept(data,colIndex);
       },
       builder: (context, candidateData, rejectedData){
+        var length = list.length;
         return SizedBox(
           height: double.infinity,
           child: Stack(
-            children: List.generate(list.length, (rowIndex){
+            children: List.generate(length==0?1:length, (rowIndex){
+              if(length==0){
+                return HissImagesWidget(name: "icon_empty_place", width: controller.cardWidth, height: controller.cardHeight);
+              }
               var bean = list[rowIndex];
               if(controller.isCardBeingDragged(colIndex, rowIndex)){
                 return Container(
@@ -689,5 +694,36 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
         ),
       ),
     ),
+  );
+
+  _giftGuideWidget()=>GetBuilder<BBBHissPlayController>(
+    id: "gift_guide",
+    builder: (_){
+      if(null==controller.giftGuideOffset){
+        return Container();
+      }
+      var dx = controller.giftGuideOffset?.dx??0;
+      var dy = controller.giftGuideOffset?.dy??0;
+      return Container(
+        margin: EdgeInsets.only(left: dx+80.w,top: dy-70.h),
+        child: Stack(
+          children: [
+            HissImagesWidget(name: "puzzle_guide", width: 220.w, height: 68.h),
+            Container(
+              width: 220.w,
+              height: 68.h,
+              padding: EdgeInsets.only(left: 10.w,right: 10.w,top: 10.h),
+              child: HissTextWidget(
+                textContent: "Receive a surprise gift puzzle",
+                textSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                textColor: "#FFFFFF".toColor(),
+                outlineColor: "#3D2603".toColor(),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
   );
 }

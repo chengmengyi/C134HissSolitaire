@@ -9,9 +9,11 @@ class HissValueConfigBean {
       this.settlementReward, 
       this.rankReward, 
       this.cyclicReward, 
+      this.spinReward,
       this.diamondPig,
       this.bubble,
       this.superTool,
+      this.spinNum,
   });
 
   HissValueConfigBean.fromJson(dynamic json) {
@@ -19,6 +21,7 @@ class HissValueConfigBean {
     cashCard = json['cash_card'] != null ? CashCard.fromJson(json['cash_card']) : null;
     diamondNum = json['diamond_num'];
     superTool = json['super_tool'];
+    spinNum = json['spin_num'];
     if (json['open_collect_card'] != null) {
       openCollectCard = [];
       json['open_collect_card'].forEach((v) {
@@ -43,6 +46,12 @@ class HissValueConfigBean {
         cyclicReward?.add(CyclicReward.fromJson(v));
       });
     }
+    if (json['spin_reward'] != null) {
+      spinReward = [];
+      json['spin_reward'].forEach((v) {
+        spinReward?.add(CyclicReward.fromJson(v));
+      });
+    }
     diamondPig = json['diamond_pig'] != null ? json['diamond_pig'].cast<int>() : [];
     bubble = json['bubble'] != null ? json['bubble'].cast<int>() : [];
   }
@@ -53,9 +62,11 @@ class HissValueConfigBean {
   List<SettlementReward>? settlementReward;
   List<RankReward>? rankReward;
   List<CyclicReward>? cyclicReward;
+  List<CyclicReward>? spinReward;
   List<int>? diamondPig;
   List<int>? bubble;
   int? superTool;
+  int? spinNum;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -76,9 +87,13 @@ class HissValueConfigBean {
     if (cyclicReward != null) {
       map['cyclic_reward'] = cyclicReward?.map((v) => v.toJson()).toList();
     }
+    if (spinReward != null) {
+      map['spin_reward'] = spinReward?.map((v) => v.toJson()).toList();
+    }
     map['diamond_pig'] = diamondPig;
     map['bubble'] = bubble;
     map['super_tool'] = superTool;
+    map['spin_num'] = spinNum;
     return map;
   }
 

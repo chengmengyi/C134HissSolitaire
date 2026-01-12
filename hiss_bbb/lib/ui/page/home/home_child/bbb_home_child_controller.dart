@@ -16,15 +16,19 @@ import 'package:hiss_bbb/ui/dialog/money_card_reward_dialog/money_card_reward_di
 import 'package:hiss_bbb/ui/dialog/new_user_dialog/new_user_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/no_money_dialog/no_money_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/random_prop_dialog/random_prop_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/spin_reward_dialog/spin_reward_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/spin_reward_task_dialog/spin_reward_task_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/super_prop_dialog/super_prop_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/verify_account_dialog/verify_account_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/wheel_dialog/wheel_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_bbb/utils/hiss_cash_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_daily_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_cash_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_gift_reward_task_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_home_gift_type.dart';
+import 'package:hiss_bbb/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_task_queue_config_utils.dart';
@@ -141,6 +145,7 @@ class BBBHomeChildController extends HissRootController{
     // HissDailyTaskUtils.instance.updateDailyTaskProgress(HissTaskType.game);
     // HissMp3Utils.instance.playOtherMp3(HissMp3Type.puzzle);
     // bLevel.saveData(1);
+    // bLevel.saveData(1);
     // HissUserInfoUtils.instance.updateUserLevel();
     // bLevel.saveData(1);
     // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
@@ -160,6 +165,18 @@ class BBBHomeChildController extends HissRootController{
     // print("kkk===${HissFkUtils.instance.hasFk()}");
 
     // HissIosNotificationUtils.instance.test();
-    HissRoutersUtils.instance.showDialog(child: FirstGetPuzzleDialog(toPuzzlePageCallback: (){}));
+    // HissRoutersUtils.instance.showDialog(child: FirstGetPuzzleDialog(toPuzzlePageCallback: (){}));
+
+    // HissRoutersUtils.instance.showDialog(
+    //   child: RandomPropDialog(
+    //     dismissCallback: (HissPropType hissPropType){
+    //
+    //     },
+    //   ),
+    // );
+
+    HissRoutersUtils.instance.showDialog(
+      child: WheelDialog(),
+    );
   }
 }

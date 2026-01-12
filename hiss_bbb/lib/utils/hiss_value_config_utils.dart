@@ -89,6 +89,27 @@ class HissValueConfigUtils{
     return 0.5;
   }
 
+  int getSpinNum()=>_configBean?.spinNum??3;
+
+  List<int> getWheelRewardList(){
+    var defaultList=[25, 45, 30, 40, 25, 25, 35, 45];
+    var list = _configBean?.spinReward??[];
+    if(list.isEmpty){
+      return defaultList;
+    }
+    var data = allMoneyNum.getData();
+    var last = list.last;
+    if(data>=(last.max??1000)){
+      return last.reward??defaultList;
+    }
+    for(var value in list){
+      if(data>=(value.min??0)&&data<(value.max??0)){
+        return value.reward??defaultList;
+      }
+    }
+    return defaultList;
+  }
+
   int getPlaySuccessOnlyAddNum()=>10;
 
   List<int> cashList()=>[1000,1200,1500];
