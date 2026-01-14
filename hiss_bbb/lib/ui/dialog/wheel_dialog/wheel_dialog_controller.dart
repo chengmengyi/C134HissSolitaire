@@ -35,11 +35,12 @@ class WheelDialogController extends HissRootController with GetSingleTickerProvi
     clickSpin();
   }
 
-  clickSpin(){
+  clickSpin()async{
     if(!canClick){
       return;
     }
     canClick=false;
+    await Future.delayed(Duration(milliseconds: 1000));
     _wheelAnimationController..reset()..forward();
   }
 

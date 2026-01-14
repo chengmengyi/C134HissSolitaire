@@ -6,6 +6,7 @@ import 'package:hiss_bbb/bean/hiss_cash_task_bean.dart';
 import 'package:hiss_bbb/ui/dialog/cash_success_dialog/cash_success_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/cash_task_dialog/cash_task_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/first_get_puzzle_dialog/first_get_puzzle_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/first_input_account_reward_dialog/first_input_account_reward_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/first_move_card_to_foundations_dialog/first_move_card_to_foundations_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/first_reach_cash_money_dialog/first_reach_cash_money_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/good_comment/good_comment_dialog.dart';
@@ -147,7 +148,7 @@ class BBBHomeChildController extends HissRootController{
     // bLevel.saveData(1);
     // bLevel.saveData(1);
     // HissUserInfoUtils.instance.updateUserLevel();
-    // bLevel.saveData(1);
+    bLevel.saveData(1);
     // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
     // HissUserInfoUtils.instance.updateWheelNum(1);
 
@@ -175,8 +176,9 @@ class BBBHomeChildController extends HissRootController{
     //   ),
     // );
 
-    HissRoutersUtils.instance.showDialog(
-      child: WheelDialog(),
-    );
+
+    // HissRoutersUtils.instance.showDialog(
+    //   child: PlaySuccessDialog(time: 100, step: 100, score: 100, dismissCallback: () {  },),
+    // );
   }
 }

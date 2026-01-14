@@ -139,10 +139,6 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
                   child: Draggable<Map<String, dynamic>>(
                     data: {"fromWaste": true, "cards": [controller.wastePileList[index]]},
                     onDragStarted: () {
-                      // setState(() {
-                      //   _isDragging = true;
-                      //   _draggingCards = [wastePile[index]];
-                      // });
                       controller.onDragStockPileStarted();
                     },
                     onDragCompleted: () {
@@ -618,42 +614,72 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
                   itemCount: controller.emptyPlaceList.length,
                   itemBuilder: (context,index){
                     var list = controller.emptyPlaceList[index];
-                    Widget widget;
+                    Widget? child;
                     if(null==list.hissCardBean){
-                      widget = HissImagesWidget(name: "icon_empty_place", width: controller.cardWidth, height: controller.cardHeight);
+                      child=HissImagesWidget(name: "icon_empty_place", width: controller.cardWidth, height: controller.cardHeight);
                     }else{
-                      widget = HissImagesWidget(name: getCardImages(list.hissCardBean), width: controller.cardWidth, height: controller.cardHeight,);
+                      child=HissImagesWidget(
+                        name: getCardImages(list.hissCardBean),
+                        width: controller.cardWidth,
+                        height: controller.cardHeight,
+                      );
                     }
-                    return DragTarget<Map<String, dynamic>>(
-                      onWillAccept: (data) {
-                        return controller.emptyPlaceOnWillAccept(data,list);
-                      },
-                      onAccept: (data) {
-                        controller.emptyPlaceOnAccept(data,index);
-                      },
-                      builder: (context, candidateData, rejectedData) {
-                        return Stack(
-                          alignment: Alignment.topRight,
-                          children: [
-                            HissClickWidget(
-                              onTap: (){
-                                controller.clickEmptyPlaceItem(index);
-                              },
-                              child: Container(
-                                margin: EdgeInsets.only(top: 14.w),
-                                child: SizedBox(
-                                  key: list.globalKey,
-                                  child: widget,
+                    return Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 14.w),
+                          child: DragTarget<Map<String, dynamic>>(
+                            onWillAccept: (data) {
+                              return controller.emptyPlaceOnWillAccept(data,list);
+                            },
+                            onAccept: (data) {
+                              controller.emptyPlaceOnAccept(data,index);
+                            },
+                            builder: (context, candidateData, rejectedData) {
+                              if(null==list.hissCardBean){
+                                return child!;
+                              }
+                              return Draggable<Map<String, dynamic>>(
+                                data: {"fromEmpty": true, "cards": [list.hissCardBean!],"fromIndex":index},
+                                onDragStarted: () {
+                                  controller.onDragStockPileStarted();
+                                },
+                                onDragCompleted: () {
+                                  controller.onDragStockPileCompleted();
+                                },
+                                onDraggableCanceled: (velocity, offset) {
+                                  controller.onDraggableStockPileCanceled();
+                                },
+                                feedback: Transform.scale(
+                                  scale: 1.05,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: child,
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: list.lock,
-                              child: HissImagesWidget(name: "icon_video", width: 28.w, height: 28.w),
-                            ),
-                          ],
-                        );
-                      },
+                                childWhenDragging: Opacity(
+                                  opacity: 0.5,
+                                  child: child,
+                                ),
+                                child: HissClickWidget(
+                                  onTap: (){
+                                    controller.clickEmptyPlaceItem(index);
+                                  },
+                                  child: SizedBox(
+                                    key: list.globalKey,
+                                    child: child,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Visibility(
+                          visible: list.lock,
+                          child: HissImagesWidget(name: "icon_video", width: 28.w, height: 28.w),
+                        ),
+                      ],
                     );
                   },
                   separatorBuilder: (context, index) => SizedBox(width: 6.w,),

@@ -293,20 +293,24 @@ class BBBHissPlayController extends HissRootController{
         value.showCard=true;
       }
     } else {
-      int fromCol = data['fromCol'];
-      int startIndex = data['startIndex'];
-      cardList[fromCol].removeRange(startIndex, cardList[fromCol].length);
-      if (cardList[fromCol].isNotEmpty){
-        var fromLast = cardList[fromCol].last;
-        fromLast.front = true;
-        if(fromLast.isWheel==true){
-          HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_spin_card);
-        }
-        if(fromLast.isCoins!=true){
-          if(fromLast.isGift==true){
-            showGiftPuzzleCard=fromLast;
-          }else if(HissValueConfigUtils.instance.showDiamondIcon()){
-            showDiamondCard=fromLast;
+      if(data['fromEmpty']==true){
+        emptyPlaceList[data["fromIndex"]].hissCardBean=null;
+      }else{
+        int fromCol = data['fromCol'];
+        int startIndex = data['startIndex'];
+        cardList[fromCol].removeRange(startIndex, cardList[fromCol].length);
+        if (cardList[fromCol].isNotEmpty){
+          var fromLast = cardList[fromCol].last;
+          fromLast.front = true;
+          if(fromLast.isWheel==true){
+            HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_spin_card);
+          }
+          if(fromLast.isCoins!=true){
+            if(fromLast.isGift==true){
+              showGiftPuzzleCard=fromLast;
+            }else if(HissValueConfigUtils.instance.showDiamondIcon()){
+              showDiamondCard=fromLast;
+            }
           }
         }
       }
@@ -317,7 +321,7 @@ class BBBHissPlayController extends HissRootController{
     _draggingFromCol = null;
     _draggingStartIndex = null;
     currentStep++;
-    update(["card_list","stock_pile","step","score"]);
+    update(["card_list","stock_pile","step","score","empty_place"]);
     _checkIsDiamondOrGiftPuzzle(showDiamondCard,showGiftPuzzleCard);
     _checkAllCardFront();
   }
@@ -1216,7 +1220,7 @@ class BBBHissPlayController extends HissRootController{
     if(null==data||data['fromWaste'] == true){
       return false;
     }
-    List<HissCardBean> moving = data["cards"];
+    List<HissCardBean?> moving = data["cards"];
     if (moving.length != 1){
       return false;
     }
@@ -1439,6 +1443,8 @@ class BBBHissPlayController extends HissRootController{
             value1.last.front=true;
           }
         }
+        wastePileList.removeWhere((v)=>v.value==value.cardBean.value&&v.cardType==value.cardBean.cardType);
+        stockPileList.removeWhere((v)=>v.value==value.cardBean.value&&v.cardType==value.cardBean.cardType);
         update(["card_list","foundations","score","stock_pile"]);
         await Future.delayed(Duration(milliseconds: 100));
       }
@@ -1454,7 +1460,7 @@ class BBBHissPlayController extends HissRootController{
     for (var value in cardList) {
       for (var value1 in value) {
         var indexWhere = resourceList.indexWhere((v)=>v.cardBean.value==value1.value&&v.cardBean.cardType==value1.cardType);
-        if(value1.isCoins==true||indexWhere>=0){
+        if(value1.isCoins==true||value1.isWheel==true||indexWhere>=0){
           continue;
         }
         //直接找A
@@ -1463,7 +1469,7 @@ class BBBHissPlayController extends HissRootController{
             return value1;
           }
         }else{
-          if(targetBean.value+1==value1.value&&isRedCard(targetBean.cardType) == isRedCard(value1.cardType)){
+          if(targetBean.value+1==value1.value&&targetBean.cardType == value1.cardType){
             return value1;
           }
         }
@@ -1485,7 +1491,7 @@ class BBBHissPlayController extends HissRootController{
           return value1;
         }
       }else{
-        if(targetBean.value+1==value1.value&&isRedCard(targetBean.cardType) == isRedCard(value1.cardType)){
+        if(targetBean.value+1==value1.value&&targetBean.cardType == value1.cardType){
           return value1;
         }
       }
@@ -1506,7 +1512,7 @@ class BBBHissPlayController extends HissRootController{
           return value1;
         }
       }else{
-        if(targetBean.value+1==value1.value&&isRedCard(targetBean.cardType) == isRedCard(value1.cardType)){
+        if(targetBean.value+1==value1.value&&targetBean.cardType == value1.cardType){
           return value1;
         }
       }

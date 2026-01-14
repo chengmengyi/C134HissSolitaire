@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hiss_bbb/ui/dialog/first_input_account_reward_dialog/first_input_account_reward_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_cash_task_utils.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/utils.dart';
@@ -31,8 +32,20 @@ class InputAccountDialogController extends HissRootController{
       return;
     }
     await HissCashTaskUtils.instance.saveAccount(chooseCashType, content);
-    HissRoutersUtils.instance.close();
-    callback.call();
+    if(showFirstInputAccountRewardDialog.getData()){
+      showFirstInputAccountRewardDialog.saveData(false);
+      HissRoutersUtils.instance.showDialog(
+        child: FirstInputAccountRewardDialog(
+          callback: (){
+            HissRoutersUtils.instance.close();
+            callback.call();
+          },
+        ),
+      );
+    }else{
+      HissRoutersUtils.instance.close();
+      callback.call();
+    }
   }
 
   clickClose(){

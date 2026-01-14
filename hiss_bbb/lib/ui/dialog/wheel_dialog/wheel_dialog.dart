@@ -127,6 +127,9 @@ class WheelDialog extends HissRootDialog<WheelDialogController>{
           ),
           SizedBox(height: 12.h,),
           HissClickWidget(
+            onTap: (){
+              controller.clickSingle();
+            },
             child: HissTextWidget(
               textContent: "\$${doubleDiv(controller.wheelReward, 10)}",
               textSize: 16.sp,

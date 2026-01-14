@@ -39,7 +39,7 @@ class Money300700ResultDialog extends HissRootDialog<Money300700ResultDialogCont
           margin: EdgeInsets.only(left: 24.w,right: 24.w),
           child: HissTextWidget(
             textContent: "Your withdrawal progress is ahead of 92% of users!",
-            textSize: 16.sp,
+            textSize: 18.sp,
             textColor: "#FFFFFF".toColor(),
             textAlign: TextAlign.center,
             fontWeight: FontWeight.bold,
@@ -48,7 +48,7 @@ class Money300700ResultDialog extends HissRootDialog<Money300700ResultDialogCont
         SizedBox(height: 24.h,),
         HissGradientTextWidget(
           textContent: "Current Earning",
-          textSize: 20.sp,
+          textSize: 22.sp,
           fontWeight: FontWeight.bold,
           outlineColor: "#01500C".toColor(),
           gradient: LinearGradient(
@@ -65,7 +65,7 @@ class Money300700ResultDialog extends HissRootDialog<Money300700ResultDialogCont
             SizedBox(width: 4.w,),
             HissTextWidget(
               textContent: "\$${bMoneyNum.getData()}",
-              textSize: 32.sp,
+              textSize: 36.sp,
               textColor: "#FFD21D".toColor(),
               fontWeight: FontWeight.bold,
               outlineColor: "#6E2F15".toColor(),
@@ -105,7 +105,7 @@ class Money300700ResultDialog extends HissRootDialog<Money300700ResultDialogCont
     itemBuilder: (context,index)=>Container(
       width: double.infinity,
       alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(left: 56.w),
+      padding: EdgeInsets.only(left: 40.w),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +117,7 @@ class Money300700ResultDialog extends HissRootDialog<Money300700ResultDialogCont
               SizedBox(width: 8.w,),
               HissTextWidget(
                 textContent: controller.getProText(index),
-                textSize: 14.sp,
+                textSize: 18.sp,
                 fontWeight: FontWeight.bold,
                 textColor: index==1?"#FFD21D".toColor():"#FFFFFF".toColor(),
               ),

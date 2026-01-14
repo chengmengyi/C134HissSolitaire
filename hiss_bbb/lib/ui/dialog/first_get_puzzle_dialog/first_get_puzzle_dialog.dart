@@ -51,13 +51,20 @@ class FirstGetPuzzleDialog extends HissRootDialog<FirstGetPuzzleDialogController
         onTap: (){
           controller.clickClose();
         },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            HissImagesWidget(name: "btn5", width: 260.w, height: 50.h),
-            HissTextWidget(textContent: "View Later", textSize: 18.sp, textColor: "#FFFFFF".toColor(),),
-          ],
+        child: HissTextWidget(
+          textContent: "View Later",
+          textSize: 18.sp,
+          textColor: "#FFFFFF".toColor(),
+          decoration: TextDecoration.underline,
+          decorationColor: "#FFFFFF".toColor(),
         ),
+        // child: Stack(
+        //   alignment: Alignment.center,
+        //   children: [
+        //     HissImagesWidget(name: "btn5", width: 260.w, height: 50.h),
+        //     HissTextWidget(textContent: "View Later", textSize: 18.sp, textColor: "#FFFFFF".toColor(),),
+        //   ],
+        // ),
       ),
     ],
   );
@@ -85,8 +92,8 @@ class FirstGetPuzzleDialog extends HissRootDialog<FirstGetPuzzleDialogController
           },
           itemBuilder: (item, index) {
             return Container(
-              width: 60.w,
-              height: 110.h,
+              width: 80.w,
+              height: 130.h,
               alignment: Alignment.center,
               margin: EdgeInsets.only(left: 6.w,right: 6.w,),
               child: Column(
@@ -95,7 +102,7 @@ class FirstGetPuzzleDialog extends HissRootDialog<FirstGetPuzzleDialogController
                   Stack(
                     alignment: Alignment.bottomRight,
                     children: [
-                      HissImagesWidget(name: getGiftIcon(item.type), width: 60.w, height: 60.w,),
+                      HissImagesWidget(name: getGiftIcon(item.type), width: 80.w, height: 80.w,),
                       HissImagesWidget(name: "icon_suipian", width: 20.w, height: 20.w,),
                     ],
                   ),
@@ -110,20 +117,6 @@ class FirstGetPuzzleDialog extends HissRootDialog<FirstGetPuzzleDialogController
                       end: Alignment.bottomCenter,
                       colors: ["#FFFFFF".toColor(),"#FFD659".toColor(),],
                     ),
-                  ),
-                  SizedBox(height: 4.h,),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      HissImagesWidget(name: "home_gift3", width: 52.w, height: 16.h,),
-                      HissTextWidget(
-                        textContent: "${item.currentPro??0}/${item.totalPro??0}",
-                        textSize: 10.sp,
-                        fontWeight: FontWeight.w900,
-                        textColor: "#FFFFFF".toColor(),
-                        outlineColor: "#005B95".toColor(),
-                      ),
-                    ],
                   ),
                 ],
               ),

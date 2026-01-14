@@ -46,6 +46,9 @@ class HissGiftWidgetController extends HissRootController{
     super.onReady();
     _queryTopGiftList();
     _queryHasGiftTaskRewardData();
+    if(wheelNum.getData()>0){
+      clickSpin();
+    }
   }
 
   _queryTopGiftList()async{
@@ -105,6 +108,9 @@ class HissGiftWidgetController extends HissRootController{
   }
 
   clickSpin(){
+    if(null!=_wheelTimer){
+      return;
+    }
     _checkShowSpinAd(
       callback: (){
         _queryHasGiftTaskRewardData();

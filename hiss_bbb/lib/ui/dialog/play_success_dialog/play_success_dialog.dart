@@ -107,33 +107,24 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
           ),
         ),
         SizedBox(height: 6.h,),
-        HissVideoBtnWidget(
-          text: "Claim",
-          bg: "success3",
-          width: 180.w,
-          height: 48.h,
-          onTap: (){
-            controller.clickClaim(dismissCallback);
-          },
+        GetBuilder<PlaySuccessController>(
+          id: "claim_btn",
+          builder: (_)=>Visibility(
+            visible: controller.showClaimBtn,
+            maintainAnimation: true,
+            maintainState: true,
+            maintainSize: true,
+            child: HissVideoBtnWidget(
+              text: "Claim",
+              bg: "success3",
+              width: 180.w,
+              height: 48.h,
+              onTap: (){
+                controller.clickClaim(dismissCallback);
+              },
+            ),
+          ),
         ),
-        // HissClickWidget(
-        //   onTap: (){
-        //     controller.clickClaim(dismissCallback);
-        //   },
-        //   child: Stack(
-        //     alignment: Alignment.center,
-        //     children: [
-        //       HissImagesWidget(name: "success3", width: 180.w, height: 48.h),
-        //       HissTextWidget(
-        //         textContent: "Claim",
-        //         textSize: 18.sp,
-        //         textColor: "#FFFFFF".toColor(),
-        //         outlineColor: "#133D03".toColor(),
-        //         fontWeight: FontWeight.w900,
-        //       ),
-        //     ],
-        //   ),
-        // ),
         SizedBox(height: 12.h,),
       ],
     ),

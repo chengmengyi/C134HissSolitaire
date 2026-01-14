@@ -19,6 +19,7 @@ import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class PlaySuccessController extends HissRootController{
   double addNum=0.0;
+  var showClaimBtn=false;
   int score=0,time=0,step=0,onlyAddNum=0;
   List<HissPlayGradeBean> gradeList=[];
   GlobalKey scrollGlobalKey=GlobalKey();
@@ -47,10 +48,13 @@ class PlaySuccessController extends HissRootController{
   }
 
   _startScroll(){
-    _scrollTimer=Timer.periodic(Duration(milliseconds: 2000), (t){
+    _scrollTimer=Timer.periodic(Duration(milliseconds: 2000), (t)async{
       var renderBox = scrollGlobalKey.currentContext?.findRenderObject() as RenderBox;
       var height = renderBox.size.height;
       scrollController.animateTo(height, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+      await Future.delayed(Duration(milliseconds: 300));
+      showClaimBtn=true;
+      update(["claim_btn"]);
     });
   }
 
