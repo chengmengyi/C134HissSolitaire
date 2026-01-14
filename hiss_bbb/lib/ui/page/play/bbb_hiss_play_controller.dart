@@ -1109,6 +1109,13 @@ class BBBHissPlayController extends HissRootController{
     currentScore=0;
     _startTimer();
     _initCards();
+    for(var index=0;index<emptyPlaceList.length;index++){
+      if(index==0){
+        continue;
+      }
+      emptyPlaceList[index].lock=true;
+    }
+    update(["empty_place"]);
   }
 
   _showPropMoveAnimator(HissPropType hissPropType){
@@ -1217,11 +1224,15 @@ class BBBHissPlayController extends HissRootController{
   }
 
   bool emptyPlaceOnWillAccept(Map<String, dynamic>? data, HissEmptyPlaceBean bean){
-    if(null==data||data['fromWaste'] == true){
+    if(null==data){
       return false;
     }
     List<HissCardBean?> moving = data["cards"];
     if (moving.length != 1){
+      return false;
+    }
+    var indexWhere = moving.indexWhere((value)=>value?.isWheel==true||value?.isCoins==true);
+    if(indexWhere>=0){
       return false;
     }
     if(null==bean.hissCardBean&&bean.lock){
@@ -1235,24 +1246,30 @@ class BBBHissPlayController extends HissRootController{
     _saveSnapshot();
     HissCardBean card = data['cards'][0];
     emptyPlaceList[index].hissCardBean=card;
-    int fromCol = data['fromCol'];
-    int startIndex = data['startIndex'];
-    cardList[fromCol].removeAt(startIndex);
-    HissCardBean? showDiamondCard;
-    HissCardBean? showGiftPuzzleCard;
-    if (cardList[fromCol].isNotEmpty){
-      var fromLast = cardList[fromCol].last;
-      fromLast.front = true;
-      if(fromLast.isCoins!=true){
-        if(fromLast.isGift==true){
-          showGiftPuzzleCard=fromLast;
-        }else if(HissValueConfigUtils.instance.showDiamondIcon()){
-          showDiamondCard=fromLast;
+    if(data['fromWaste'] == true){
+      wastePileList.removeAt(data["wasteIndex"]);
+      update(["stock_pile"]);
+    }else{
+      int fromCol = data['fromCol'];
+      int startIndex = data['startIndex'];
+      cardList[fromCol].removeAt(startIndex);
+      HissCardBean? showDiamondCard;
+      HissCardBean? showGiftPuzzleCard;
+      if (cardList[fromCol].isNotEmpty){
+        var fromLast = cardList[fromCol].last;
+        fromLast.front = true;
+        if(fromLast.isCoins!=true){
+          if(fromLast.isGift==true){
+            showGiftPuzzleCard=fromLast;
+          }else if(HissValueConfigUtils.instance.showDiamondIcon()){
+            showDiamondCard=fromLast;
+          }
         }
       }
+      _checkIsDiamondOrGiftPuzzle(showDiamondCard,showGiftPuzzleCard);
+      update(["card_list"]);
     }
-    _checkIsDiamondOrGiftPuzzle(showDiamondCard,showGiftPuzzleCard);
-    update(["empty_place","card_list"]);
+    update(["empty_place",]);
   }
 
   clickEmptyPlaceItem(int index)async{

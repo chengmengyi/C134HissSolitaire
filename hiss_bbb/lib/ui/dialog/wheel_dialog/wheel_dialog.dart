@@ -38,25 +38,36 @@ class WheelDialog extends HissRootDialog<WheelDialogController>{
             builder: (context,bc){
               var size = bc.maxWidth;
               var radius = (size / 2 - 30)*0.7;
-              return AnimatedBuilder(
-                animation: controller.wheelAnimation!,
-                builder: (context,child)=>Transform.rotate(
-                  angle: controller.wheelAnimation!.value,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      HissImagesWidget(name: "wheel2", width: double.infinity, height: double.infinity),
-                      ...List.generate(
-                        controller.wheelList.length, (i) =>
-                          _wheelItemWidget(
-                            money: controller.wheelList[i],
-                            angleDeg: i * 45.0 - 90,
-                            radius: radius,
+              return Stack(
+                children: [
+                  AnimatedBuilder(
+                    animation: controller.wheelAnimation!,
+                    builder: (context,child)=>Transform.rotate(
+                      angle: controller.wheelAnimation!.value,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          HissImagesWidget(name: "wheel2", width: double.infinity, height: double.infinity),
+                          ...List.generate(
+                            controller.wheelList.length, (i) =>
+                              _wheelItemWidget(
+                                money: controller.wheelList[i],
+                                angleDeg: i * 45.0 - 90,
+                                radius: radius,
+                              ),
                           ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 20.h),
+                      child: Image.asset("hiss_images/wheel_choose.webp",width: size/3,fit: BoxFit.fitWidth,),
+                    ),
+                  ),
+                ],
               );
             },
           ),

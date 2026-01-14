@@ -177,8 +177,8 @@ class BBBHomeChildController extends HissRootController{
     // );
 
 
-    // HissRoutersUtils.instance.showDialog(
-    //   child: PlaySuccessDialog(time: 100, step: 100, score: 100, dismissCallback: () {  },),
-    // );
+    HissRoutersUtils.instance.showDialog(
+      child: WheelDialog(),
+    );
   }
 }

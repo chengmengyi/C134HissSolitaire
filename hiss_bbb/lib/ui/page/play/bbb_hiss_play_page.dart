@@ -137,7 +137,7 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
                   key: bean.globalKey,
                   margin: EdgeInsets.only(left: left),
                   child: Draggable<Map<String, dynamic>>(
-                    data: {"fromWaste": true, "cards": [controller.wastePileList[index]]},
+                    data: {"fromWaste": true, "cards": [controller.wastePileList[index]],"wasteIndex":index},
                     onDragStarted: () {
                       controller.onDragStockPileStarted();
                     },
