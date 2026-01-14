@@ -638,7 +638,12 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
                             },
                             builder: (context, candidateData, rejectedData) {
                               if(null==list.hissCardBean){
-                                return child!;
+                                return HissClickWidget(
+                                  onTap: (){
+                                    controller.clickEmptyPlaceItem(index);
+                                  },
+                                  child: child!,
+                                );
                               }
                               return Draggable<Map<String, dynamic>>(
                                 data: {"fromEmpty": true, "cards": [list.hissCardBean!],"fromIndex":index},

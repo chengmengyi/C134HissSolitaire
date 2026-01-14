@@ -80,7 +80,7 @@ class BBBHomeChildController extends HissRootController{
   }
 
   clickPig(){
-    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.pig);
+    HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.pig,params:{"fromHome":true});
   }
 
   clickGame(){
@@ -148,9 +148,11 @@ class BBBHomeChildController extends HissRootController{
     // bLevel.saveData(1);
     // bLevel.saveData(1);
     // HissUserInfoUtils.instance.updateUserLevel();
-    bLevel.saveData(1);
+    // bLevel.saveData(1);
     // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
     // HissUserInfoUtils.instance.updateWheelNum(1);
+
+
 
     // HissMp3Utils.instance.playOtherMp3(HissMp3Type.zhuan);
 
@@ -176,9 +178,9 @@ class BBBHomeChildController extends HissRootController{
     //   ),
     // );
 
-
-    HissRoutersUtils.instance.showDialog(
-      child: WheelDialog(),
-    );
+    HissUserInfoUtils.instance.updateDiamondNum(10);
+    // HissRoutersUtils.instance.showDialog(
+    //   child: WheelDialog(),
+    // );
   }
 }

@@ -72,4 +72,9 @@ class SpinRewardTaskDialogController extends HissRootController{
       },
     );
   }
+
+  clickSpin(Function() clickSpinCallback){
+    HissRoutersUtils.instance.close();
+    clickSpinCallback.call();
+  }
 }

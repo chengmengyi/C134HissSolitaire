@@ -15,15 +15,17 @@ import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissGiftWidget extends HissRootWidget<HissGiftWidgetController>{
   String tagStr;
+  bool fromHomeTab;
   HissGiftWidget({
     required this.tagStr,
+    this.fromHomeTab=false,
 });
 
   @override
   String controllerTag() => "HissGiftWidgetController_$tagStr";
 
   @override
-  HissGiftWidgetController initGetController() => HissGiftWidgetController();
+  HissGiftWidgetController initGetController() => HissGiftWidgetController(fromHomeTab);
 
   @override
   Widget initContent() => Stack(

@@ -33,11 +33,7 @@ class _HissPigWidgetState extends HissRootStatefulState<HissPigWidget>{
         margin: EdgeInsets.only(top: 24.h),
         child: HissClickWidget(
           onTap: (){
-            if(null==widget.clickCallback){
-              HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.pig);
-            }else{
-              widget.clickCallback?.call();
-            }
+            widget.clickCallback?.call();
           },
           child: HissImagesWidget(name: "play3", width: 72.w, height: 72.w),
         ),

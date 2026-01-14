@@ -25,8 +25,8 @@ class BBBHomeChild extends HissRootChild<BBBHomeChildController>{
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              HissLottieWidget(name: "fire",width: 200.w,),
-              HissImagesWidget(name: "home8", width: 100.w, height: 40.h),
+              HissLottieWidget(name: "fire",width: 280.w,),
+              HissImagesWidget(name: "home8", width: 200.w, height: 40.h),
             ],
           ),
         ),
@@ -88,7 +88,11 @@ class BBBHomeChild extends HissRootChild<BBBHomeChildController>{
       Positioned(
         left: 12.w,
         bottom: 210.h,
-        child: HissPigWidget(),
+        child: HissPigWidget(
+          clickCallback: (){
+            controller.clickPig();
+          },
+        ),
       ),
       Positioned(
         top: 116.h,
@@ -110,6 +114,7 @@ class BBBHomeChild extends HissRootChild<BBBHomeChildController>{
         ),
       ),
       HissBubbleWidget(),
+      // HissLottieWidget(name: "fire",width: 100,height: 100,)
     ],
   );
 }

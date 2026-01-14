@@ -287,6 +287,7 @@ class BBBHissPlayController extends HissRootController{
     List<HissCardBean> movingCards = data['cards'];
     HissCardBean? showDiamondCard;
     HissCardBean? showGiftPuzzleCard;
+    _uploadMovePoint();
     if (data['fromWaste'] == true){
       wastePileList.remove(movingCards.first);
       for (var value in movingCards) {
@@ -304,6 +305,7 @@ class BBBHissPlayController extends HissRootController{
           fromLast.front = true;
           if(fromLast.isWheel==true){
             HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.game_spin_card);
+            _autoShowWheelDialog(fromLast);
           }
           if(fromLast.isCoins!=true){
             if(fromLast.isGift==true){
@@ -529,6 +531,7 @@ class BBBHissPlayController extends HissRootController{
       return;
     }
     canClick=false;
+    _cancelNoOperationTimer();
     if(card.isCoins==true){
       HissUserInfoUtils.instance.showGoodCommentDialog(
         callback: (){
@@ -587,6 +590,7 @@ class BBBHissPlayController extends HissRootController{
         cardList[colIndex].removeRange(rowIndex, cardList[colIndex].length);
         // cardList[colIndex].removeLast();
         update(["card_list"]);
+        _uploadMovePoint();
         HissSendEventUtils.instance.sendEvent(
           data: HissEventData(
             eventCode: HissEventCode.moveToCardList,
@@ -628,6 +632,7 @@ class BBBHissPlayController extends HissRootController{
         },
       ),
     );
+    _uploadMovePoint();
     await Future.delayed(Duration(milliseconds: 280));
     card.showCard=true;
     _saveSnapshot();
@@ -648,6 +653,7 @@ class BBBHissPlayController extends HissRootController{
       cardList[colIndex].last.front = true;
       HissUserInfoUtils.instance.updateMoney(HissValueConfigUtils.instance.getFlipCardAddNum());
       var last = cardList[colIndex].last;
+      _autoShowWheelDialog(last);
       HissCardBean? showDiamondCard;
       HissCardBean? showGiftPuzzleCard;
       if(last.isCoins!=true){
@@ -1110,10 +1116,11 @@ class BBBHissPlayController extends HissRootController{
     _startTimer();
     _initCards();
     for(var index=0;index<emptyPlaceList.length;index++){
-      if(index==0){
-        continue;
+      var bean = emptyPlaceList[index];
+      bean.hissCardBean=null;
+      if(index!=0){
+        bean.lock=true;
       }
-      emptyPlaceList[index].lock=true;
     }
     update(["empty_place"]);
   }
@@ -1149,8 +1156,10 @@ class BBBHissPlayController extends HissRootController{
 
   _startNoOperationTimer(){
     _noOperationTimer?.cancel();
-    _noOperationTimer=Timer(Duration(milliseconds: 3000), (){
+    _noOperationTimer=Timer.periodic(Duration(milliseconds: 6000), (t){
       tipsAnimationController.start(shakeCount: 3);
+      HissUserInfoUtils.instance.updatePropNum(hissPropType: HissPropType.tips, addNum: 1);
+      clickHint();
     });
   }
 
@@ -1244,6 +1253,7 @@ class BBBHissPlayController extends HissRootController{
 
   emptyPlaceOnAccept(Map<String, dynamic> data, int index){
     _saveSnapshot();
+    _uploadMovePoint();
     HissCardBean card = data['cards'][0];
     emptyPlaceList[index].hissCardBean=card;
     if(data['fromWaste'] == true){
@@ -1320,6 +1330,7 @@ class BBBHissPlayController extends HissRootController{
       canClick=true;
       return;
     }
+    _uploadMovePoint();
     _cancelNoOperationTimer();
     HissSendEventUtils.instance.sendEvent(
       data: HissEventData(
@@ -1535,6 +1546,22 @@ class BBBHissPlayController extends HissRootController{
       }
     }
     return null;
+  }
+  
+  _uploadMovePoint(){
+    HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.move_card);
+  }
+
+  _autoShowWheelDialog(HissCardBean? bean)async{
+    if(firstMoveCardToFoundations.getData()||firstGetPuzzle.getData()){
+      return;
+    }
+    await Future.delayed(Duration(milliseconds: 1000));
+    if(bean?.isWheel==true){
+      HissRoutersUtils.instance.showDialog(child: WheelDialog());
+      bean?.isWheel=false;
+      update(["card_list"]);
+    }
   }
 
   @override

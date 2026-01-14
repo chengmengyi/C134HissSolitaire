@@ -26,6 +26,7 @@ import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissGiftWidgetController extends HissRootController{
   var selectedWheelIndex=-1;
+  bool fromHomeTab;
   List<HissHomeGiftProgressBean> topGiftList=[];
   List<String> centerGiftTypeList=[];
   List<String> wheelList=[];
@@ -33,6 +34,8 @@ class HissGiftWidgetController extends HissRootController{
 
   HissGiftRewardTaskBean? hissGiftRewardTaskBean;
   Timer? _giftTaskRewardTimer;
+
+  HissGiftWidgetController(this.fromHomeTab);
 
   @override
   void onInit() {
@@ -46,7 +49,7 @@ class HissGiftWidgetController extends HissRootController{
     super.onReady();
     _queryTopGiftList();
     _queryHasGiftTaskRewardData();
-    if(wheelNum.getData()>0){
+    if(!fromHomeTab&&wheelNum.getData()>0){
       clickSpin();
     }
   }
@@ -103,6 +106,9 @@ class HissGiftWidgetController extends HissRootController{
     HissRoutersUtils.instance.showDialog(
       child: SpinRewardTaskDialog(
         rewardType: type,
+        clickSpinCallback: (){
+          clickSpin();
+        },
       ),
     );
   }

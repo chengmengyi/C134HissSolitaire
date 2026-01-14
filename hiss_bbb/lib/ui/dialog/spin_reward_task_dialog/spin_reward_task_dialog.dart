@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/spin_reward_task_dialog/spin_reward_task_dialog_controller.dart';
+import 'package:hiss_bbb/ui/widget/hiss_video_btn_widget.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_gift_reward_task_type.dart';
+import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
@@ -11,8 +13,11 @@ import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class SpinRewardTaskDialog extends HissRootDialog<SpinRewardTaskDialogController>{
   String? rewardType;
+  Function() clickSpinCallback;
+
   SpinRewardTaskDialog({
     required this.rewardType,
+    required this.clickSpinCallback,
   });
 
   @override
@@ -31,6 +36,17 @@ class SpinRewardTaskDialog extends HissRootDialog<SpinRewardTaskDialogController
       _progressWidget(),
       SizedBox(height: 52.h,),
       _taskWidget(),
+      SizedBox(height: 30.h,),
+      HissVideoBtnWidget(
+        text: "Spin(${wheelNum.getData()})",
+        bg: "home_gift8",
+        width: 280.w,
+        height: 52.h,
+        showVideoIcon: wheelNum.getData()<=0,
+        onTap: (){
+          controller.clickSpin(clickSpinCallback);
+        },
+      ),
     ],
   );
   
@@ -159,12 +175,17 @@ class SpinRewardTaskDialog extends HissRootDialog<SpinRewardTaskDialogController
         child: Row(
           children: [
             Expanded(
-              child: HissTextWidget(
-                textContent: "${controller.rewardTaskBean?.totalPro??0} puzzle pieces",
-                textSize: 16.sp,
-                fontWeight: FontWeight.bold,
-                textColor: "#724B2F".toColor(),
-                overflow: TextOverflow.ellipsis,
+              child: Row(
+                children: [
+                  HissTextWidget(
+                    textContent: "${controller.rewardTaskBean?.totalPro??0} ",
+                    textSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    textColor: "#724B2F".toColor(),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  HissImagesWidget(name: "icon_suipian", width: 24.w, height: 24.w,),
+                ],
               ),
             ),
             HissTextWidget(
