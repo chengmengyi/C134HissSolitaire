@@ -10,7 +10,7 @@ class HissDealCardAnimatorWidget extends HissRootStateful{
   Function() allAnimatorCompletedCallback;
   HissDealCardAnimatorWidget({
     required this.allAnimatorCompletedCallback,
-});
+  });
   @override
   State<StatefulWidget> createState() => _HissDealCardAnimatorWidgetState();
 }

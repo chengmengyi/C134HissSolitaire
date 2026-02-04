@@ -108,7 +108,7 @@ class HomeTaskDialog extends HissRootDialog<HomeTaskDialogController>{
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                HissImagesWidget(name: "home_task3", width: 36.w, height: 36.w,),
+                HissImagesWidget(name: "icon_money3", width: 36.w, height: 36.w,),
                 HissTextWidget(
                   textContent: "\$${taskBean.reward??0}",
                   textSize: 12.sp,

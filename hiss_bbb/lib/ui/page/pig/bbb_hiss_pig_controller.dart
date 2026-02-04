@@ -1,9 +1,9 @@
 import 'package:hiss_bbb/bean/hiss_pig_info_bean.dart';
+import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_pig_type.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_prop_type.dart';
 import 'package:hiss_bbb/utils/hiss_pig_utils.dart';
 import 'package:hiss_bbb/utils/hiss_show_ad_utils.dart';
-import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_bbb/utils/utils.dart';
@@ -17,13 +17,14 @@ import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class BBBHissPigController extends HissRootController{
-  var currentDiamondNum=0,reachNum=0;
+  var currentDiamondNum=0,reachNum=0,fromHome=false;
   HissPigInfoBean? lastPigBean;
   List<HissPigInfoBean> pigList=[];
 
   @override
   void onInit() {
     super.onInit();
+    fromHome=HissRoutersUtils.instance.getParams()["fromHome"]??false;
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.pig_pop);
     currentDiamondNum=countCurrentDiamond();
     _initList();
@@ -35,7 +36,12 @@ class BBBHissPigController extends HissRootController{
       if(lastPigBean?.status==HissPigStatus.unReceive){
         _lookAd(lastPigBean);
       }else{
-        showToast("Continue & Earn Gems");
+        if(fromHome){
+          HissRoutersUtils.instance.close();
+          HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.play);
+        }else{
+          HissRoutersUtils.instance.close();
+        }
       }
       return;
     }
@@ -77,7 +83,7 @@ class BBBHissPigController extends HissRootController{
       var indexWhere = list.indexWhere((value)=>value.status==HissPigStatus.lock);
       var diamondPigRewardList = HissValueConfigUtils.instance.getDiamondPigRewardList();
       if(indexWhere>=0){
-        reachNum=(indexWhere+1)*10-currentDiamondNum;
+        reachNum=(indexWhere+1)*5-currentDiamondNum;
         if(reachNum<0){
           reachNum=0;
         }
@@ -86,7 +92,7 @@ class BBBHissPigController extends HissRootController{
       var diamondRewardIndex=0;
       for(var index=0;index<list.length;index++){
         var infoBean = list[index];
-        if(currentDiamondNum>=(index+1)*10&&infoBean.status==HissPigStatus.lock){
+        if(currentDiamondNum>=(index+1)*5&&infoBean.status==HissPigStatus.lock){
           infoBean.status=HissPigStatus.unReceive;
         }
         if(infoBean.type==HissPigType.coins&&diamondRewardIndex<diamondPigRewardList.length){
@@ -107,7 +113,7 @@ class BBBHissPigController extends HissRootController{
   }
 
   double getPro(){
-    var d = currentDiamondNum/100;
+    var d = currentDiamondNum/50;
     if(d<0){
       return 0.0;
     }else if(d>1.0){

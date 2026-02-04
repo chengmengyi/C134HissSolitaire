@@ -10,6 +10,7 @@ class HissCardBean{
   bool showCard;
   bool? isCoins;
   bool? isGift;
+  bool? isWheel;
   HissCardBean({
     required this.value,
     required this.cardType,
@@ -19,6 +20,7 @@ class HissCardBean{
     this.globalKey,
     this.isCoins,
     this.isGift,
+    this.isWheel,
 });
 
   @override

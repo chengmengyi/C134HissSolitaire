@@ -117,3 +117,11 @@ double doubleMul(num1,num2){
     return 0.0;
   }
 }
+
+double doubleDiv(num1,num2){
+  try{
+    return (Decimal.parse("$num1")/Decimal.parse("$num2")).toDouble();
+  }catch(e){
+    return 0.0;
+  }
+}

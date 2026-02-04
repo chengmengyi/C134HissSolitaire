@@ -53,6 +53,7 @@ class _HissMoveToFoundationAnimatorWidgetState extends HissRootStatefulState<His
     cardHeight = anyEventValue["cardHeight"];
     GlobalKey startGlobalKey=anyEventValue["startGlobalKey"];
     GlobalKey endGlobalKey=anyEventValue["endGlobalKey"];
+    bool fromAuto=anyEventValue["fromAuto"]??false;
     cardBean=anyEventValue["card"];
     var startRenderBox = startGlobalKey.currentContext?.findRenderObject() as RenderBox;
     var startOffset = startRenderBox.localToGlobal(Offset.zero);
@@ -60,7 +61,7 @@ class _HissMoveToFoundationAnimatorWidgetState extends HissRootStatefulState<His
     var endOffset = endRenderBox.localToGlobal(Offset.zero);
     animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: fromAuto?100:300),
     );
 
     animation = Tween<Offset>(

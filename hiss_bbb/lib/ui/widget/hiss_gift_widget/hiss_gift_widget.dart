@@ -1,4 +1,5 @@
 import 'package:hiss_bbb/ui/widget/hiss_gift_widget/hiss_gift_widget_controller.dart';
+import 'package:hiss_bbb/utils/hiss_enum/hiss_home_gift_type.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/bean/hiss_home_gift_progress_bean.dart';
@@ -14,15 +15,17 @@ import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissGiftWidget extends HissRootWidget<HissGiftWidgetController>{
   String tagStr;
+  bool fromHomeTab;
   HissGiftWidget({
     required this.tagStr,
-});
+    this.fromHomeTab=false,
+  });
 
   @override
   String controllerTag() => "HissGiftWidgetController_$tagStr";
 
   @override
-  HissGiftWidgetController initGetController() => HissGiftWidgetController();
+  HissGiftWidgetController initGetController() => HissGiftWidgetController(fromHomeTab);
 
   @override
   Widget initContent() => Stack(
@@ -61,68 +64,57 @@ class HissGiftWidget extends HissRootWidget<HissGiftWidgetController>{
                 if(controller.topGiftList.isEmpty){
                   return Container();
                 }
-                return HorizontalScroller<HissHomeGiftProgressBean>(
-                  items: controller.topGiftList,
-                  height: 110.h,
-                  enableAutoScroll: true,
-                  scrollSpeed: 60,
-                  enableInfiniteScroll: true,
-                  backgroundColor: Colors.transparent,
-                  itemPadding: EdgeInsets.zero,
-                  margin: EdgeInsets.zero,
-                  onItemClick: (item, index) {
-                  },
-                  itemBuilder: (item, index) {
-                    return HissClickWidget(
-                      onTap: (){
-                        controller.clickTopGiftItem(item);
-                      },
-                      child: Container(
-                        width: 60.w,
-                        height: 110.h,
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.only(left: 6.w,right: 6.w,),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Stack(
-                              alignment: Alignment.bottomRight,
-                              children: [
-                                HissImagesWidget(name: getGiftIcon(item.type), width: 60.w, height: 60.w,),
-                                HissImagesWidget(name: "icon_suipian", width: 20.w, height: 20.w,),
-                              ],
-                            ),
-                            HissGradientTextWidget(
-                              textContent: getGiftShortName(item.type),
-                              textSize: 10.sp,
-                              outlineColor: "#5D3E00".toColor(),
-                              fontWeight: FontWeight.w900,
-                              overflow: TextOverflow.ellipsis,
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: ["#FFFFFF".toColor(),"#FFD659".toColor(),],
-                              ),
-                            ),
-                            SizedBox(height: 4.h,),
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                HissImagesWidget(name: "home_gift3", width: 52.w, height: 16.h,),
-                                HissTextWidget(
-                                  textContent: "${item.currentPro??0}/${item.totalPro??0}",
-                                  textSize: 10.sp,
-                                  fontWeight: FontWeight.w900,
-                                  textColor: "#FFFFFF".toColor(),
-                                  outlineColor: "#005B95".toColor(),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                final payAndPhoneList = <HissHomeGiftProgressBean>[];
+                final otherList = <HissHomeGiftProgressBean>[];
+
+                HissHomeGiftProgressBean? payItem;
+                HissHomeGiftProgressBean? phoneItem;
+
+                for (final item in controller.topGiftList) {
+                  if (item.type == HissHomeGiftType.pay) {
+                    payItem ??= item;
+                  } else if (item.type == HissHomeGiftType.phone) {
+                    phoneItem ??= item;
+                  } else {
+                    otherList.add(item);
+                  }
+                }
+
+                if (payItem != null) {
+                  payAndPhoneList.add(payItem);
+                }
+                if (phoneItem != null) {
+                  payAndPhoneList.add(phoneItem);
+                }
+                return Row(
+                  children: [
+                    SizedBox(
+                      height: 110.h,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: payAndPhoneList.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context,index)=>_topRewardItemWidget(payAndPhoneList[index]),
                       ),
-                    );
-                  },
+                    ),
+                    Expanded(
+                      child: HorizontalScroller<HissHomeGiftProgressBean>(
+                        items: otherList,
+                        height: 110.h,
+                        enableAutoScroll: true,
+                        scrollSpeed: 60,
+                        enableInfiniteScroll: true,
+                        backgroundColor: Colors.transparent,
+                        itemPadding: EdgeInsets.zero,
+                        margin: EdgeInsets.zero,
+                        onItemClick: (item, index) {
+                        },
+                        itemBuilder: (item, index) {
+                          return _topRewardItemWidget(item);
+                        },
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
@@ -157,49 +149,99 @@ class HissGiftWidget extends HissRootWidget<HissGiftWidgetController>{
     ),
   );
 
-  _rewardListWidget()=>SizedBox(
-    width: double.infinity,
-    height: 52.w,
-    child: Directionality(
-      textDirection: TextDirection.rtl,
-      child: HorizontalScroller<String>(
-        items: controller.centerGiftTypeList,
-        height: 52.h,
-        enableAutoScroll: true,
-        scrollSpeed: 60,
-        enableInfiniteScroll: true,
-        backgroundColor: Colors.transparent,
-        itemPadding: EdgeInsets.zero,
-        margin: EdgeInsets.zero,
-        onItemClick: (item, index) {
-        },
-        itemBuilder: (item, index) {
-          var type = controller.centerGiftTypeList[index];
-          return HissClickWidget(
-            onTap: (){
-              controller.clickCenterGift(type);
-            },
-            child: Container(
-              width: 52.w,
-              height: 52.w,
-              margin: EdgeInsets.only(left: 10.w,right: 10.w),
-              child: Stack(
-                children: [
-                  HissImagesWidget(name: "home_gift4", width: 52.w, height: 52.w),
-                  Align(
-                    child: HissImagesWidget(name: getGiftIcon(type), width: 40.w, height: 40.w,),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: HissImagesWidget(name: "icon_video", width: 20.w, height: 20.w,),
-                  ),
-                ],
-              ),
+  _topRewardItemWidget(HissHomeGiftProgressBean item)=>HissClickWidget(
+    onTap: (){
+      controller.clickTopGiftItem(item);
+    },
+    child: Container(
+      width: 60.w,
+      height: 110.h,
+      alignment: Alignment.center,
+      margin: EdgeInsets.only(left: 6.w,right: 6.w,),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              HissImagesWidget(name: getGiftIcon(item.type), width: 60.w, height: 60.w,),
+              HissImagesWidget(name: "icon_suipian", width: 20.w, height: 20.w,),
+            ],
+          ),
+          HissGradientTextWidget(
+            textContent: getGiftShortName(item.type),
+            textSize: 10.sp,
+            outlineColor: "#5D3E00".toColor(),
+            fontWeight: FontWeight.w900,
+            overflow: TextOverflow.ellipsis,
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: ["#FFFFFF".toColor(),"#FFD659".toColor(),],
             ),
-          );
-        },
+          ),
+          SizedBox(height: 4.h,),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              HissImagesWidget(name: "home_gift3", width: 52.w, height: 16.h,),
+              HissTextWidget(
+                textContent: "${item.currentPro??0}/${item.totalPro??0}",
+                textSize: 10.sp,
+                fontWeight: FontWeight.w900,
+                textColor: "#FFFFFF".toColor(),
+                outlineColor: "#005B95".toColor(),
+              ),
+            ],
+          ),
+        ],
       ),
-    )
+    ),
+  );
+
+  _rewardListWidget()=>SizedBox(
+      width: double.infinity,
+      height: 52.w,
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: HorizontalScroller<String>(
+          items: controller.centerGiftTypeList,
+          height: 52.h,
+          enableAutoScroll: true,
+          scrollSpeed: 60,
+          enableInfiniteScroll: true,
+          backgroundColor: Colors.transparent,
+          itemPadding: EdgeInsets.zero,
+          margin: EdgeInsets.zero,
+          onItemClick: (item, index) {
+          },
+          itemBuilder: (item, index) {
+            var type = controller.centerGiftTypeList[index];
+            return HissClickWidget(
+              onTap: (){
+                controller.clickCenterGift(type);
+              },
+              child: Container(
+                width: 52.w,
+                height: 52.w,
+                margin: EdgeInsets.only(left: 10.w,right: 10.w),
+                child: Stack(
+                  children: [
+                    HissImagesWidget(name: "home_gift4", width: 52.w, height: 52.w),
+                    Align(
+                      child: HissImagesWidget(name: getGiftIcon(type), width: 40.w, height: 40.w,),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: HissImagesWidget(name: "icon_video", width: 20.w, height: 20.w,),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      )
     // ListView.separated(
     //   scrollDirection: Axis.horizontal,
     //   itemBuilder: (context,index){

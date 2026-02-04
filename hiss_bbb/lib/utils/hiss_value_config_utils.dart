@@ -50,6 +50,8 @@ class HissValueConfigUtils{
   //悬浮气泡
   double getBubbleAddNum()=> _getRandomDouble(_configBean?.bubble??[10,15]);
 
+  int getSuperToolTime()=>_configBean?.superTool??15;
+
   //翻开一张牌
   double getFlipCardAddNum(){
     var list = _configBean?.openCollectCard??[];
@@ -85,6 +87,27 @@ class HissValueConfigUtils{
       }
     }
     return 0.5;
+  }
+
+  int getSpinNum()=>_configBean?.spinNum??3;
+
+  List<int> getWheelRewardList(){
+    var defaultList=[25, 45, 30, 40, 25, 25, 35, 45];
+    var list = _configBean?.spinReward??[];
+    if(list.isEmpty){
+      return defaultList;
+    }
+    var data = allMoneyNum.getData();
+    var last = list.last;
+    if(data>=(last.max??1000)){
+      return last.reward??defaultList;
+    }
+    for(var value in list){
+      if(data>=(value.min??0)&&data<(value.max??0)){
+        return value.reward??defaultList;
+      }
+    }
+    return defaultList;
   }
 
   int getPlaySuccessOnlyAddNum()=>10;
@@ -137,7 +160,7 @@ class HissValueConfigUtils{
   }
 
   List<int> getDiamondPigRewardList()=>_configBean?.diamondPig??[20,30,40,50,80];
-  
+
   int _randomMinAndMax(List<int> list){
     if(list.isEmpty){
       return 0;

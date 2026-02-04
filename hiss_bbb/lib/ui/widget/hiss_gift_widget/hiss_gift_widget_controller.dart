@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:hiss_bbb/bean/hiss_gift_reward_task_bean.dart';
 import 'package:hiss_bbb/bean/hiss_home_gift_progress_bean.dart';
 import 'package:hiss_bbb/ui/dialog/spin_reward_dialog/spin_reward_dialog.dart';
@@ -25,6 +26,7 @@ import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissGiftWidgetController extends HissRootController{
   var selectedWheelIndex=-1;
+  bool fromHomeTab;
   List<HissHomeGiftProgressBean> topGiftList=[];
   List<String> centerGiftTypeList=[];
   List<String> wheelList=[];
@@ -32,6 +34,8 @@ class HissGiftWidgetController extends HissRootController{
 
   HissGiftRewardTaskBean? hissGiftRewardTaskBean;
   Timer? _giftTaskRewardTimer;
+
+  HissGiftWidgetController(this.fromHomeTab);
 
   @override
   void onInit() {
@@ -45,6 +49,9 @@ class HissGiftWidgetController extends HissRootController{
     super.onReady();
     _queryTopGiftList();
     _queryHasGiftTaskRewardData();
+    if(!fromHomeTab&&wheelNum.getData()>0){
+      clickSpin();
+    }
   }
 
   _queryTopGiftList()async{
@@ -99,11 +106,17 @@ class HissGiftWidgetController extends HissRootController{
     HissRoutersUtils.instance.showDialog(
       child: SpinRewardTaskDialog(
         rewardType: type,
+        clickSpinCallback: (){
+          clickSpin();
+        },
       ),
     );
   }
 
   clickSpin(){
+    if(null!=_wheelTimer){
+      return;
+    }
     _checkShowSpinAd(
       callback: (){
         _queryHasGiftTaskRewardData();
@@ -210,7 +223,9 @@ class HissGiftWidgetController extends HissRootController{
 
   int _getRandWheelIndex(){
     while(true){
-      String random = wheelList.random();
+      // String random = wheelList.random();
+      String random = Random().nextInt(80)<100?HissHomeGiftType.phone:HissHomeGiftType.pay;
+
       var indexWhere = wheelList.indexWhere((value)=>value==random);
       if(wheelList[indexWhere].isNotEmpty){
         return indexWhere;

@@ -55,6 +55,8 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
           _bottomWidget(),
         ],
       ),
+      _giftGuideWidget(),
+      _emptyPlaceWidget(),
       HissSuperPropAnimatorWidget(),
       HissDealCardAnimatorWidget(
         allAnimatorCompletedCallback: (){
@@ -135,12 +137,8 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
                   key: bean.globalKey,
                   margin: EdgeInsets.only(left: left),
                   child: Draggable<Map<String, dynamic>>(
-                    data: {"fromWaste": true, "cards": [controller.wastePileList[index]]},
+                    data: {"fromWaste": true, "cards": [controller.wastePileList[index]],"wasteIndex":index},
                     onDragStarted: () {
-                      // setState(() {
-                      //   _isDragging = true;
-                      //   _draggingCards = [wastePile[index]];
-                      // });
                       controller.onDragStockPileStarted();
                     },
                     onDragCompleted: () {
@@ -231,10 +229,14 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
         controller.onAccept(data,colIndex);
       },
       builder: (context, candidateData, rejectedData){
+        var length = list.length;
         return SizedBox(
           height: double.infinity,
           child: Stack(
-            children: List.generate(list.length, (rowIndex){
+            children: List.generate(length==0?1:length, (rowIndex){
+              if(length==0){
+                return HissImagesWidget(name: "icon_empty_place", width: controller.cardWidth, height: controller.cardHeight);
+              }
               var bean = list[rowIndex];
               if(controller.isCardBeingDragged(colIndex, rowIndex)){
                 return Container(
@@ -588,5 +590,171 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
         ),
       ],
     ),
+  );
+
+  _emptyPlaceWidget()=>Align(
+    alignment: Alignment.bottomCenter,
+    child: Container(
+      margin: EdgeInsets.only(bottom: 148.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _emptyPlaceTipsWidget(),
+          GetBuilder<BBBHissPlayController>(
+            id: "empty_place",
+            builder: (_){
+              if(controller.cardWidth<=0){
+                return Container();
+              }
+              return SizedBox(
+                height: controller.cardHeight+14.w,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.emptyPlaceList.length,
+                  itemBuilder: (context,index){
+                    var list = controller.emptyPlaceList[index];
+                    Widget? child;
+                    if(null==list.hissCardBean){
+                      child=HissImagesWidget(name: "icon_empty_place", width: controller.cardWidth, height: controller.cardHeight);
+                    }else{
+                      child=HissImagesWidget(
+                        name: getCardImages(list.hissCardBean),
+                        width: controller.cardWidth,
+                        height: controller.cardHeight,
+                      );
+                    }
+                    return Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 14.w),
+                          child: DragTarget<Map<String, dynamic>>(
+                            onWillAccept: (data) {
+                              return controller.emptyPlaceOnWillAccept(data,list);
+                            },
+                            onAccept: (data) {
+                              controller.emptyPlaceOnAccept(data,index);
+                            },
+                            builder: (context, candidateData, rejectedData) {
+                              if(null==list.hissCardBean){
+                                return HissClickWidget(
+                                  onTap: (){
+                                    controller.clickEmptyPlaceItem(index);
+                                  },
+                                  child: child!,
+                                );
+                              }
+                              return Draggable<Map<String, dynamic>>(
+                                data: {"fromEmpty": true, "cards": [list.hissCardBean!],"fromIndex":index},
+                                onDragStarted: () {
+                                  controller.onDragStockPileStarted();
+                                },
+                                onDragCompleted: () {
+                                  controller.onDragStockPileCompleted();
+                                },
+                                onDraggableCanceled: (velocity, offset) {
+                                  controller.onDraggableStockPileCanceled();
+                                },
+                                feedback: Transform.scale(
+                                  scale: 1.05,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: child,
+                                  ),
+                                ),
+                                childWhenDragging: Opacity(
+                                  opacity: 0.5,
+                                  child: child,
+                                ),
+                                child: HissClickWidget(
+                                  onTap: (){
+                                    controller.clickEmptyPlaceItem(index);
+                                  },
+                                  child: SizedBox(
+                                    key: list.globalKey,
+                                    child: child,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Visibility(
+                          visible: list.lock,
+                          child: HissImagesWidget(name: "icon_video", width: 28.w, height: 28.w),
+                        ),
+                      ],
+                    );
+                  },
+                  separatorBuilder: (context, index) => SizedBox(width: 6.w,),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    ),
+  );
+
+  _emptyPlaceTipsWidget()=>GetBuilder<BBBHissPlayController>(
+    id: "empty_tip",
+    builder: (_)=>Visibility(
+      visible: controller.showEmptyTips,
+      child: Container(
+        margin: EdgeInsets.only(bottom: 8.h),
+        child: SizedBox(
+          width: 220.w,
+          height: 68.h,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              HissImagesWidget(name: "empty_tip_bg", width: double.infinity, height: double.infinity),
+              Container(
+                margin: EdgeInsets.only(left: 10.w,right: 10.w,top: 10.h),
+                child: HissTextWidget(
+                  textContent: "Temporary Spaces To Help\nYou Progress.",
+                  textSize: 14.sp,
+                  textAlign: TextAlign.center,
+                  textColor: "#FFFFFF".toColor(),
+                  outlineColor: "#3D2603".toColor(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+
+  _giftGuideWidget()=>GetBuilder<BBBHissPlayController>(
+    id: "gift_guide",
+    builder: (_){
+      if(null==controller.giftGuideOffset){
+        return Container();
+      }
+      var dx = controller.giftGuideOffset?.dx??0;
+      var dy = controller.giftGuideOffset?.dy??0;
+      return Container(
+        margin: EdgeInsets.only(left: dx+80.w,top: dy-70.h),
+        child: Stack(
+          children: [
+            HissImagesWidget(name: "puzzle_guide", width: 220.w, height: 68.h),
+            Container(
+              width: 220.w,
+              height: 68.h,
+              padding: EdgeInsets.only(left: 10.w,right: 10.w,top: 10.h),
+              child: HissTextWidget(
+                textContent: "Receive a surprise gift puzzle",
+                textSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                textColor: "#FFFFFF".toColor(),
+                outlineColor: "#3D2603".toColor(),
+              ),
+            ),
+          ],
+        ),
+      );
+    },
   );
 }

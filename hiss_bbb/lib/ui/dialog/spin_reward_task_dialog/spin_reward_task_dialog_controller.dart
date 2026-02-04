@@ -17,7 +17,7 @@ class SpinRewardTaskDialogController extends HissRootController{
 
   SpinRewardTaskDialogController({
     required this.type,
-});
+  });
 
   @override
   void onReady() {
@@ -71,5 +71,10 @@ class SpinRewardTaskDialogController extends HissRootController{
         HissRoutersUtils.instance.close();
       },
     );
+  }
+
+  clickSpin(Function() clickSpinCallback){
+    HissRoutersUtils.instance.close();
+    clickSpinCallback.call();
   }
 }

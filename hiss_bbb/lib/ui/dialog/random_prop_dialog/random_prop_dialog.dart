@@ -12,7 +12,7 @@ class RandomPropDialog extends HissRootDialog<RandomPropController>{
   Function(HissPropType propType) dismissCallback;
   RandomPropDialog({
     required this.dismissCallback,
-});
+  });
   @override
   RandomPropController initGetController() => RandomPropController();
 

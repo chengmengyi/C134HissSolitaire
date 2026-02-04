@@ -352,9 +352,9 @@ class BBBHissRankPage extends HissRootPage<BBBHissRankController>{
           fontWeight: FontWeight.bold,
           outlineColor: "#3A230F".toColor(),
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: ["#FFFFFF".toColor(),"#FFE88C".toColor(),]
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: ["#FFFFFF".toColor(),"#FFE88C".toColor(),]
           ),
         ),
       ),

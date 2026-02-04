@@ -14,7 +14,7 @@ class InputAccountDialog extends HissRootDialog<InputAccountDialogController>{
   InputAccountDialog({
     required this.cashMoney,
     required this.callback,
-});
+  });
 
   @override
   InputAccountDialogController initGetController() => InputAccountDialogController();

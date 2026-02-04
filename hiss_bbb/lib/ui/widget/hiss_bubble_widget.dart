@@ -65,9 +65,9 @@ class _HissBubbleWidgetState extends HissRootStatefulState<HissBubbleWidget>{
                       textSize: 14.sp,
                       fontWeight: FontWeight.bold,
                       gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: ["#FFF132".toColor(),"#FFA806".toColor(),]
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: ["#FFF132".toColor(),"#FFA806".toColor(),]
                       ),
                     ),
                   ],

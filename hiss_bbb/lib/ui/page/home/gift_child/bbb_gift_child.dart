@@ -8,5 +8,5 @@ class BBBGiftChild extends HissRootChild<BBBGiftChildController>{
   BBBGiftChildController initGetController() => BBBGiftChildController();
 
   @override
-  Widget initContent() => HissGiftWidget(tagStr: "gift_tab");
+  Widget initContent() => HissGiftWidget(tagStr: "gift_tab",fromHomeTab: true,);
 }
