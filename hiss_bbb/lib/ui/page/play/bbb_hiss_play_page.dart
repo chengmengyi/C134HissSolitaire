@@ -250,13 +250,11 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
               var itemWidget = _cardItemWidget(bean);
               Widget childWidget;
               if(bean.front){
-                childWidget=HissClickWidget(
+                childWidget=GestureDetector(
                   onTap: (){
                     controller.tryAutoMoveToFoundation(colIndex, rowIndex,list);
                   },
-                  child: LongPressDraggable<Map<String, dynamic>>(
-                    delay: Duration(milliseconds: 80),
-                    hitTestBehavior: HitTestBehavior.translucent,
+                  child: Draggable<Map<String, dynamic>>(
                     data: {
                       "fromCol": colIndex,
                       "startIndex": rowIndex,
