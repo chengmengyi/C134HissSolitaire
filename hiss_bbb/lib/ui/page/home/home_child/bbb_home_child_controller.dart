@@ -11,6 +11,7 @@ import 'package:hiss_bbb/ui/dialog/input_account_dialog/input_account_dialog.dar
 import 'package:hiss_bbb/ui/dialog/money300_700_result_dialog/money300_700_result_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/money_300_700_animator_dialog/money_300_700_animator_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/money_card_reward_dialog/money_card_reward_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/new_user_dialog/new_user_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/no_money_dialog/no_money_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/spin_reward_dialog/spin_reward_dialog.dart';
@@ -39,6 +40,13 @@ import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 
 class BBBHomeChildController extends HissRootController{
+
+  @override
+  void onReady() {
+    super.onReady();
+    _showNewUserDialog();
+  }
+
   clickPlay(){
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.home_play);
     HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.play);
@@ -65,6 +73,21 @@ class BBBHomeChildController extends HissRootController{
       IosHhh.instance.hiss4();
     }
   }
+
+  _showNewUserDialog(){
+    if(!newUser.getData()){
+      return;
+    }
+    newUser.saveData(false);
+    HissRoutersUtils.instance.showDialog(
+      child: NewUserDialog(
+        toPlayCallback: (){
+          clickPlay();
+        },
+      ),
+    );
+  }
+
 
   test()async{
     if(!kDebugMode){
@@ -101,6 +124,13 @@ class BBBHomeChildController extends HissRootController{
 
     // HissRoutersUtils.instance.showDialog(child: FirstReachCashMoneyDialog());
     // HissValueConfigUtils.instance.test();
-    bLevel.saveData(1);
+    // bLevel.saveData(1);
+
+    HissRoutersUtils.instance.showDialog(
+      child: NewUserDialog(
+        toPlayCallback: (){
+        },
+      ),
+    );
   }
 }

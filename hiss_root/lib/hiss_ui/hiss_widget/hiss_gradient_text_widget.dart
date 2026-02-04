@@ -8,6 +8,7 @@ class HissGradientTextWidget extends StatelessWidget{
   FontWeight? fontWeight;
   Color? outlineColor;
   TextOverflow? overflow;
+  TextAlign? textAlign;
   HissGradientTextWidget({
     required this.textContent,
     required this.textSize,
@@ -15,6 +16,7 @@ class HissGradientTextWidget extends StatelessWidget{
     this.fontWeight,
     this.outlineColor,
     this.overflow,
+    this.textAlign,
 });
 
   @override
@@ -29,6 +31,7 @@ class HissGradientTextWidget extends StatelessWidget{
       fontWeight: fontWeight,
       outlineColor: outlineColor,
       overflow: overflow,
+      textAlign: textAlign,
     ),
   );
 }

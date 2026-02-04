@@ -49,9 +49,9 @@ class HissCheckUserUtils{
   }
 
   bool getUser(){
-    // if(kDebugMode){
-    //   return true;
-    // }
+    if(kDebugMode){
+      return true;
+    }
     if(Platform.isAndroid){
       return true;
     }
