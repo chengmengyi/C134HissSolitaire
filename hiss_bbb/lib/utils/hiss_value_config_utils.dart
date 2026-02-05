@@ -45,7 +45,7 @@ class HissValueConfigUtils{
   //道具消耗金币
   int propCostMoney()=>100;
 
-  int lookAdAddMoneyNum()=>100;
+  int lookAdAddMoneyNum()=>50;
 
   //悬浮气泡
   double getBubbleAddNum()=> _getRandomDouble(_configBean?.bubble??[10,15]);

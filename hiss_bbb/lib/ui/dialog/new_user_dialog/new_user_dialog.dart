@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/new_user_dialog/new_user_dialog_controller.dart';
+import 'package:hiss_bbb/ui/widget/hiss_breath_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_dialog.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_gradient_text_widget.dart';
@@ -62,16 +63,25 @@ class NewUserDialog extends HissRootDialog<NewUserDialogController>{
         textColor: "#FFFFFF".toColor(),
       ),
       SizedBox(height: 12.h,),
-      HissClickWidget(
-        onTap: (){
-          controller.clickPlay(toPlayCallback);
-        },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            HissImagesWidget(name: "btn4", width: 260.w, height: 50.h),
-            HissTextWidget(textContent: "Collect & Earn", textSize: 18.sp, textColor: "#FFFFFF".toColor(),),
-          ],
+      HissBreathWidget(
+        start: true,
+        child: HissClickWidget(
+          onTap: (){
+            controller.clickPlay(toPlayCallback);
+          },
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              HissImagesWidget(name: "btn4", width: 260.w, height: 50.h),
+              HissTextWidget(
+                textContent: "Collect & Earn",
+                textSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                textColor: "#FFFFFF".toColor(),
+                outlineColor: "#000000".toColor(),
+              ),
+            ],
+          ),
         ),
       ),
     ],

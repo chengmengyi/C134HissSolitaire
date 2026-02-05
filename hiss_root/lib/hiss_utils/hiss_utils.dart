@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 extension StColor on String{
   Color toColor(){
@@ -47,6 +48,11 @@ String formatHMS(int seconds) {
 String getTodayTime(){
   var dateTime = DateTime.now();
   return "${dateTime.year}-${dateTime.month}-${dateTime.day}";
+}
+
+String getTodayEn(){
+  final result = DateFormat('MMM dd, yyyy', 'en_US').format(DateTime.now());
+  return result;
 }
 
 String userNameStar(String name){

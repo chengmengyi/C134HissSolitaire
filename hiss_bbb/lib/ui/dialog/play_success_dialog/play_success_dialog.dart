@@ -31,51 +31,58 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
   );
 
   @override
-  Widget initContent() => Container(
-    width: double.infinity,
-    margin: EdgeInsets.only(left: 20.w,right: 20.w),
-    child: Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        HissImagesWidget(name: "success1", width: 200.w, height: 100.h),
-        Container(
-          margin: EdgeInsets.only(top: 60.h),
-          child: SizedBox(
-            width: double.infinity,
-            height: 360.h,
-            child: Stack(
-              children: [
-                HissImagesWidget(name: "success2", width: double.infinity, height: 360.h,),
-                _contentWidget(),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 40.h),
-                    child: HissGradientTextWidget(
-                      textContent: "Winning Settlement",
-                      textSize: 20.sp,
-                      fontWeight: FontWeight.bold,
-                      outlineColor: "#01500C".toColor(),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: ["#FFFFFF".toColor(),"#FFF290".toColor(),]
+  Widget initContent() => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(left: 20.w,right: 20.w),
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            HissImagesWidget(name: "success1", width: 200.w, height: 100.h),
+            Container(
+              margin: EdgeInsets.only(top: 60.h),
+              child: SizedBox(
+                width: double.infinity,
+                height: 360.h,
+                child: Stack(
+                  children: [
+                    HissImagesWidget(name: "success2", width: double.infinity, height: 360.h,),
+                    _contentWidget(),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 40.h),
+                        child: HissGradientTextWidget(
+                          textContent: "Winning Settlement",
+                          textSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                          outlineColor: "#01500C".toColor(),
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: ["#FFFFFF".toColor(),"#FFF290".toColor(),]
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
-      ],
-    ),
+      ),
+      SizedBox(height: 20.h,),
+      _btnWidget(),
+    ],
   );
 
   _contentWidget()=>Container(
     width: double.infinity,
     height: 360.h,
-    padding: EdgeInsets.only(top: 84.h),
+    padding: EdgeInsets.only(top: 80.h),
     child: Column(
       children: [
         HissGradientTextWidget(
@@ -89,7 +96,7 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
             colors: ["#FFB62D".toColor(),"#FF5C05".toColor(),]
           ),
         ),
-        SizedBox(height: 10.h,),
+        SizedBox(height: 6.h,),
         Expanded(
           child: SingleChildScrollView(
             controller: controller.scrollController,
@@ -99,23 +106,12 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
               children: [
                 _infoWidget(),
                 SizedBox(height: 6.h,),
-                // _diamondAndMoneyWidget(),
-                SizedBox(height: 16.h,),
                 _rewardWidget(),
               ],
             ),
           ),
         ),
-        SizedBox(height: 6.h,),
-        HissVideoBtnWidget(
-          text: "Claim",
-          bg: "success3",
-          width: 180.w,
-          height: 48.h,
-          onTap: (){
-            controller.clickClaim(dismissCallback);
-          },
-        ),
+
         // HissClickWidget(
         //   onTap: (){
         //     controller.clickClaim(dismissCallback);
@@ -312,17 +308,17 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
       children: [
         HissTextWidget(
           textContent: "Wow, you’re so lucky! This reward gives you an extra \$${controller.addNum}!",
-          textSize: 14.sp,
+          textSize: 18.sp,
            textColor: "#724B2F".toColor(),
         ),
-        SizedBox(height: 16.h,),
+        SizedBox(height: 50.h,),
         Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             HissTextWidget(
               textContent: "\$${controller.onlyAddNum}",
-              textSize: 28.sp,
+              textSize: 30.sp,
               fontWeight: FontWeight.bold,
               textColor: "#FFD21D".toColor(),
               outlineColor: "#6E2F15".toColor(),
@@ -335,34 +331,59 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
                   margin: EdgeInsets.only(top: 14.h,right: 14.w),
                   child: HissTextWidget(
                     textContent: "+\$${controller.addNum}",
-                    textSize: 28.sp,
+                    textSize: 30.sp,
                     fontWeight: FontWeight.bold,
                     textColor: "#55E53B".toColor(),
                     outlineColor: "#155D0E".toColor(),
                   ),
                 ),
-                HissImagesWidget(name: "icon_video", width: 28.w, height: 28.w,),
+                // HissImagesWidget(name: "icon_video", width: 28.w, height: 28.w,),
               ],
             )
           ],
         ),
         SizedBox(height: 30.h,),
-        HissClickWidget(
-          onTap: (){
-            controller.clickOnly(dismissCallback);
-          },
-          child: HissTextWidget(
-            textContent: "Only \$${controller.onlyAddNum}",
-            textSize: 16.sp,
-            fontWeight: FontWeight.bold,
-            textColor: "#FFFFFF".toColor(),
-            outlineColor: "#052B1F".toColor(),
-            decoration: TextDecoration.underline,
-            decorationColor: "#052B1F".toColor(),
-          ),
-        ),
         SizedBox(height: 100.h,),
       ],
+    ),
+  );
+
+  _btnWidget()=>GetBuilder<PlaySuccessController>(
+    id: "btn",
+    builder: (_)=>Visibility(
+      visible: controller.showBtn,
+      maintainAnimation: true,
+      maintainState: true,
+      maintainSize: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          HissVideoBtnWidget(
+            text: "Get \$${doubleAdd(controller.onlyAddNum, controller.addNum)}",
+            bg: "success3",
+            width: 180.w,
+            height: 48.h,
+            onTap: (){
+              controller.clickClaim(dismissCallback);
+            },
+          ),
+          SizedBox(height: 10.h,),
+          HissClickWidget(
+            onTap: (){
+              controller.clickOnly(dismissCallback);
+            },
+            child: HissTextWidget(
+              textContent: "Only \$${controller.onlyAddNum}",
+              textSize: 16.sp,
+              fontWeight: FontWeight.bold,
+              textColor: "#FFFFFF".toColor(),
+              outlineColor: "#052B1F".toColor(),
+              decoration: TextDecoration.underline,
+              decorationColor: "#052B1F".toColor(),
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }

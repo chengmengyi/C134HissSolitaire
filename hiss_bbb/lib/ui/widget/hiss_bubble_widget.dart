@@ -10,6 +10,7 @@ import 'package:hiss_root/hiss_ui/hiss_root_stateful.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_gradient_text_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
+import 'package:hiss_root/hiss_ui/hiss_widget/hiss_text_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
@@ -60,15 +61,23 @@ class _HissBubbleWidgetState extends HissRootStatefulState<HissBubbleWidget>{
                   alignment: Alignment.bottomCenter,
                   children: [
                     HissImagesWidget(name: "icon_bubble", width: 64.w, height: 64.w),
-                    HissGradientTextWidget(
+                    // HissGradientTextWidget(
+                    //   textContent: "\$$addNum",
+                    //   textSize: 14.sp,
+                    //   fontWeight: FontWeight.bold,
+                    //   gradient: LinearGradient(
+                    //       begin: Alignment.topCenter,
+                    //       end: Alignment.bottomCenter,
+                    //       colors: ["#FFF132".toColor(),"#FFA806".toColor(),]
+                    //   ),
+                    //   outlineColor: "#FFFFFF".toColor(),
+                    // ),
+                    HissTextWidget(
                       textContent: "\$$addNum",
                       textSize: 14.sp,
                       fontWeight: FontWeight.bold,
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: ["#FFF132".toColor(),"#FFA806".toColor(),]
-                      ),
+                      textColor: "#FFF132".toColor(),
+                      outlineColor: "#000000".toColor(),
                     ),
                   ],
                 ),
@@ -81,7 +90,7 @@ class _HissBubbleWidgetState extends HissRootStatefulState<HissBubbleWidget>{
   );
 
   _startTimer(){
-    _timer=Timer.periodic(const Duration(milliseconds: 10), (timer) {
+    _timer=Timer.periodic(const Duration(milliseconds: 15), (timer) {
       if(right){
         currentX++;
         if(down){

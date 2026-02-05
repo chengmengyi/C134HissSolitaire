@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_ios_ad_plugins/flutter_ios_ad_plugins.dart';
 
 import 'hiss_root_staorage.dart';
 
@@ -70,6 +71,9 @@ class HissMp3Utils{
   }
 
   playOtherMp3(HissMp3Type mp3Type){
+    if(FlutterIosAdPlugins.instance.adShowing()){
+      return;
+    }
     if(playOtherMp3Key.getData()){
       AudioPlayer audio=AudioPlayer();
       if(mp3Type==HissMp3Type.super_prop||mp3Type==HissMp3Type.zhuan){

@@ -15,7 +15,9 @@ import 'package:hiss_bbb/ui/widget/hiss_prop_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_super_prop_animator_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_top_widget.dart';
 import 'package:hiss_bbb/ui/widget/hiss_waste_move_animator_widget.dart';
+import 'package:hiss_bbb/ui/widget/hiss_wheel_card_animator_widget.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
+import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_bbb/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_page.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
@@ -72,6 +74,7 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
       HissMoveToFoundationAnimatorWidget(),
       HissMoveToCardListAnimatorWidget(),
       HissBubbleWidget(),
+      HissWheelCardAnimatorWidget(),
     ],
   );
 
@@ -495,7 +498,22 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
               onTap: (){
                 controller.clickAdBtn();
               },
-              child: HissImagesWidget(name: "play12", width: 72.w, height: 72.w),
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  HissImagesWidget(name: "play12", width: 72.w, height: 72.w),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 4.h),
+                    child: HissTextWidget(
+                      textContent: "+\$${HissValueConfigUtils.instance.lookAdAddMoneyNum()}",
+                      textSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      textColor: "#FFFFFF".toColor(),
+                      outlineColor: "#000000".toColor(),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

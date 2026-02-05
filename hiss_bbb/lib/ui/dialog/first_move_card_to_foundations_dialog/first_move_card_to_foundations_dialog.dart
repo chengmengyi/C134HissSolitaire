@@ -47,7 +47,7 @@ class FirstMoveCardToFoundationsDialog extends HissRootDialog<FirstMoveCardToFou
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              HissTextWidget(textContent: "Play cards and earn rewards.", textSize: 14.sp, textColor: "#724B2F".toColor()),
+              HissTextWidget(textContent: "Play cards and earn rewards.", textSize: 18.sp, textColor: "#724B2F".toColor()),
               SizedBox(height: 20.h,),
               Stack(
                 children: [
@@ -79,7 +79,13 @@ class FirstMoveCardToFoundationsDialog extends HissRootDialog<FirstMoveCardToFou
                   alignment: Alignment.center,
                   children: [
                     HissImagesWidget(name: "btn4", width: 180.w, height: 50.h),
-                    HissTextWidget(textContent: "Claim AD-free", textSize: 18.sp, textColor: "#FFFFFF".toColor(),),
+                    HissTextWidget(
+                      textContent: "Claim AD-free",
+                      textSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      textColor: "#FFFFFF".toColor(),
+                      outlineColor: "#000000".toColor(),
+                    ),
                   ],
                 ),
               ),

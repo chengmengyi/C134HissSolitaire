@@ -341,6 +341,14 @@ class BBBHissPlayController extends HissRootController{
     }
 
     if(allFront){
+      for (var value in cardList) {
+        for (var value1 in value) {
+          if(value1.isCoins==true){
+            value1.isCoins=false;
+          }
+        }
+      }
+
       var foundationIndex=-1,colIndex=-1;
       HissCardBean? card;
       for (int  i = 0; i < cardList.length; i++) {
@@ -568,9 +576,7 @@ class BBBHissPlayController extends HissRootController{
       return;
     }
     if(card.isWheel==true){
-      HissRoutersUtils.instance.showDialog(
-        child: WheelDialog(),
-      );
+      _showWheelAnimator(card);
       card.isWheel=false;
       update(["card_list"]);
       canClick=true;
@@ -1556,12 +1562,31 @@ class BBBHissPlayController extends HissRootController{
     if(firstMoveCardToFoundations.getData()||firstGetPuzzle.getData()){
       return;
     }
+
     await Future.delayed(Duration(milliseconds: 1000));
+
     if(bean?.isWheel==true){
-      HissRoutersUtils.instance.showDialog(child: WheelDialog());
+      _showWheelAnimator(bean);
       bean?.isWheel=false;
       update(["card_list"]);
     }
+  }
+
+  _showWheelAnimator(HissCardBean? bean)async{
+    HissSendEventUtils.instance.sendEvent(
+      data: HissEventData(
+        eventCode: HissEventCode.showWheelAnimator,
+        anyEventValue: {
+          "card":bean,
+          "cardWidth":cardWidth,
+          "cardHeight":cardHeight,
+        },
+      ),
+    );
+    await Future.delayed(Duration(milliseconds: 1000));
+    HissRoutersUtils.instance.showDialog(
+      child: WheelDialog(),
+    );
   }
 
   @override

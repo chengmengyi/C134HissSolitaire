@@ -42,7 +42,13 @@ class FirstGetPuzzleDialog extends HissRootDialog<FirstGetPuzzleDialogController
           alignment: Alignment.center,
           children: [
             HissImagesWidget(name: "btn4", width: 260.w, height: 50.h),
-            HissTextWidget(textContent: "Collect & Earn", textSize: 18.sp, textColor: "#FFFFFF".toColor(),),
+            HissTextWidget(
+              textContent: "Collect & Earn",
+              textSize: 20.sp,
+              textColor: "#FFFFFF".toColor(),
+              fontWeight: FontWeight.bold,
+              outlineColor: "#000000".toColor(),
+            ),
           ],
         ),
       ),
@@ -72,7 +78,7 @@ class FirstGetPuzzleDialog extends HissRootDialog<FirstGetPuzzleDialogController
   _giftWidget()=>Container(
     width: double.infinity,
     height: 110.h,
-    margin: EdgeInsets.only(left: 32.w,right: 32.w,bottom: 12.h),
+    margin: EdgeInsets.only(bottom: 12.h),
     child: GetBuilder<FirstGetPuzzleDialogController>(
       id: "top_list",
       builder: (_){

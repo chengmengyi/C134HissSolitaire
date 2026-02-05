@@ -303,7 +303,7 @@ class BBBHissRankPage extends HissRootPage<BBBHissRankController>{
           Container(
             margin: EdgeInsets.only(top: 4.h),
             child: HissTextWidget(
-              textContent: "2025.10.19",
+              textContent: getTodayEn(),
               textSize: 12.sp,
               textColor: "#FFFFFF".toColor(),
               fontWeight: FontWeight.bold,

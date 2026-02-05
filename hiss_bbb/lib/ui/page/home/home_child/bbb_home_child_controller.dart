@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:hiss_bbb/ui/dialog/new_user_dialog/new_user_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/wheel_dialog/wheel_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
@@ -102,7 +103,7 @@ class BBBHomeChildController extends HissRootController{
     // bLevel.saveData(1);
 
     HissRoutersUtils.instance.showDialog(
-      child: WheelDialog(),
+      child: PlaySuccessDialog(time: 100, step: 100, score: 100, dismissCallback: (){}),
     );
   }
 }
