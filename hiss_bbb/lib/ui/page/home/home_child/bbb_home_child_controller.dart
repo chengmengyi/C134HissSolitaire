@@ -1,11 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:hiss_bbb/ui/dialog/first_get_puzzle_dialog/first_get_puzzle_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/good_comment/good_comment_dialog.dart';
+import 'package:hiss_bbb/ui/dialog/money_card_reward_dialog/money_card_reward_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/new_user_dialog/new_user_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_dialog.dart';
 import 'package:hiss_bbb/ui/dialog/wheel_dialog/wheel_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
+import 'package:hiss_bbb/utils/hiss_cash_task_utils.dart';
+import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
@@ -98,24 +102,27 @@ class BBBHomeChildController extends HissRootController{
     // bLevel.saveData(1);
     // HissUserInfoUtils.instance.updateUserLevel();
     // bLevel.saveData(1);
-    // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
     // HissUserInfoUtils.instance.updateWheelNum(1);
 
     // HissMp3Utils.instance.playOtherMp3(HissMp3Type.zhuan);
 
-    // HissRoutersUtils.instance.showDialog(child: FirstReachCashMoneyDialog());
+    // HissRoutersUtils.instance.showDialog(child: MoneyCardRewardDialog(reward: 10, callback: (double reward) {  },
+    //
+    // ));
     // HissValueConfigUtils.instance.test();
     // bLevel.saveData(1);
 
     // HissRoutersUtils.instance.showDialog(
-    //   child: GoodCommentDialog(callback: () {  },),
+    //   child: FirstGetPuzzleDialog(toPuzzlePageCallback: (){},),
     // );
 
     // HissUserInfoUtils.instance.updateMoney(1000);
     // show300AnimatorTips.saveData(true);
     // firstShowSuperPropAnimator.saveData(true);
 
-    HissFirebaseUtils.instance.initFirebase();
-
+    // HissFirebaseUtils.instance.initFirebase();
+    
+    // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
+    // firstShowSuperPropAnimator.saveData(true);
   }
 }

@@ -3,18 +3,23 @@ import 'dart:math';
 import 'package:hiss_bbb/bean/hiss_account_bean.dart';
 import 'package:hiss_bbb/bean/hiss_cash_rank_bean.dart';
 import 'package:hiss_bbb/bean/hiss_cash_task_bean.dart';
+import 'package:hiss_bbb/ui/dialog/cash_task_dialog/cash_task_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_task_queue_config_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_sql/hiss_sql_name.dart';
 import 'package:hiss_root/hiss_utils/hiss_sql/hiss_sql_utils.dart';
 
 class HissCashTaskUtils{
   static final HissCashTaskUtils _cashTaskUtils=HissCashTaskUtils();
   static HissCashTaskUtils get instance => _cashTaskUtils;
+
+  //更新了新的提现任务
+  HissCashTaskBean? updateNewTaskBean;
 
   Future<HissCashTaskBean?> queryCashTaskByCashTypeMoney(String cashType,int cashMoney)async{
     var database = await HissSqlUtils.instance.initSql();
@@ -56,11 +61,13 @@ class HissCashTaskUtils{
         if(null==nextWithdrawalTask){
           await database.delete(HissSqlName.bCashTaskInfo,where: '"id" = ?',whereArgs: [value["id"]]);
           await _createCashRankInfo(taskBean.cashType, taskBean.cashMoney);
+          updateNewTaskBean=null;
         }else{
           taskBean.taskIndex=(taskBean.taskIndex??0)+1;
           taskBean.currentPro=0;
           taskBean.totalPro=nextWithdrawalTask.num;
           await database.update(HissSqlName.bCashTaskInfo,taskBean.toJson(),where: '"id" = ?',whereArgs: [value["id"]]);
+          updateNewTaskBean = taskBean;
         }
       }else{
         await database.update(HissSqlName.bCashTaskInfo,taskBean.toJson(),where: '"id" = ?',whereArgs: [value["id"]]);

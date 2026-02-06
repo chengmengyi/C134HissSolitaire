@@ -74,6 +74,7 @@ class BBBHissHomeController extends HissRootController{
     }
     if(index==3){
       HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.cash_page);
+      HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.checkShowTaskDialog));
     }
     tabIndex=index;
     update(["page"]);

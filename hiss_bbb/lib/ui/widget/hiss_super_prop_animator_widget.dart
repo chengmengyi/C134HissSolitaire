@@ -111,7 +111,13 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
 
     HissMp3Utils.instance.playOtherMp3(HissMp3Type.super_prop);
     if(isFirstShow){
-      HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.showOrHideSuperPropTips,boolEventValue: true));
+      Future.delayed(Duration(milliseconds: 1500),(){
+        HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.showOrHideSuperPropTips,boolEventValue: true));
+      });
+      Future.delayed(Duration(milliseconds: 8500),(){
+        firstShowSuperPropAnimator.saveData(false);
+        HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.showOrHideSuperPropTips,boolEventValue: false));
+      });
     }
     _breathAnimationController?.reset();
     _breathAnimationController?.repeat(reverse: true);
@@ -120,10 +126,6 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
         _isVisible = false;
       });
     });
-    if(isFirstShow){
-      firstShowSuperPropAnimator.saveData(false);
-      HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.showOrHideSuperPropTips,boolEventValue: false));
-    }
   }
 
   _stopAnimation() {

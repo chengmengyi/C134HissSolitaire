@@ -23,6 +23,7 @@ class HissMp3Utils{
   static HissMp3Utils get instance => _hissMp3Utils;
 
   final AudioPlayer _bgmPlayer=AudioPlayer();
+  AudioPlayer? _superPropAudioPlayer;
 
   initPlayer()async{
     final audioContext = AudioContext(
@@ -78,14 +79,24 @@ class HissMp3Utils{
     if(playOtherMp3Key.getData()){
       AudioPlayer audio=AudioPlayer();
       if(mp3Type==HissMp3Type.super_prop||mp3Type==HissMp3Type.puzzle_zhuan){
+        if(mp3Type==HissMp3Type.super_prop){
+          _superPropAudioPlayer=audio;
+        }
         audio.setVolume(3);
       }
       audio.onPlayerStateChanged.listen((state){
         if(state==PlayerState.completed){
           audio.dispose();
+          _superPropAudioPlayer=null;
         }
       });
       audio.play(AssetSource("${mp3Type.name}.MP3"));
     }
+  }
+
+  stopSuperPropMp3(){
+    _superPropAudioPlayer?.stop();
+    _superPropAudioPlayer?.dispose();
+    _superPropAudioPlayer=null;
   }
 }

@@ -34,6 +34,7 @@ class HissCashWidgetController extends HissRootController{
   void onReady() {
     super.onReady();
     _initCashList();
+    _checkShowTaskDialog();
   }
 
   clickCashType(String cashType){
@@ -107,10 +108,10 @@ class HissCashWidgetController extends HissRootController{
       return;
     }
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.cash_skip);
-    // if(kDebugMode){
-    //   _cashRankWatchVideoCompleted(bean);
-    //   return;
-    // }
+    if(kDebugMode){
+      _cashRankWatchVideoCompleted(bean);
+      return;
+    }
     HissAdUtils.instance.showBBBAd(
       adType: AdType.reward,
       hissAdEnum: HissAdEnum.ccqes_queue_rv,
@@ -139,6 +140,7 @@ class HissCashWidgetController extends HissRootController{
         var rankListInfo = await _initRankListInfo(hissCashRankBean);
         hissCashRankBean.userList=rankListInfo;
         bean.cashRankBean=hissCashRankBean;
+        showToast("Your current rank ${bean.cashRankBean?.currentPro??0}");
         update(["list"]);
       }
     }
@@ -220,6 +222,20 @@ class HissCashWidgetController extends HissRootController{
       case HissEventCode.updateCashTaskInfo:
         _initCashList();
         break;
+      case HissEventCode.checkShowTaskDialog:
+        _checkShowTaskDialog()();
+        break;
+    }
+  }
+
+  _checkShowTaskDialog(){
+    if(null!=HissCashTaskUtils.instance.updateNewTaskBean){
+      HissRoutersUtils.instance.showDialog(
+        child: CashTaskDialog(
+          cashTaskBean: HissCashTaskUtils.instance.updateNewTaskBean,
+        ),
+      );
+      HissCashTaskUtils.instance.updateNewTaskBean=null;
     }
   }
 }

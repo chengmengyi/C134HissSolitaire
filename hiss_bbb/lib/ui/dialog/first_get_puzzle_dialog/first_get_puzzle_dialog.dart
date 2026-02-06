@@ -43,7 +43,7 @@ class FirstGetPuzzleDialog extends HissRootDialog<FirstGetPuzzleDialogController
           children: [
             HissImagesWidget(name: "btn4", width: 260.w, height: 50.h),
             HissTextWidget(
-              textContent: "Collect & Earn",
+              textContent: "Choose Your Gift",
               textSize: 20.sp,
               textColor: "#FFFFFF".toColor(),
               fontWeight: FontWeight.bold,

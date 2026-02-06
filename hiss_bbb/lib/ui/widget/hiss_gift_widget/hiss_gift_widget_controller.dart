@@ -42,6 +42,7 @@ class HissGiftWidgetController extends HissRootController{
     super.onInit();
     _initWheelList();
     _initCenterGiftTypeList();
+    HissMp3Utils.instance.stopSuperPropMp3();
   }
 
   @override

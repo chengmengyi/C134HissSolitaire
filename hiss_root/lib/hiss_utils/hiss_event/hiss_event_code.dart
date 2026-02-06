@@ -28,4 +28,5 @@ class HissEventCode{
   static const int toPuzzlePageInPlayPage=24;
   static const int stopHintAnimator=25;
   static const int showOrHideSuperPropTips=26;
+  static const int checkShowTaskDialog=27;
 }

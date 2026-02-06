@@ -1220,7 +1220,7 @@ class BBBHissPlayController extends HissRootController{
     return canMoveToFoundation(moving.first, foundationsList[index]);
   }
 
-  foundationsOnAccept(Map<String, dynamic> data, int index){
+  foundationsOnAccept(Map<String, dynamic> data, int index)async{
     _saveSnapshot();
     HissCardBean card = data['cards'][0];
     if (data['fromWaste'] == true) {
@@ -1230,15 +1230,29 @@ class BBBHissPlayController extends HissRootController{
       _draggingFromCol = null;
       _draggingStartIndex = null;
       update(["stock_pile","foundations",]);
+    } else {
+      if(data['fromEmpty']==true){
+
+      }else{
+        // "fromCol": colIndex,
+        // "startIndex": rowIndex,
+        // "cards": list.sublist(rowIndex),
+        // "fromWaste": false
+        int fromCol = data['fromCol'];
+        int startIndex = data['startIndex'];
+        cardList[fromCol].removeRange(startIndex, cardList[fromCol].length);
+        _uploadMovePoint();
+        foundationsList[index].add(card);
+        _checkFirstMoveCardToFoundations();
+        _setCardLastShow(fromCol);
+        currentScore+=10;
+        update(["card_list","foundations","score"]);
+        await Future.delayed(Duration(milliseconds: 100));
+        canClick=true;
+        //校验游戏通关了
+        _checkPlayEnd();
+      }
     }
-    // else {
-    //   int fromCol = data['fromCol'];
-    //   int startIndex = data['startIndex'];
-    //   cardList[fromCol].removeRange(startIndex, cardList[fromCol].length);
-    //   if (cardList[fromCol].isNotEmpty) {
-    //     cardList[fromCol].last.isFaceUp = true;
-    //   }
-    // }
     //校验游戏通关了
     _checkPlayEnd();
   }
