@@ -25,4 +25,5 @@ class HissEventCode{
   static const int moveToCardList=21;
   static const int useSuperProp=22;
   static const int showWheelAnimator=23;
+  static const int toPuzzlePageInPlayPage=24;
 }

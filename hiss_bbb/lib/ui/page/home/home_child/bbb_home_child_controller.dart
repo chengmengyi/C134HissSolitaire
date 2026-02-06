@@ -6,6 +6,7 @@ import 'package:hiss_bbb/ui/dialog/play_success_dialog/play_success_dialog.dart'
 import 'package:hiss_bbb/ui/dialog/wheel_dialog/wheel_dialog.dart';
 import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_bbb/utils/hiss_storage.dart';
+import 'package:hiss_bbb/utils/hiss_user_info_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
@@ -75,7 +76,8 @@ class BBBHomeChildController extends HissRootController{
     //   child: NoMoneyDialog(),
     // );
     // HissValueConfigUtils.instance.initBean();
-    // HissUserInfoUtils.instance.updateMoney(100);
+    // HissUserInfoUtils.instance.updateMoney(-130);
+
 
     // HissCashTaskUtils.instance.updateCashTask(HissTaskType.puzzle);
 
@@ -102,8 +104,11 @@ class BBBHomeChildController extends HissRootController{
     // HissValueConfigUtils.instance.test();
     // bLevel.saveData(1);
 
-    HissRoutersUtils.instance.showDialog(
-      child: PlaySuccessDialog(time: 100, step: 100, score: 100, dismissCallback: (){}),
-    );
+    // HissRoutersUtils.instance.showDialog(
+    //   child: PlaySuccessDialog(time: 100, step: 100, score: 100, dismissCallback: (){}),
+    // );
+
+    HissUserInfoUtils.instance.updateMoney(1000);
+    // show300AnimatorTips.saveData(true);
   }
 }

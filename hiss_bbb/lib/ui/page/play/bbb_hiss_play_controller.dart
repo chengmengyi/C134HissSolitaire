@@ -657,9 +657,9 @@ class BBBHissPlayController extends HissRootController{
   _setCardLastShow(int colIndex){
     if (cardList[colIndex].isNotEmpty){
       cardList[colIndex].last.front = true;
-      HissUserInfoUtils.instance.updateMoney(HissValueConfigUtils.instance.getFlipCardAddNum());
+      var alreadyShowDialog = HissUserInfoUtils.instance.updateMoney(HissValueConfigUtils.instance.getFlipCardAddNum());
       var last = cardList[colIndex].last;
-      _autoShowWheelDialog(last);
+      _autoShowWheelDialog(last,alreadyShowDialog: alreadyShowDialog);
       HissCardBean? showDiamondCard;
       HissCardBean? showGiftPuzzleCard;
       if(last.isCoins!=true){
@@ -1558,14 +1558,14 @@ class BBBHissPlayController extends HissRootController{
     HissPointUtils.instance.pointEvent(hissPointEnum: HissPointEnum.move_card);
   }
 
-  _autoShowWheelDialog(HissCardBean? bean)async{
+  _autoShowWheelDialog(HissCardBean? bean,{bool alreadyShowDialog = false})async{
     if(firstMoveCardToFoundations.getData()||firstGetPuzzle.getData()){
       return;
     }
 
     await Future.delayed(Duration(milliseconds: 1000));
 
-    if(bean?.isWheel==true){
+    if(bean?.isWheel==true&&!alreadyShowDialog){
       _showWheelAnimator(bean);
       bean?.isWheel=false;
       update(["card_list"]);

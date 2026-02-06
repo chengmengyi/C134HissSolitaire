@@ -29,7 +29,7 @@ class HissUserInfoUtils {
     }
   }
 
-  updateMoney(addNum,{bool showAnimator=false}){
+  bool updateMoney(addNum,{bool showAnimator=false}){
     bMoneyNum.saveData(doubleAdd(bMoneyNum.getData(), addNum));
     if(addNum>0){
       if(showAnimator){
@@ -42,15 +42,19 @@ class HissUserInfoUtils {
       if(currentMoneyNum>=300&&show300AnimatorTips.getData()){
         show300AnimatorTips.saveData(false);
         _show300700AnimatorDialog(300);
+        return true;
       }else if(currentMoneyNum>=700&&show700AnimatorTips.getData()){
         show700AnimatorTips.saveData(false);
         _show300700AnimatorDialog(700);
+        return true;
       }else if(currentMoneyNum>=HissValueConfigUtils.instance.cashList().first&&show1000MoneyDialog.getData()){
         show1000MoneyDialog.saveData(false);
         _show1000MoneyDialog();
+        return true;
       }
     }
     HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.aUpdateMoneyNum));
+    return false;
   }
 
   _handleMoneyLevel(double currentMoneyNum){

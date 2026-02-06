@@ -45,7 +45,7 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
               margin: EdgeInsets.only(top: 60.h),
               child: SizedBox(
                 width: double.infinity,
-                height: 360.h,
+                height: 300.h,
                 child: Stack(
                   children: [
                     HissImagesWidget(name: "success2", width: double.infinity, height: 360.h,),
@@ -302,7 +302,7 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
   );
 
   _rewardWidget()=>Container(
-    margin: EdgeInsets.only(left: 48.w,right: 48.w),
+    margin: EdgeInsets.only(left: 48.w,right: 48.w,top: 20.h),
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -311,7 +311,7 @@ class PlaySuccessDialog extends HissRootDialog<PlaySuccessController>{
           textSize: 18.sp,
            textColor: "#724B2F".toColor(),
         ),
-        SizedBox(height: 50.h,),
+        SizedBox(height: 30.h,),
         Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.end,

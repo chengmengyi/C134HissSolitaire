@@ -1,7 +1,9 @@
 import 'package:hiss_bbb/bean/hiss_cash_task_bean.dart';
 import 'package:hiss_bbb/bean/hiss_task_queue_config_bean.dart';
+import 'package:hiss_bbb/utils/hiss_b_routers.dart';
 import 'package:hiss_bbb/utils/hiss_enum/hiss_task_type.dart';
 import 'package:hiss_bbb/utils/hiss_task_queue_config_utils.dart';
+import 'package:hiss_bbb/utils/utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
@@ -25,8 +27,23 @@ class CashTaskDialogController extends HissRootController{
   }
 
   clickConfirm(){
-    HissRoutersUtils.instance.close();
-    HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.showHomeTabIndex,intEventValue: 1));
+    var withdrawalTask = HissTaskQueueConfigUtils.instance.getWithdrawalTaskByIndex(cashTaskBean?.taskIndex??0);
+    if(withdrawalTask.name==HissTaskType.puzzle){
+      if(playGamePageOpen){
+        HissRoutersUtils.instance.closeAllPageUntilNamed(str: HissBBBRouters.play);
+        HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.toPuzzlePageInPlayPage));
+      }else{
+        HissRoutersUtils.instance.close();
+        HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.showHomeTabIndex,intEventValue: 2));
+      }
+    }else{
+      if(playGamePageOpen){
+        HissRoutersUtils.instance.closeAllPageUntilNamed(str: HissBBBRouters.play);
+      }else{
+        HissRoutersUtils.instance.close();
+        HissRoutersUtils.instance.toNextPageByNamed(routerName: HissBBBRouters.play);
+      }
+    }
   }
 
   clickClose(){
