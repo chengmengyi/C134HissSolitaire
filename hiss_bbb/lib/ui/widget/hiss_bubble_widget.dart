@@ -77,7 +77,7 @@ class _HissBubbleWidgetState extends HissRootStatefulState<HissBubbleWidget>{
                       textSize: 14.sp,
                       fontWeight: FontWeight.bold,
                       textColor: "#FFF132".toColor(),
-                      outlineColor: "#000000".toColor(),
+                      outlineColor: "#FFFFFF".toColor(),
                     ),
                   ],
                 ),

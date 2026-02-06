@@ -26,4 +26,6 @@ class HissEventCode{
   static const int useSuperProp=22;
   static const int showWheelAnimator=23;
   static const int toPuzzlePageInPlayPage=24;
+  static const int stopHintAnimator=25;
+  static const int showOrHideSuperPropTips=26;
 }

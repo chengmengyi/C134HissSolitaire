@@ -58,7 +58,7 @@ class _HissWheelCardAnimatorWidgetState extends HissRootStatefulState<HissWheelC
     HissCardBean cardBean=anyEventValue["card"];
     var startRenderBox = cardBean.globalKey?.currentContext?.findRenderObject() as RenderBox;
     var offset = startRenderBox.localToGlobal(Offset.zero);
-    var startOffset=Offset(offset.dx-cardWidth/2, offset.dy);
+    var startOffset=Offset(offset.dx-cardWidth*3/2, offset.dy);
     final size = MediaQuery.of(context).size;
     final centerOffset = size.center(Offset.zero);
     animationController = AnimationController(
@@ -76,7 +76,7 @@ class _HissWheelCardAnimatorWidgetState extends HissRootStatefulState<HissWheelC
 
     scaleAnim = Tween<double>(
       begin: 1.0,
-      end: 2.0,
+      end: 3.0,
     ).animate(CurvedAnimation(
       parent: animationController!,
       curve: Curves.easeOut,

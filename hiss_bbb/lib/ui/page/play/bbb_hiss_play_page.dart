@@ -54,11 +54,12 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
           _foundationsAndStockPileWidget(),
           SizedBox(height: 24.h,),
           _cardListWidget(),
-          _bottomWidget(),
         ],
       ),
+      _bottomWidget(),
       _giftGuideWidget(),
       _emptyPlaceWidget(),
+      _superPropTipsWidget(),
       HissSuperPropAnimatorWidget(),
       HissDealCardAnimatorWidget(
         allAnimatorCompletedCallback: (){
@@ -449,143 +450,108 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
     ),
   );
 
-  _bottomWidget()=>Container(
-    margin: EdgeInsets.only(left: 12.w,right: 12.w,bottom: 20.h,),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        HissClickWidget(
-          onTap: (){
-            controller.clickGiftBtn();
-          },
-          child: Stack(
-            alignment: Alignment.topRight,
-            key: controller.giftPuzzleGlobalKey,
-            children: [
-              HissImagesWidget(name: "play11", width: 72.w, height: 72.w,),
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  HissImagesWidget(name: "play10", width: 16.w, height: 16.w),
-                  GetBuilder<BBBHissPlayController>(
-                    id: "wheel_num",
-                    builder: (_)=>HissTextWidget(
-                      textContent: "${wheelNum.getData()}",
-                      textSize: 10.sp,
-                      textColor: "#FFFFFF".toColor(),
-                      fontWeight: FontWeight.bold,
+  _bottomWidget()=>Align(
+    alignment: Alignment.bottomCenter,
+    child: Container(
+      margin: EdgeInsets.only(left: 12.w,right: 12.w,bottom: 20.h,),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          HissClickWidget(
+            onTap: (){
+              controller.clickGiftBtn();
+            },
+            child: Stack(
+              alignment: Alignment.topRight,
+              key: controller.giftPuzzleGlobalKey,
+              children: [
+                HissImagesWidget(name: "play11", width: 72.w, height: 72.w,),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    HissImagesWidget(name: "play10", width: 16.w, height: 16.w),
+                    GetBuilder<BBBHissPlayController>(
+                      id: "wheel_num",
+                      builder: (_)=>HissTextWidget(
+                        textContent: "${wheelNum.getData()}",
+                        textSize: 10.sp,
+                        textColor: "#FFFFFF".toColor(),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
-              )
+                  ],
+                )
+              ],
+            ),
+          ),
+          SizedBox(height: 12.h,),
+          Row(
+            children: [
+              SizedBox(
+                key: controller.diamondPigGlobalKey,
+                child: HissPigWidget(
+                  clickCallback: (){
+                    controller.clickPig();
+                  },
+                ),
+              ),
+              Spacer(),
+              HissClickWidget(
+                onTap: (){
+                  controller.clickAdBtn();
+                },
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    HissImagesWidget(name: "play12", width: 72.w, height: 72.w),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 4.h),
+                      child: HissTextWidget(
+                        textContent: "+\$${HissValueConfigUtils.instance.lookAdAddMoneyNum()}",
+                        textSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                        textColor: "#FFFFFF".toColor(),
+                        outlineColor: "#000000".toColor(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
-        SizedBox(height: 12.h,),
-        Row(
-          children: [
-            SizedBox(
-              key: controller.diamondPigGlobalKey,
-              child: HissPigWidget(
-                clickCallback: (){
-                  controller.clickPig();
+          SizedBox(height: 46.h,),
+          Row(
+            children: [
+              HissClickWidget(
+                onTap: (){
+                  controller.clickHome();
                 },
+                child: HissImagesWidget(name: "play5", width: 64.w, height: 64.w),
               ),
-            ),
-            Spacer(),
-            HissClickWidget(
-              onTap: (){
-                controller.clickAdBtn();
-              },
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  HissImagesWidget(name: "play12", width: 72.w, height: 72.w),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 4.h),
-                    child: HissTextWidget(
-                      textContent: "+\$${HissValueConfigUtils.instance.lookAdAddMoneyNum()}",
-                      textSize: 14.sp,
-                      fontWeight: FontWeight.bold,
-                      textColor: "#FFFFFF".toColor(),
-                      outlineColor: "#000000".toColor(),
-                    ),
-                  ),
-                ],
+              Spacer(),
+              HissClickWidget(
+                onTap: (){
+                  controller.clickResetPlay();
+                },
+                child: HissImagesWidget(name: "play6", width: 56.w, height: 56.w),
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 46.h,),
-        Row(
-          children: [
-            HissClickWidget(
-              onTap: (){
-                controller.clickHome();
-              },
-              child: HissImagesWidget(name: "play5", width: 64.w, height: 64.w),
-            ),
-            Spacer(),
-            HissClickWidget(
-              onTap: (){
-                controller.clickResetPlay();
-              },
-              child: HissImagesWidget(name: "play6", width: 56.w, height: 56.w),
-            ),
-            SizedBox(width: 22.w,),
-            HissClickWidget(
-              onTap: (){
-                controller.clickBackProp();
-              },
-              child: Stack(
-                alignment: Alignment.topRight,
-                children: [
-                  SizedBox(
-                    key: controller.backPropGlobalKey,
-                    child: HissImagesWidget(name: "play7", width: 56.w, height: 56.w),
-                  ),
-                  GetBuilder<BBBHissPlayController>(
-                    id: "back_prop",
-                    builder: (_){
-                      var data = bBackPropNum.getData();
-                      if(data<=0){
-                        return HissImagesWidget(name: "play8", width: 16.w, height: 16.w);
-                      }
-                      return Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          HissImagesWidget(name: "play10", width: 16.w, height: 16.w),
-                          HissTextWidget(textContent: "$data", textSize: 10.sp, textColor: "#FFFFFF".toColor(),fontWeight: FontWeight.bold,),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: 22.w,),
-            HissClickWidget(
-              onTap: (){
-                controller.clickHint();
-              },
-              child: ShakeAnimationWidget(
-                shakeAnimationController: controller.tipsAnimationController,
-                shakeAnimationType: ShakeAnimationType.LeftRightShake,
-                isForward: false,
-                shakeCount: 4,
-                shakeRange: 0.2,
+              SizedBox(width: 22.w,),
+              HissClickWidget(
+                onTap: (){
+                  controller.clickBackProp();
+                },
                 child: Stack(
                   alignment: Alignment.topRight,
                   children: [
                     SizedBox(
-                      key: controller.tipsPropGlobalKey,
-                      child: HissImagesWidget(name: "play9", width: 56.w, height: 56.w),
+                      key: controller.backPropGlobalKey,
+                      child: HissImagesWidget(name: "play7", width: 56.w, height: 56.w),
                     ),
                     GetBuilder<BBBHissPlayController>(
-                      id: "tips_prop",
+                      id: "back_prop",
                       builder: (_){
-                        var data = bTipsPropNum.getData();
+                        var data = bBackPropNum.getData();
                         if(data<=0){
                           return HissImagesWidget(name: "play8", width: 16.w, height: 16.w);
                         }
@@ -601,10 +567,48 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
-      ],
+              SizedBox(width: 22.w,),
+              HissClickWidget(
+                onTap: (){
+                  controller.clickHint();
+                },
+                child: ShakeAnimationWidget(
+                  shakeAnimationController: controller.tipsAnimationController,
+                  shakeAnimationType: ShakeAnimationType.LeftRightShake,
+                  isForward: false,
+                  shakeCount: 4,
+                  shakeRange: 0.2,
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      SizedBox(
+                        key: controller.tipsPropGlobalKey,
+                        child: HissImagesWidget(name: "play9", width: 56.w, height: 56.w),
+                      ),
+                      GetBuilder<BBBHissPlayController>(
+                        id: "tips_prop",
+                        builder: (_){
+                          var data = bTipsPropNum.getData();
+                          if(data<=0){
+                            return HissImagesWidget(name: "play8", width: 16.w, height: 16.w);
+                          }
+                          return Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              HissImagesWidget(name: "play10", width: 16.w, height: 16.w),
+                              HissTextWidget(textContent: "$data", textSize: 10.sp, textColor: "#FFFFFF".toColor(),fontWeight: FontWeight.bold,),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     ),
   );
 
@@ -741,6 +745,45 @@ class BBBHissPlayPage extends HissRootPage<BBBHissPlayController>{
         ),
       ),
     ),
+  );
+
+  _superPropTipsWidget()=>GetBuilder<BBBHissPlayController>(
+    id: "super_prop_tip",
+    builder: (_){
+      if(!controller.showSuperPropTips){
+        return Container();
+      }
+      final size = MediaQuery.of(controller.buildContext).size;
+      double startY = (size.height - 100) / 2+(80.h);
+      return Container(
+        width: double.infinity,
+        alignment: Alignment.topCenter,
+        margin: EdgeInsets.only(top: startY),
+        child: SizedBox(
+          width: 220.w,
+          height: 68.h,
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Transform.scale(
+                scaleY: -1,
+                child: HissImagesWidget(name: "empty_tip_bg", width: double.infinity, height: double.infinity),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 10.w,right: 10.w,bottom: 15.h),
+                child: HissTextWidget(
+                  textContent: "Surprise! Earn faster for a limited time!",
+                  textSize: 14.sp,
+                  textAlign: TextAlign.center,
+                  textColor: "#FFFFFF".toColor(),
+                  outlineColor: "#3D2603".toColor(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
   );
 
   _giftGuideWidget()=>GetBuilder<BBBHissPlayController>(

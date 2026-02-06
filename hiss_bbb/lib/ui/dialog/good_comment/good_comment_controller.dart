@@ -11,7 +11,9 @@ class GoodCommentController extends HissRootController{
   }
 
   clickFeed(Function() callback)async{
-    if(index<0){
+    if(index<3){
+      HissRoutersUtils.instance.close();
+      callback.call();
       return;
     }
     var instance = InAppReview.instance;

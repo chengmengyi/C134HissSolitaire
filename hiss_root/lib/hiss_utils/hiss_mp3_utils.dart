@@ -14,7 +14,8 @@ enum HissMp3Type{
   win, //胜利
   money, //金币
   puzzle, //实物碎片
-  zhuan, //转盘
+  puzzle_zhuan, //实物转盘
+  zhuanpan, //转盘
 }
 
 class HissMp3Utils{
@@ -76,7 +77,7 @@ class HissMp3Utils{
     }
     if(playOtherMp3Key.getData()){
       AudioPlayer audio=AudioPlayer();
-      if(mp3Type==HissMp3Type.super_prop||mp3Type==HissMp3Type.zhuan){
+      if(mp3Type==HissMp3Type.super_prop||mp3Type==HissMp3Type.puzzle_zhuan){
         audio.setVolume(3);
       }
       audio.onPlayerStateChanged.listen((state){

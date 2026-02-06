@@ -193,6 +193,12 @@ class OpenCollectCard {
     return map;
   }
 
+  @override
+  String toString() {
+    return 'OpenCollectCard{min: $min, max: $max, reward: $reward}';
+  }
+
+
 }
 
 class CashCard {

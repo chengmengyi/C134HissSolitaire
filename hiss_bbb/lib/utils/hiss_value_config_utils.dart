@@ -36,7 +36,8 @@ class HissValueConfigUtils{
   }
 
   test(){
-    _startInitBean();
+    // _startInitBean();
+    print(_configBean?.openCollectCard);
   }
 
   //道具增加数量
@@ -187,5 +188,4 @@ class HissValueConfigUtils{
     double value = min + random.nextDouble() * (max - min);
     return value.toStringAsFixed(2).toDouble();
   }
-
 }

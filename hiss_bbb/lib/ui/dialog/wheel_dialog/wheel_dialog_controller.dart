@@ -7,6 +7,7 @@ import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_controller.dart';
 import 'package:hiss_root/hiss_utils/hiss_ad_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
+import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_ad_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_enum.dart';
 import 'package:hiss_root/hiss_utils/hiss_point/hiss_point_utils.dart';
@@ -41,6 +42,7 @@ class WheelDialogController extends HissRootController with GetSingleTickerProvi
     }
     canClick=false;
     await Future.delayed(Duration(milliseconds: 1000));
+    HissMp3Utils.instance.playOtherMp3(HissMp3Type.zhuanpan);
     _wheelAnimationController..reset()..forward();
   }
 

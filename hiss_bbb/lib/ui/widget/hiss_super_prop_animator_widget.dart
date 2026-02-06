@@ -3,16 +3,20 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hiss_bbb/ui/dialog/super_prop_dialog/super_prop_dialog.dart';
+import 'package:hiss_bbb/utils/hiss_storage.dart';
 import 'package:hiss_bbb/utils/hiss_value_config_utils.dart';
 import 'package:hiss_root/hiss_ui/hiss_root_stateful.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_breath_animator_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_click_widget.dart';
 import 'package:hiss_root/hiss_ui/hiss_widget/hiss_images_widget.dart';
+import 'package:hiss_root/hiss_ui/hiss_widget/hiss_text_widget.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_code.dart';
 import 'package:hiss_root/hiss_utils/hiss_event/hiss_event_data.dart';
+import 'package:hiss_root/hiss_utils/hiss_event/hiss_send_event_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_export.dart';
 import 'package:hiss_root/hiss_utils/hiss_mp3_utils.dart';
 import 'package:hiss_root/hiss_utils/hiss_routers_utils.dart';
+import 'package:hiss_root/hiss_utils/hiss_utils.dart';
 
 class HissSuperPropAnimatorWidget extends HissRootStateful{
   @override
@@ -55,10 +59,7 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
           );
         },
         child: HissBreathAnimatorWidget(
-          start: false,
-          controllerCallback: (c){
-            _breathAnimationController=c;
-          },
+          start: true,
           child: HissImagesWidget(name: "play2", width: 100.w, height: 80.w),
         ),
       );
@@ -78,9 +79,10 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
     double endY = startY;
 
     _controller?.dispose();
+    var isFirstShow = firstShowSuperPropAnimator.getData();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 5),
+      duration: Duration(seconds: isFirstShow?10:5),
     );
     _animation = TweenSequence<Offset>([
       TweenSequenceItem(
@@ -92,7 +94,7 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
       ),
       TweenSequenceItem(
         tween: ConstantTween<Offset>(Offset(centerX, centerY)),
-        weight: 2, // 停留
+        weight: isFirstShow?7:2, // 停留
       ),
       TweenSequenceItem(
         tween: Tween<Offset>(
@@ -108,15 +110,20 @@ class _HissSuperPropAnimatorWidgetState extends HissRootStatefulState<HissSuperP
     });
 
     HissMp3Utils.instance.playOtherMp3(HissMp3Type.super_prop);
-
-    _controller!.forward().whenComplete(() {
+    if(isFirstShow){
+      HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.showOrHideSuperPropTips,boolEventValue: true));
+    }
+    _breathAnimationController?.reset();
+    _breathAnimationController?.repeat(reverse: true);
+    await _controller!.forward().whenComplete(() {
       setState(() {
         _isVisible = false;
       });
     });
-    await Future.delayed(Duration(seconds: 1));
-    _breathAnimationController?.reset();
-    _breathAnimationController?.repeat(reverse: true);
+    if(isFirstShow){
+      firstShowSuperPropAnimator.saveData(false);
+      HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.showOrHideSuperPropTips,boolEventValue: false));
+    }
   }
 
   _stopAnimation() {

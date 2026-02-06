@@ -127,7 +127,7 @@ class HissGiftWidgetController extends HissRootController{
         var count=0;
         var randWheelIndex = _getRandWheelIndex();
         var pre3wheelIndex = _getPre3WheelIndex(randWheelIndex);
-        HissMp3Utils.instance.playOtherMp3(HissMp3Type.zhuan);
+        HissMp3Utils.instance.playOtherMp3(HissMp3Type.puzzle_zhuan);
         _wheelTimer=Timer.periodic(Duration(milliseconds: 80), (t){
           if(count>=20&&pre3wheelIndex==selectedWheelIndex){
             _stopWheelTimer();

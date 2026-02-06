@@ -43,7 +43,7 @@ class BBBHissPlayController extends HissRootController{
   var cardWidth=0.0,cardHeight=0.0,_canClickStockPile=true,_canClickResetPlay=true,
       currentScore=0,currentStep=0,currentTime=0,appBackground=false,
       canClick=true;
-  bool _isDragging = false,showEmptyTips=false,_firstGetRewardShowing=false,_canShowFirstGetPuzzle=false;
+  bool _isDragging = false,showEmptyTips=false,_firstGetRewardShowing=false,_canShowFirstGetPuzzle=false,showSuperPropTips=false;
   int? _draggingFromCol;
   int? _draggingStartIndex;
   List<List<HissCardBean>> foundationsList=[[],[],[],[]];
@@ -539,6 +539,7 @@ class BBBHissPlayController extends HissRootController{
       return;
     }
     canClick=false;
+    _stopHintTipsAnimator();
     _cancelNoOperationTimer();
     if(card.isCoins==true){
       HissUserInfoUtils.instance.showGoodCommentDialog(
@@ -1174,6 +1175,10 @@ class BBBHissPlayController extends HissRootController{
     _noOperationTimer=null;
   }
 
+  _stopHintTipsAnimator(){
+    HissSendEventUtils.instance.sendEvent(data: HissEventData(eventCode: HissEventCode.stopHintAnimator));
+  }
+
   clickPig(){
     if(!canClick){
       return;
@@ -1425,6 +1430,10 @@ class BBBHissPlayController extends HissRootController{
       case HissEventCode.useSuperProp:
         useSuperProp();
         break;
+      case HissEventCode.showOrHideSuperPropTips:
+        showSuperPropTips=data.boolEventValue??false;
+        update(["super_prop_tip"]);
+        break;
     }
   }
 
@@ -1564,8 +1573,12 @@ class BBBHissPlayController extends HissRootController{
     }
 
     await Future.delayed(Duration(milliseconds: 1000));
-
-    if(bean?.isWheel==true&&!alreadyShowDialog){
+    if(alreadyShowDialog){
+      bean?.isWheel=false;
+      update(["card_list"]);
+      return;
+    }
+    if(bean?.isWheel==true){
       _showWheelAnimator(bean);
       bean?.isWheel=false;
       update(["card_list"]);

@@ -56,6 +56,13 @@ class _HissHintAnimatorWidgetState extends HissRootStatefulState<HissHintAnimato
       case HissEventCode.aHintAnimator:
         _hintAnimator(data.anyEventValue);
         break;
+      case HissEventCode.stopHintAnimator:
+        if(null!=animationController){
+          animationController?.stop();
+          animationController=null;
+          setState(() {});
+        }
+        break;
     }
   }
 
