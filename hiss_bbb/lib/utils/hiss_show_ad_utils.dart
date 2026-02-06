@@ -35,9 +35,9 @@ class HissShowAdUtils{
   }
 
   bool showAd(AdType adType){
-    if(kDebugMode){
-      return false;
-    }
+    // if(kDebugMode){
+    //   return false;
+    // }
     if(adType==AdType.reward){
       return true;
     }

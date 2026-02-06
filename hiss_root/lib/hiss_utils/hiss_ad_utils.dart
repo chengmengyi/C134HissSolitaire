@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_check_adjust/flutter_check_adjust.dart';
 import 'package:flutter_ios_ad_plugins/data/ad_info_data.dart';
 import 'package:flutter_ios_ad_plugins/data/ad_money_info_bean.dart';
 import 'package:flutter_ios_ad_plugins/data/config_ad_data.dart';
@@ -174,6 +175,7 @@ class HissAdUtils{
       adType: adType,
       iosAdCallback: IosAdCallback(
         showSuccess: (ad,info){
+          FlutterCheckAdjust.instance.uploadAdRevenueToAdjust(ad?.networkName??"", ad?.revenue??0, ad?.adUnitId??"");
           HissMp3Utils.instance.stopBgm();
           _uploadLookAdNumLevel();
           HissPointUtils.instance.adEvent(ad: ad, hissAdEnum: hissAdEnum, adInfoData: info);
